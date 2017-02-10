@@ -1,0 +1,21 @@
+<ion-view cache-view="false" view-title="See Hua Mobile EPaper" ng-controller="ThumbnailController">
+    <ion-content scroll="false">
+        <ion-slides slider="swiper" options="swiperOptions" show-pager="true">
+            <ion-slide-page ng-init="loadImages(page)" ng-repeat="page in slide_pages">
+                <ion-scroll direction="y">
+                        <div class="row" ng-repeat="image in images[page.id]" ng-if="$even">
+                                <div class="col col-200">
+                                    <a href="{{images[page.id][$index].url}}"><img ng-src="{{images[page.id][$index].src}}" width="100%"/></a>
+                                </div>
+                                <div class="col col-200">
+                                    <a href="{{images[page.id][$index+1].url}}"><img ng-src="{{images[page.id][$index+1].src}}" width="100%"/></a>
+                                </div>
+                        </div>
+                </ion-scroll>
+            </ion-slide-page>
+        </ion-slides>
+    </ion-content>
+    <div class="bar bar-footer bar-calm">
+        <h1 class="title"><a href="#thumbnail/{{pager}}">Page {{pager}}</a></h1>
+    </div>
+</ion-view>
