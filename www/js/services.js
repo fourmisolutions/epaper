@@ -1,11 +1,11 @@
-app.factory('ePaperService', function($http) {
+app.factory('ePaperService', function($http, $q) {
 
-    var baseUrl = 'http://localhost:8080';
+    var baseUrl = 'http://shetest.theborneopost.com';
     var ePaperFactory = {};
 
     //POST login
     var loginApiUrl = '/login';
-
+    var breakingNews = [];
     ePaperFactory.login = function() {
         return $http.post(baseUrl + loginApiUrl, data)
             .then(function(status, headers){
@@ -17,13 +17,28 @@ app.factory('ePaperService', function($http) {
 
 
     //GET /news/breaking
-    var breakingApiUrl = '/news/breaking';
+    var breakingApiUrl = '/seehua_breaking_news.json';
 
     ePaperFactory.getBreakingNews = function() {
-        return $http.get(baseUrl + breakingApiUrl)
-            .then(function(response) {
-                return response;
-            });
+        
+        var deferred = $q.defer();
+
+        if(breakingNews.length > 0) {
+            deferred.resolve(breakingNews);
+        } else {
+            return $http.get(baseUrl + breakingApiUrl)
+                .then(function(response) {
+                    var news = response.data;
+                    breakingNews = news;
+                    return breakingNews;
+                });
+        }
+    }
+    
+    ePaperFactory.getBreakingNewsById = function(id) {
+        return ePaperFactory.getBreakingNews().then(function(breakingNews){
+            return breakingNews[id];
+        });
     }
 
     //GET /news/categories

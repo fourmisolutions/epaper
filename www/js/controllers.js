@@ -172,7 +172,7 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$stateParams", "$q", "$loca
                 $scope.images[tab.id].push({id: i, label: type+i, src: "thumbnails/"+type+i+".jpg", url:detailurl+i});
             }
 
-         }
+        }
 
         var loadBreakingNews = function() {
             $state.go("app.breakingnews");
@@ -246,45 +246,6 @@ app.controller("MenuController", ['$rootScope', "$scope", "$stateParams", "$q", 
     }
 ]);
 
-app.controller('BreakingNewsController', function($scope, $stateParams) {
-    $scope.title = "古晋肯雅兰年货市集 吸引160摊参与";
-    $scope.description =
-        "（本报古晋2日讯）华人农历新年跫音近，古晋区的年货市集预计将在农历新年的前2个星期开业。所谓'姜还是老的辣'，肯雅兰年货市集截至12月23日，已有160个摊位敲定参与"
-        + "由古晋南市市政局承办的肯雅兰年货市集，将于1月14日至27日，假肯雅兰商业中心举行，获得商家的热烈支持。"
-        + "该年货市集已成为古晋人的一部分，逢农历新年前，都会前往选购年货。印度街年市有23摊"
-        + "另外，首次于古晋老街印度街主办的年货市集，则将于本月12日至16日，在印度街举行。";
-    $scope.imageUrl = "img/test.jpg";
-    $scope.id = $stateParams.id;
-
-    var scope = $scope;
-    var tCtrl = this;
-
-    this.onLoad = function (pag) {
-        console.log('Num pages: ' + pag);
-    };
-
-    this.onError = function (err) {
-        console.error('Error: ' + JSON.stringify(err, null, 4));
-    };
-
-    this.onProgress = function (progress) {
-        //console.log('Progress: ' + (progress.loaded/progress.total*100) + '%');
-    };
-
-    this.onRenderPage = function (page) {
-        console.log('Page: ' + page);
-    };
-
-    scope.options = {
-        pdfUrl: 'pdf/pdf.pdf',
-        onLoad: tCtrl.onLoad,
-        onProgress: tCtrl.onProgress,
-        onError: tCtrl.onError,
-        onRenderPage: tCtrl.onRenderPage
-    };
-    console.log(JSON.stringify(scope.options, null, 4));
-});
-
 app.controller("DetailController", function($scope, $stateParams) {
     $scope.title = "古晋肯雅兰年货市集 吸引160摊参与";
     $scope.description =
@@ -322,53 +283,3 @@ app.controller("DetailController", function($scope, $stateParams) {
     };
     console.log(JSON.stringify(scope.options, null, 4));
 });
-
-app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$http',
-    function($scope, ePaperService, $http) {
-    $scope.breaking_news_number = 5;
-    $scope.news = [];
-
-    $scope.getBreakingNews = function(){
-        ePaperService.getBreakingNews()
-            .then(function(response) {
-                console.log(response.data);
-                return $scope.news = response.data;
-            }, function (error) {
-                return $scope.status = 'Unable to load breaking news data: ' + error.message;
-            });
-
-        }
-
-        $scope.getBreakingNews();
-
-
-
-
-
-    var title = "";
-
-    for(var i=1;i<=$scope.breaking_news_number; i++) {
-        switch(i){
-            case 1:
-                title = "News abc";
-                break;
-            case 2:
-                title = "没后悔这一段情　风水师出示录音证据指女说谎不爱他！";
-                break;
-            case 3:
-                title = "丹登水灾情况恶化 灾民人数翻倍";
-                break;
-            case 4:
-                title = "狗儿也能监测血糖！";
-                break;
-            case 5:
-                title = "特朗普好友 　华裔富商擬选印尼总统";
-                break;
-            default:
-                title = "特朗普好友 　华裔富商擬选印尼总统";
-        }
-
-        $scope.news.push({"id": i, "title": "Breaking News " + i + " " + title, "description": "Breaking News " + i});
-    }
-}]);
-

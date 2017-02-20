@@ -10,7 +10,7 @@
 
     <ion-content>
                 <ion-list>
-                    <ion-item ng-repeat="article in news" href="#/app/news/{{article.id}}">
+                    <ion-item ng-repeat="article in news" ng-click="clickBreakingNews({{$index}})">
                         <h2>{{article.title}}</h2>
                         <p>{{article.description}}</p>
                     </ion-item>

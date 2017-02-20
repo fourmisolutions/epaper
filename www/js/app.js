@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 
 (function(){
-var app = angular.module('epaper', ['ionic', 'epaper.controllers', 'tabSlideBox', 'gesture-pdf'])
+var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf'])
 
 app.run(function($ionicPlatform, $rootScope, $location, $ionicViewSwitcher, $ionicHistory) {
   $ionicPlatform.ready(function() {
@@ -85,7 +85,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
       })
 
       .state('app.news', {
-          url: '/news/:id',
+          url: '/news/',
+          params: {news: null},
           views: {
               'menuContent': {
                   templateUrl: 'templates/breakingnewsdetail.html'
@@ -101,102 +102,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
               }
           }
       });
-
-  /*.state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
-      }
-    })
-    .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
-  */
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/tabs');
 });
-
-    app.factory('ePaperService', function($http) {
-
-        var baseUrl = 'http://localhost:8080';
-        var ePaperFactory = {};
-
-        //POST login
-        var loginApiUrl = '/login';
-
-        ePaperFactory.login = function() {
-            return $http.post(baseUrl + loginApiUrl, data)
-                .then(function(status, headers){
-                    console.log("Post successfully");
-                },function (error) {
-                    console.log(error.message);
-                });
-        }
-
-
-        //GET /news/breaking
-        var breakingApiUrl = '/news/breaking';
-
-        ePaperFactory.getBreakingNews = function() {
-            return $http.get(baseUrl + breakingApiUrl)
-                .then(function(response) {
-                    return response;
-                });
-        }
-
-        //GET /news/categories
-        var categoriesApiUrl = '/news/categories';
-
-        ePaperFactory.getCategories = function() {
-            return $http.get(baseUrl + categoriesApiUrl)
-                .then(function(response) {
-                    return response;
-                });
-        }
-
-        //GET /news/today/{category}/{pageNo}news.pdf
-        var newsPDFApiUrl = '/news/today/';
-
-        ePaperFactory.getNewsPDF = function(category, pageNo) {
-            return $http.get(baseUrl + newsPDFApiUrl + category + "/" + pageNo + "news.pdf")
-                .then(function(response) {
-                    return response;
-                });
-        }
-
-        //GET /news/today/{category}/{pageNo}thumbnail.png
-        var newsThumbnailApiUrl = '/news/today/';
-
-        ePaperFactory.getNewsThumbnail = function(category, pageNo) {
-            return $http.get(baseUrl + newsThumbnailApiUrl + category + "/" + pageNo + "thumbnail.png")
-                .then(function(response) {
-                    return response;
-                });
-        }
-
-        return ePaperFactory;
-
-
-    });
-
-
-
 }());
