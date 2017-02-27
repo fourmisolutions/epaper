@@ -18,7 +18,7 @@ app.factory('ePaperService', function($http, $q) {
 
     //GET /news/breaking - online version
     var breakingApiUrl = '/seehua_breaking_news.json';
-
+    var breakingNews = []
     ePaperService.getBreakingNews = function() {
         
         var deferred = $q.defer();
@@ -99,7 +99,7 @@ app.factory('ePaperService', function($http, $q) {
         if(newsPdf.length > 0) {
             deferred.resolve(newsPdf);
         } else {
-            return $http.get(newsPDFApiUrl)
+            return $http.get(baseUrl + newsPDFApiUrl)
                 .then(function(response) {
                     //var newspdf = response.data;
                     newsPdf = response.data;
