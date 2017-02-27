@@ -1,16 +1,10 @@
-<ion-view view-title="诗华 Mobile EPaper" ng-controller="DetailController">
+<ion-view view-title="诗华 Mobile EPaper" ng-controller="PdfCtrl">
     <ion-nav-bar class="bar-assertive">
         <ion-nav-back-button>
         </ion-nav-back-button>
     </ion-nav-bar>
     <ion-content>
-        <!--<div>
-            <h1>Breaking News!</h1>
-            <h3>{{title}}</h3>
-            <p><img ng-src="{{imageUrl}}" width="100%"></p>
-            <p>{{description}}</p>
-        </div>-->
-        <div ng-controller="PdfCtrl as pCtrl">
+		<div>
             <pdf-gesture ng-pdf-options="options"></pdf-gesture>
         </div>
     </ion-content>
