@@ -2,16 +2,46 @@ var app = angular.module('epaper.controllers', []);
 
 app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$q", "$location", "$window", '$timeout', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', 'ePaperService',
     function($rootScope, $scope, $state, $stateParams, $q, $location, $window, $timeout, $ionicSlideBoxDelegate, $ionicScrollDelegate, ePaperService){
-
         const no_of_images_per_tab = 4; //javascript const	
-	
         $scope.pdf_number = 0;
         $scope.pdf_thumbnail = [];
 		
 		var k = 0;
 		
 		//$window.localstorage.clear();
-
+        $scope.currentPage = 0;
+        $scope.pageSize = 4;
+        $scope.categories = [];
+        $scope.menus = [];
+        ePaperService.getCategories().then(function(categories){
+            $scope.categories = categories;
+            $scope.tabs = [];
+            var pageSize = 4;
+            $scope.images = [];
+            for(var j=0;j < categories.getTotal();j++)
+			{
+                var category = categories.getCategory(j);
+				for(var pageNo = 0 ; pageNo < category.getNoOfPages(pageSize); pageNo++)
+				{
+                    var categoryPageNo = categories.getPageNo(j, pageNo, pageSize);
+                    var tab = {id: categoryPageNo, "category": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize)};
+					$scope.tabs.push(tab);
+                    tab["href"] = "#/app/tabs/" + (categories.getPageNo(j, pageNo, pageSize)+1);
+                    $scope.menus.push(tab);
+                    $scope.images[categoryPageNo] = [];
+                    for( i = 0; i < pageSize; i++) {
+                        var news = category.getNews(pageNo * pageSize + i);
+                        if(news != undefined) {
+                            $scope.images[categoryPageNo].push(news);
+                        }
+                    }
+				}
+			}
+            $timeout(function(){
+                $scope.$apply();
+            });
+            
+        });
         
         if(!$window.localStorage.getItem("pdf_thumbnail"))
 		{		
@@ -52,13 +82,13 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$
 		
 		//console.log(categories_temp);
 		
-		$scope.categories = Array.from(new Set(categories_temp));
-		$scope.categories[-1] = 'off';
+		//$scope.categories = Array.from(new Set(categories_temp));
 		
 		//console.log($scope.categories);
 		
 		var category_count = [];					
 			
+        /*
 		for(var j=0;j<$scope.categories.length;j++)
 		{				
 			var count = 0 ;	
@@ -74,7 +104,7 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$
 			category_count[$scope.categories[j]] = count;
 			
 		}
-		
+		*/
 		
 		
 		category_count['off'] = 0;
@@ -103,7 +133,7 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$
 
         //Load and initialize tabs
         $scope.tabs = [];
-
+        
         $scope.loadSlideTabs = function() {			
 			
             for(var j=0;j<$scope.categories.length;j++)
@@ -121,63 +151,33 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$
 						
 
         }
-        $scope.loadSlideTabs();
+        //$scope.loadSlideTabs();
 		
 		//console.log($scope.tabs);
 
         $scope.onSlideMove = function(data){
+            console.log(data);
             console.log("You have selected " + data.index + " tab");
         };
-
-
-        var Create2DArray = function(rows) {
-            var arr = [];
-
-            for (var i=0;i<rows;i++) {
-                arr[i] = [];
-            }
-
-            return arr;
-        }
-
-        $scope.images = Create2DArray(tabs_grand_total);
-
-        $scope.loadThumbnails = function(tab, category){ 
-		
-			var start = 0;
+        
+        $scope.loadThumbnails = function(tab){ 
+            var start = 0;
 			var end = 0;		
-			
-			
-			for(var j=0;j<$scope.categories.length;j++)
+            var pageSize = 4;
+			for(var j=0;j<$scope.categories.getTotal();j++)
 			{	
-				
-				for(var i=0;i<$scope.no_of_tabs_by_category[$scope.categories[j]];i++)
+                var category = $scope.categories.getCategory(j);
+				for(var i = 0 ;i< category.getTotal() ;i++)
 				{
-					start = tab.id * no_of_images_per_tab + 1;
-					end = start + 3;
-				}
-				
-				$scope.images[tab.id].push({id: i, label: category+i, src: $scope.pdf_thumbnail[k].thumbnailURL, url: $scope.pdf_thumbnail[k].pdfURL});
-				
-			}	
-			
-			
-            
-			for(var i = start; i <= end; i++) 
-			{
-                //var detailurl = "#app/detail/:{url}";
-
-                /*if(i <= 5){
-                    detailurl = "#app/detailwithbreaking/:id";
+                    var news = category.getNews(i);
+					$scope.images[tab.id].push({id: i, src: news.thumbnailURL, url: news.pdfURL});
                 }
-                else {
-                    detailurl = "#app/detail/";
-                }*/
-                
-
-            }
-
-         }
+            }	
+            
+            $timeout(function(){
+                $scope.$apply();
+            });
+        }
 
         var loadBreakingNews = function() {
             $state.go("app.breakingnews");
@@ -206,7 +206,6 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$
 
 
         $scope.goTo = function(index){
-            console.log(index);
             var handle = $ionicSlideBoxDelegate.$getByHandle('myTab');
             $ionicSlideBoxDelegate.slide(index)
         }
