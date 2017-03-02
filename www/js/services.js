@@ -64,6 +64,51 @@ app.factory('Categories', function(Category){
     }
     return Categories
 });
+<<<<<<< HEAD
+=======
+
+app.factory('Category', function(){
+    function Category(categoryId, news) {
+        this.categoryId = categoryId;
+        this.news = news;
+    }
+    Category.build = function(categoryId, data) {
+        var arrayOfNews = [];
+        angular.forEach(data, function(news, key) {
+            if(news.category == categoryId) {
+                arrayOfNews.push(news);
+            }
+        });
+        return new Category(categoryId, arrayOfNews);
+    }
+    
+    Category.prototype.getNewsStartFrom = function (currentPage, pageSize) {
+        console.log(currentPage, pageSize);
+        var start = currentPage * pageSize;
+        var end = start + pageSize;
+        return this.news.slice(start,end);
+    };
+    Category.prototype.getTotal = function() {
+        return this.news.length;
+    }
+    Category.prototype.getNoOfPages = function(pageSize) {
+        return Math.ceil(this.getTotal()/pageSize);  
+    }
+    Category.prototype.getStart = function(pageNo, pageSize) {
+        return pageNo * pageSize + 1;
+    }
+    Category.prototype.getEnd = function(pageNo, pageSize) {
+        return this.getStart(pageNo, pageSize) + pageSize - 1;
+    }
+    Category.prototype.getNews = function(index) {
+        return this.news[index];
+    }
+    return Category;
+});
+
+
+app.factory('ePaperService', function($http, $q, Category, Categories) {
+>>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
 
 app.factory('Category', function(){
     function Category(categoryId, news) {
@@ -124,8 +169,12 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
 
 
     //GET /news/breaking - online version
+<<<<<<< HEAD
 	var baseUrl = 'http://shetest.theborneopost.com';
     var breakingApiUrl = 'http://shetest.theborneopost.com/seehua_breaking_news.json';
+=======
+    var breakingApiUrl = '/seehua_breaking_news.json';
+>>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
     var breakingNews = [];
     ePaperService.getBreakingNews = function() {
         var deferred = $q.defer();
@@ -171,6 +220,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
     }
     */
 
+<<<<<<< HEAD
     //GET /news/categories    
 	var categoriesApiUrl = 'http://shetest.theborneopost.com/seehua_pdf.json';
 
@@ -182,6 +232,15 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
 	
 	ePaperService.getCategories = function() {
         return Categories.build(JSON.parse($window.localStorage.getItem("pdf_thumbnail")));
+=======
+    //GET /news/categories
+    var categoriesApiUrl = '/seehua_pdf.json';
+
+    ePaperService.getCategories = function() {
+        return $http.get(baseUrl + categoriesApiUrl).then(function(response) {
+            return Categories.build(response.data);
+        });
+>>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
     }
 	
 
@@ -210,7 +269,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
         if(newsPdf.length > 0) {
             deferred.resolve(newsPdf);
         } else {
-            return $http.get(newsPDFApiUrl)
+            return $http.get(baseUrl + newsPDFApiUrl)
                 .then(function(response) {
                     //var newspdf = response.data;
                     newsPdf = response.data;

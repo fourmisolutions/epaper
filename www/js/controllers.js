@@ -1,11 +1,17 @@
 var app = angular.module('epaper.controllers', []);
 
+<<<<<<< HEAD
 app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$q", "$location", "$window", 'Categories', '$timeout', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', 'ePaperService', 'ConnectivityMonitor',
     function($rootScope, $scope, $state, $stateParams, $q, $location, $window, Categories, $timeout, $ionicSlideBoxDelegate, $ionicScrollDelegate, ePaperService, ConnectivityMonitor){
         
 		//ConnectivityMonitor.isOnline();	
 	
 		const pageSize = 4; 
+=======
+app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$q", "$location", "$window", '$timeout', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', 'ePaperService',
+    function($rootScope, $scope, $state, $stateParams, $q, $location, $window, $timeout, $ionicSlideBoxDelegate, $ionicScrollDelegate, ePaperService){
+        const no_of_images_per_tab = 4; //javascript const	
+>>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
         $scope.pdf_number = 0;
         $scope.pdf_thumbnail = [];	
         $scope.currentPage = 0;
@@ -15,7 +21,48 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$
 		$scope.tabs = [];
         $scope.images = [];		
 		
+<<<<<<< HEAD
 		if($window.localStorage.getItem("pdf_thumbnail") == null) //does not exist in localstorage
+=======
+		var k = 0;
+		
+		//$window.localstorage.clear();
+        $scope.currentPage = 0;
+        $scope.pageSize = 4;
+        $scope.categories = [];
+        $scope.menus = [];
+        ePaperService.getCategories().then(function(categories){
+            $scope.categories = categories;
+            $scope.tabs = [];
+            var pageSize = 4;
+            $scope.images = [];
+            for(var j=0;j < categories.getTotal();j++)
+			{
+                var category = categories.getCategory(j);
+				for(var pageNo = 0 ; pageNo < category.getNoOfPages(pageSize); pageNo++)
+				{
+                    var categoryPageNo = categories.getPageNo(j, pageNo, pageSize);
+                    var tab = {id: categoryPageNo, "category": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize)};
+					$scope.tabs.push(tab);
+                    tab["href"] = "#/app/tabs/" + (categories.getPageNo(j, pageNo, pageSize)+1);
+                    $scope.menus.push(tab);
+                    $scope.images[categoryPageNo] = [];
+                    for( i = 0; i < pageSize; i++) {
+                        var news = category.getNews(pageNo * pageSize + i);
+                        if(news != undefined) {
+                            $scope.images[categoryPageNo].push(news);
+                        }
+                    }
+				}
+			}
+            $timeout(function(){
+                $scope.$apply();
+            });
+            
+        });
+        
+        if(!$window.localStorage.getItem("pdf_thumbnail"))
+>>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
 		{		
 			//Check network status - ON/OFF
 			
@@ -109,14 +156,150 @@ app.controller("TabsCtrl", ['$rootScope', "$scope", "$state", "$stateParams", "$
 		$scope.clickThumbnail = function(url) {
 			console.log(url);
 			$state.go('app.detail', {url: url});    
+<<<<<<< HEAD
 		};	
 
 
+=======
+		};
+		
+		//Read the distinct categories from api
+		var categories_temp = [];
+		for(var i=0;i<$scope.pdf_thumbnail.length;i++)
+		{
+			categories_temp.push($scope.pdf_thumbnail[i].category);
+		}
+		
+		
+		
+		//console.log(categories_temp);
+		
+		//$scope.categories = Array.from(new Set(categories_temp));
+		
+		//console.log($scope.categories);
+		
+		var category_count = [];					
+			
+        /*
+		for(var j=0;j<$scope.categories.length;j++)
+		{				
+			var count = 0 ;	
+			for(var i=0;i<$scope.pdf_thumbnail.length;i++)
+			{
+				
+				if($scope.pdf_thumbnail[i].category == $scope.categories[j])
+				{
+					count++;					
+				}						
+				
+			}
+			category_count[$scope.categories[j]] = count;
+			
+		}
+		*/
+		
+		
+		category_count['off'] = 0;
+		
+	    //console.log(category_count);
+		
+		$scope.total_pages_by_category = [];
+		$scope.no_of_tabs_by_category = [];
+		var tabs_grand_total = 0;
+		var cumulative_category_count = [];		
+		var cumulative_count = 0;
+		for(var i=0;i<$scope.categories.length;i++)
+		{
+			$scope.total_pages_by_category[$scope.categories[i]] = category_count[$scope.categories[i]];
+			$scope.no_of_tabs_by_category[$scope.categories[i]] = Math.ceil($scope.total_pages_by_category[$scope.categories[i]]/no_of_images_per_tab);
+			tabs_grand_total += Math.ceil($scope.total_pages_by_category[$scope.categories[i]]/no_of_images_per_tab);
+			//cumulative_count += category_count[$scope.categories[i]]; 
+			//cumulative_category_count[$scope.categories[i+1]] = cumulative_count;
+		}
+
+		//console.log($scope.total_pages_by_category);
+		//console.log($scope.no_of_tabs_by_category);
+		//console.log(tabs_grand_total);
+		//console.log(cumulative_category_count);		
+
+
+        //Load and initialize tabs
+        $scope.tabs = [];
+        
+        $scope.loadSlideTabs = function() {			
+			
+            for(var j=0;j<$scope.categories.length;j++)
+			{
+				//var offset = 0;
+				for(var i=0;i<$scope.no_of_tabs_by_category[$scope.categories[j]];i++)
+				{
+					//offset = cumulative_category_count[$scope.categories[j]];
+					var start = i*4+1;
+					var end = start + 3;
+					//console.log($scope.no_of_tabs_by_category[$scope.categories[j]]);
+					$scope.tabs.push({"id": i, "category": $scope.categories[j], "text": $scope.categories[j] + start + "-" + $scope.categories[j] + end, "description": "Tab " + (i+1)});
+				}
+			}
+						
+
+        }
+        //$scope.loadSlideTabs();
+		
+		//console.log($scope.tabs);
+>>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
 
         $scope.onSlideMove = function(data){
             console.log(data);
             console.log("You have selected " + data.index + " tab");
+<<<<<<< HEAD
         };	    	
+=======
+        };
+        
+        $scope.loadThumbnails = function(tab){ 
+            var start = 0;
+			var end = 0;		
+            var pageSize = 4;
+			for(var j=0;j<$scope.categories.getTotal();j++)
+			{	
+                var category = $scope.categories.getCategory(j);
+				for(var i = 0 ;i< category.getTotal() ;i++)
+				{
+                    var news = category.getNews(i);
+					$scope.images[tab.id].push({id: i, src: news.thumbnailURL, url: news.pdfURL});
+                }
+            }	
+            
+            $timeout(function(){
+                $scope.$apply();
+            });
+        }
+
+        var loadBreakingNews = function() {
+            $state.go("app.breakingnews");
+        }
+
+        //Load and initialize menu
+        $scope.menus = [];
+
+        $scope.loadMenu = function() {
+            
+			for(var j=0;j<$scope.categories.length;j++)
+			{			
+				for(var i=0;i<$scope.no_of_tabs_by_category[$scope.categories[j]];i++)
+				{
+					var start = i*4+1;
+					var end = start + 3;
+					$scope.menus.push({"id": i, "category": $scope.categories[j], "text": $scope.categories[j] + start + "-" + $scope.categories[j] + end, "href": "#/app/tabs/" + (i+1)});
+				}
+			}
+
+        }
+        $scope.loadMenu();
+
+        //-- end: Load and initialize menu
+	
+>>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
 
 
         $scope.goTo = function(index){
