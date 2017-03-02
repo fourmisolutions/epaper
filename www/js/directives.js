@@ -118,7 +118,6 @@
                             renderPage(i);
                         }
                     });
-                    console.log('container', container);
                 }
             };
 
@@ -150,9 +149,7 @@
                         pageWidthScale = clientRect.width / viewport.width;
                         scale = pageWidthScale;
                     }
-                    console.log(page);
                     viewport = page.getViewport(scale);
-                    console.log(viewport);
                     canvasWidth = viewport.width;
                     setCanvasDimensions(canvas[num - 1], viewport.width, viewport.height);
 
@@ -228,9 +225,7 @@
                     if (debug) {
                         console.log('pdfUrl value change detected: ', newVal);
                     }
-                    console.log(pdfLoaderTask);
                     if (pdfLoaderTask) {
-                        console.log(pdfLoaderTask);
                         //pdfLoaderTask.destroy().then(function () {
                             renderPDF();
                         //});
@@ -265,41 +260,36 @@
             $ionicGesture.on('release', function (e) {
                 pinch = 0;
             }, element);
-
-            $ionicGesture.on('pinchin', function (e) {
-                if (pinch) {
-                    if (scale > .4) {
-                        scale -= ((pinch - e.gesture.scale) / 2);
-                        console.log('scale: ' + scale);
-                        console.log('offset: ' + ((pinch - e.gesture.scale) / 4));
-                        zoom();
+            if(options.pinchin) {
+                $ionicGesture.on('pinchin', function (e) {
+                    if (pinch) {
+                        if (scale > .4) {
+                            scale -= ((pinch - e.gesture.scale) / 2);
+                            zoom();
+                            pinch = e.gesture.scale;
+                        } else {
+                            scale = .4;
+                            return;
+                        }
+                    } else
                         pinch = e.gesture.scale;
-                    } else {
-                        scale = .4;
-                        return;
-                    }
-                } else
-                    pinch = e.gesture.scale;
-                $ionicGesture.trigger('dragleft',{target: element});
-            }, element);
-            $ionicGesture.on('pinchout', function (e) {
-                if (pinch) {
-                    if (scale < 1.5) {
-                        scale += ((e.gesture.scale - pinch) / 2);
-                        console.log('scale: ' + scale);
-                        console.log('offset: ' + ((e.gesture.scale - pinch) / 4));
-                        zoom();
+                    $ionicGesture.trigger('dragleft',{target: element});
+                }, element);
+                $ionicGesture.on('pinchout', function (e) {
+                    if (pinch) {
+                        if (scale < 1.5) {
+                            scale += ((e.gesture.scale - pinch) / 2);
+                            zoom();
+                            pinch = e.gesture.scale;
+                        } else {
+                            scale = 1.5;
+                            return;
+                        }
+                    } else
                         pinch = e.gesture.scale;
-                    } else {
-                        scale = 1.5;
-                        return;
-                    }
-                } else
-                    pinch = e.gesture.scale;
-            }, element);
-
+                }, element);
+            }
             $ionicGesture.on('dragend', function (e) {
-                console.log('dragend');
                 if ((left + e.gesture.deltaX) < (windowWidth - canvasWidth)) {
                     left = windowWidth - canvasWidth;
                 } else if ((left + e.gesture.deltaX) > 0) {
@@ -309,7 +299,6 @@
             }, element);
 
             $ionicGesture.on('dragleft', function (e) {
-                console.log('dragleft');
                 if (!pdfDoc || ((left + e.gesture.deltaX) < (windowWidth - canvasWidth)))
                     return;
                 pageFit = false;
@@ -319,7 +308,6 @@
             }, element);
 
             $ionicGesture.on('dragright', function (e) {
-                console.log('dragright');
                 if (!pdfDoc || (left + e.gesture.deltaX) > 0)
                     return;
                 pageFit = false;

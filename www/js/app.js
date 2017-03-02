@@ -8,7 +8,6 @@
 
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading) {
         $ionicPlatform.ready(function() {
-			
 	
 			// Check for network connection
 			//Approach 1
@@ -62,7 +61,7 @@
 			*/
 			
 			document.addEventListener("deviceready", function () {
-
+                
 				$scope.network = $cordovaNetwork.getNetwork();
 				$scope.isOnline = $cordovaNetwork.isOnline();
 				$scope.$apply();
@@ -157,17 +156,30 @@
                 url: '/tabs',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/tabs.html'
+                        templateUrl: 'templates/tabs.html',
+                        controller: 'TabsCtrl'
+                    }
+                },
+                resolve : {
+                    categories : function(ePaperService) {
+                        return ePaperService.getCategories();
                     }
                 }
             })
 
 
             .state('app.detail', {
-                url: '/detail/:{url}',
+                url: '/detail/:categoryId/:pageNo',
+                
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/detailpdf.html'
+                        templateUrl: 'templates/detailpdf.html',
+                        controller: 'PdfCtrl',
+                    }
+                },
+                resolve: {
+                    news: function(ePaperService, $stateParams) {
+                        return  ePaperService.getNews($stateParams.categoryId, $stateParams.pageNo);
                     }
                 }
             })

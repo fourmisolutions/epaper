@@ -62,10 +62,20 @@ app.factory('Categories', function(Category){
         pageNo += categoryPageNo;
         return pageNo;
     }
+    Categories.prototype.getCategoryByCategoryId = function(categoryId) {
+        var category;
+        angular.forEach(this.categories, function(data) {
+            if(data.categoryId == categoryId) {
+                category = data;
+            }
+        });
+        return category;
+    }
+    Categories.prototype.getNews = function(categoryId, pageNo) {
+        return this.getCategoryByCategoryId(categoryId).getNewsByPageNo(pageNo);
+    }
     return Categories
 });
-<<<<<<< HEAD
-=======
 
 app.factory('Category', function(){
     function Category(categoryId, news) {
@@ -83,7 +93,6 @@ app.factory('Category', function(){
     }
     
     Category.prototype.getNewsStartFrom = function (currentPage, pageSize) {
-        console.log(currentPage, pageSize);
         var start = currentPage * pageSize;
         var end = start + pageSize;
         return this.news.slice(start,end);
@@ -103,56 +112,23 @@ app.factory('Category', function(){
     Category.prototype.getNews = function(index) {
         return this.news[index];
     }
-    return Category;
-});
-
-
-app.factory('ePaperService', function($http, $q, Category, Categories) {
->>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
-
-app.factory('Category', function(){
-    function Category(categoryId, news) {
-        this.categoryId = categoryId;
-        this.news = news;
-    }
-    Category.build = function(categoryId, data) {
-        var arrayOfNews = [];
-        angular.forEach(data, function(news, key) {
-            if(news.category == categoryId) {
-                arrayOfNews.push(news);
+    
+    Category.prototype.getNewsByPageNo = function(pageNo) {
+        var news = this.getNews(pageNo);
+        if(news != undefined && news.pageNo == pageNo) {
+            return news;
+        }
+        angular.forEach(this.news, function(data) {
+            if(data.pageNo == pageNo) {
+                news = data;
             }
         });
-        return new Category(categoryId, arrayOfNews);
-    }
-    
-    Category.prototype.getNewsStartFrom = function (currentPage, pageSize) {
-        console.log(currentPage, pageSize);
-        var start = currentPage * pageSize;
-        var end = start + pageSize;
-        return this.news.slice(start,end);
-    };
-    Category.prototype.getTotal = function() {
-        return this.news.length;
-    }
-    Category.prototype.getNoOfPages = function(pageSize) {
-        return Math.ceil(this.getTotal()/pageSize);  
-    }
-    Category.prototype.getStart = function(pageNo, pageSize) {
-        return pageNo * pageSize + 1;
-    }
-    Category.prototype.getEnd = function(pageNo, pageSize) {
-        return this.getStart(pageNo, pageSize) + pageSize - 1;
-    }
-    Category.prototype.getNews = function(index) {
-        return this.news[index];
+        return news;
     }
     return Category;
 });
-
 
 app.factory('ePaperService', function($http, $q, Category, Categories, $window) {
-
-    
     var ePaperService = {};
 
     //POST login
@@ -169,132 +145,29 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
 
 
     //GET /news/breaking - online version
-<<<<<<< HEAD
 	var baseUrl = 'http://shetest.theborneopost.com';
-    var breakingApiUrl = 'http://shetest.theborneopost.com/seehua_breaking_news.json';
-=======
     var breakingApiUrl = '/seehua_breaking_news.json';
->>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
     var breakingNews = [];
-    ePaperService.getBreakingNews = function() {
-        var deferred = $q.defer();
-
-        if(breakingNews.length > 0) {
-            deferred.resolve(breakingNews);
-        } else {
-            return $http.get(breakingApiUrl)
-                .then(function(response) {
-                    var news = response.data;
-                    breakingNews = news;
-                    return breakingNews;
-                });
-        }
-    }
-
-    //GET /news/breaking - local version
-    /*
-	var breakingApiUrl = '../api/seehua_breaking_news.json';
-    var breakingNews = [];
-    ePaperService.getBreakingNews = function() {
-
-        var deferred = $q.defer();
-
-        if(breakingNews.length > 0) {
-            deferred.resolve(breakingNews);
-        } else {
-            return $http.get(breakingApiUrl)
-                .then(function(response) {
-                    var news = response.data;
-                    breakingNews = news;					
-                    return breakingNews;
-                });
-        }
-    }
-	*/
-    
-    /*
-    ePaperService.getBreakingNewsById = function(id) {
-        return ePaperFactory.getBreakingNews().then(function(breakingNews){
-            return breakingNews[id];
+    ePaperService.getBreakingNews = function() {    
+        return $http.get(baseUrl + breakingApiUrl).then(function(response) {
+            return response.data;
         });
     }
-    */
 
-<<<<<<< HEAD
     //GET /news/categories    
-	var categoriesApiUrl = 'http://shetest.theborneopost.com/seehua_pdf.json';
-
-    /*ePaperService.getCategories = function() {
-        return $http.get(categoriesApiUrl).then(function(response) {
-            return Categories.build(response.data);
-        });
-    }*/
-	
-	ePaperService.getCategories = function() {
-        return Categories.build(JSON.parse($window.localStorage.getItem("pdf_thumbnail")));
-=======
-    //GET /news/categories
-    var categoriesApiUrl = '/seehua_pdf.json';
+	var categoriesApiUrl = '/seehua_pdf.json';
 
     ePaperService.getCategories = function() {
-        return $http.get(baseUrl + categoriesApiUrl).then(function(response) {
+        return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
             return Categories.build(response.data);
         });
->>>>>>> 8201eaeba3e4957125aa040502d5e4ff48b9fefa
     }
-	
-
-    //GET /news/today/{category}/{pageNo}news.pdf -- local version
-    
-    /*var newsPDFApiUrl = '/news/today/';
-
-    ePaperService.getNewsPDF = function(category, pageNo) {
-        return $http.get(baseUrl + newsPDFApiUrl + category + "/" + pageNo + "news.pdf")
-            .then(function(response) {
-                return response;
-            });
+    ePaperService.getNews = function(categoryId, pageNo) {
+        return ePaperService.getCategories().then(function(categories){
+           return categories.getNews(categoryId, pageNo);
+        });
     }
-	*/
-    
-
-    //GET /news/today/{category}/{pageNo}news.pdf --online version
-	
-    //var newsPDFApiUrl = '../api/seehua_pdf.json';
-	var newsPDFApiUrl = 'http://shetest.theborneopost.com/seehua_pdf.json';
-    var newsPdf = [];
-    ePaperService.getNewsPDF = function() {
-
-        var deferred = $q.defer();
-
-        if(newsPdf.length > 0) {
-            deferred.resolve(newsPdf);
-        } else {
-            return $http.get(baseUrl + newsPDFApiUrl)
-                .then(function(response) {
-                    //var newspdf = response.data;
-                    newsPdf = response.data;
-					console.log(newsPdf);
-                    return newsPdf;
-                });
-        }
-    }
-	
-
-    //GET /news/today/{category}/{pageNo}thumbnail.png
-    /*
-	var newsThumbnailApiUrl = '/news/today/';
-
-    ePaperService.getNewsThumbnail = function(category, pageNo) {
-        return $http.get(baseUrl + newsThumbnailApiUrl + category + "/" + pageNo + "thumbnail.png")
-            .then(function(response) {
-                return response;
-            });
-    }
-	*/
-
-    return ePaperService;
-
-
+	return ePaperService;
 });
 
 app.factory('ConnectivityMonitor', function($rootScope, $cordovaNetwork){

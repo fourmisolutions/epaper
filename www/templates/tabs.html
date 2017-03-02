@@ -1,4 +1,4 @@
-<ion-view title="诗华 Mobile EPaper" ng-controller="TabsCtrl">
+<ion-view title="诗华 Mobile EPaper">
     <ion-nav-bar class="bar-assertive">
         <ion-nav-buttons side="left">
             <!-- Toggle left side menu -->
@@ -10,26 +10,28 @@
             </a>
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-content scroll="false">
-        <tab-slide-box tabs-position="bottom" delegate-handle=="myTab" ng-repeat="category in categories">
+    <ion-content>
+        <tab-slide-box tabs-position="bottom" delegate-handle=="myTab">
             <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
                 <ion-slide ng-repeat="tab in tabs">
-                    <ion-scroll>
+                    <ion-content has-bouncing="true">
                         <div class="row">
-                            <div class="col col-50"  ng-repeat="image in images[tab.id].slice(0,2)">
-                                <a ng-click="clickThumbnail(image.pdfURL)">
-                                        <img class="full-image" ng-src="{{image.thumbnailURL}}">
+                            <div class="col col-50"  ng-repeat="news2 in tab.news">
+                                <a href="#/app/detail/{{tab.categoryId}}/{{news2.pageNo}}">
+                                        <img class="full-image" ng-src="{{news2.thumbnailURL}}">
                                  </a>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col col-50"  ng-repeat="image in images[tab.id].slice(2)">
-                                <a ng-click="clickThumbnail(image.pdfURL)">
-                                        <img class="full-image" ng-src="{{image.thumbnailURL}}">
+                            <div class="col col-50"  ng-repeat="news2 in tab.news.slice(2)">
+                                <a href="#/app/detail/{{tab.categoryId}}/{{news2.pageNo}}">
+                                        <img class="full-image" ng-src="{{news2.thumbnailURL}}">
                                  </a>
                             </div>
                         </div>
-                    </ion-scroll>
+                        <br/>
+                        <br/>
+                    </ion-content>
                 </ion-slide>
             </ion-slide-box>
             <div class="tsb-icons">
