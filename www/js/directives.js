@@ -43,9 +43,7 @@
             var container = angular.element('<div class="pdf-container"></container>');
             var buttonContainer = angular.element('<div class="button-container"></div>')
             container.append(buttonContainer);
-            var button = angular.element('<div class="button"><i class="icon ion-share"></i></div>');
-            buttonContainer.append(button);
-            button = angular.element('<div class="button"><i class="icon ion-arrow-shrink"></i></div>');
+            var button = angular.element('<div class="button"><i class="icon ion-arrow-shrink"></i></div>');
             var count = 0;
             button.bind('click', function (e) {
                 if (count == 0) {
@@ -57,7 +55,7 @@
                 }
             });
             buttonContainer.append(button);
-            button = angular.element('<div class="button"><i class="icon ion-plus-round"></i></div>');
+            button = angular.element('<div class="button" id="plus"><i class="icon ion-plus-round"></i></div>');
             button.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomIn();
@@ -68,7 +66,7 @@
                 }
             });
             buttonContainer.append(button);
-            button = angular.element('<div class="button"><i class="icon ion-minus-round"></i></div>');
+            button = angular.element('<div class="button" id="minus"><i class="icon ion-minus-round"></i></div>');
             button.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomOut();
@@ -77,6 +75,7 @@
                         count = 0;
                     }, 500);
                 }
+                
             });
 
             buttonContainer.append(button);
@@ -96,10 +95,11 @@
             var canvasWidth = 0;
             container.css('width', windowWidth + 'px');
             container.css('height', $window.innerHeight + 'px');
-
+            var zoomTime = 0;
             PDFJS.disableWorker = true;
 
             scope.pageFit = function () {
+                zoomTime = 0;
                 if (pdfDoc) {
                     pageFit = true;
                     scope.$apply(function () {
@@ -110,7 +110,8 @@
                 }
             };
             scope.zoomIn = function () {
-                if (pdfDoc) {
+                zoomTime += 1;
+                if (pdfDoc && zoomTime <= 4) {
                     pageFit = false;
                     scale += .2;
                     scope.$apply(function () {
@@ -122,6 +123,7 @@
             };
 
             scope.zoomOut = function () {
+                zoomTime -= 1;
                 if (pdfDoc) {
                     pageFit = false;
                     scale -= .2;
@@ -299,20 +301,30 @@
             }, element);
 
             $ionicGesture.on('dragleft', function (e) {
-                if (!pdfDoc || ((left + e.gesture.deltaX) < (windowWidth - canvasWidth)))
+                if (!pdfDoc)
                     return;
+                var margin = left + e.gesture.deltaX;
+                //exceed margin then margin left till max.
+                if((margin) < (windowWidth - canvasWidth)) {
+                    margin = windowWidth - canvasWidth;
+                }
                 pageFit = false;
                 scope.$apply(function () {
-                    container.css('margin-left', (left + e.gesture.deltaX) + 'px');
+                    container.css('margin-left', (margin) + 'px');
                 })
             }, element);
 
             $ionicGesture.on('dragright', function (e) {
-                if (!pdfDoc || (left + e.gesture.deltaX) > 0)
+                if (!pdfDoc)
                     return;
+                var margin = left + e.gesture.deltaX;
+                //exceed min margin then just stick to zero
+                if((margin) > 0) {
+                    margin = 0;
+                }
                 pageFit = false;
                 scope.$apply(function () {
-                    container.css('margin-left', (left + e.gesture.deltaX) + 'px');
+                    container.css('margin-left', margin + 'px');
                 })
             }, element);
         }

@@ -1,11 +1,3 @@
-app.filter('startFrom', function() {
-    return function(input, start) {
-        //console.log(input);
-        start = +start; //parse to int
-        return input.slice(start);
-    }
-});
-
 app.factory('Categories', function(Category){
     function Categories(categories) {
         this.categories = categories;
@@ -147,16 +139,14 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
     //GET /news/breaking - online version
 	var baseUrl = 'http://shetest.theborneopost.com';
     var breakingApiUrl = '/seehua_breaking_news.json';
-    var breakingNews = [];
     ePaperService.getBreakingNews = function() {    
-        return $http.get(baseUrl + breakingApiUrl).then(function(response) {
+        return $http.get(baseUrl + breakingApiUrl, {cache:true}).then(function(response) {
             return response.data;
         });
     }
 
     //GET /news/categories    
 	var categoriesApiUrl = '/seehua_pdf.json';
-
     ePaperService.getCategories = function() {
         return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
             return Categories.build(response.data);

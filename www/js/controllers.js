@@ -59,7 +59,7 @@ app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperServ
 		});
     };
 
-    this.onRenderPage = function (page) {
+    this.onPageRender = function (page) {
     };
     $scope.options = {};
     $scope.options = {
@@ -67,7 +67,7 @@ app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperServ
         onLoad: tCtrl.onLoad,
         onProgress: tCtrl.onProgress,
         onError: tCtrl.onError,
-        onRenderPage: tCtrl.onRenderPage,
+        onPageRender: tCtrl.onPageRender,
         httpHeaders: [],
         pinchin: false
     };
