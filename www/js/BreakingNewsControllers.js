@@ -6,14 +6,11 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
     $scope.breaking_news_number = 0;
     $scope.news = [];
 	
-	//$window.localStorage.clear();
-	
-	if(!$window.localStorage.getItem("breakingnews")) {
+	if($window.localStorage.getItem("breakingnews") == null) {
     $scope.getBreakingNews = function(){
         ePaperService.getBreakingNews()
             .then(function(response) {
                 $scope.news = response;
-				$window.localStorage.clear();
 				$window.localStorage.setItem("breakingnews",JSON.stringify(response));
             }, function (error) {
                 $scope.status = 'Unable to load breaking news data: ' + error.message;
@@ -41,7 +38,7 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$ionicLoadi
 
     this.onLoad = function (pag) {
 		$ionicLoading.show({
-		  template: '<ion-spinner></ion-spinner> Loading...',
+		  template: '<ion-spinner></ion-spinner> News Loading...',
 		  duration: 5000
 		}).then(function(){
 		   console.log("The loading indicator is now displayed");

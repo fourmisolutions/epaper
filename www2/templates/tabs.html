@@ -1,0 +1,91 @@
+<ion-view title="诗华 Mobile EPaper" ng-controller="TabsCtrl">
+    <ion-nav-bar class="bar-assertive">
+        <ion-nav-buttons side="left">
+            <!-- Toggle left side menu -->
+            <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a href="#/app/breakingnewslist" class="button">
+                即时新闻
+            </a>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content scroll="false">
+        <tab-slide-box tabs-position="bottom" delegate-handle=="myTab" ng-repeat="category in categories">
+            <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
+                <ion-slide ng-init="loadThumbnails(tab,'A')" ng-repeat="tab in tabs | filter: { category: 'A'}">
+                    <ion-scroll direction="y">
+                        <div id="tab.id" class="row" ng-repeat="image in images[tab.id] | limitTo: 3" ng-if="$even">
+                            <div class="col col-200" ng-class="{thumbnail : (($index == 0 || 2) && (tab.id == 0)) || (($index == 0) && (tab.id == 1))}">
+                                    <img ng-class="{smallone : (($index == 0 || 2) && (tab.id == 0)) || (($index == 0) && (tab.id == 1))}" src="../img/breakingnews.gif" width="50px" id="smallone" ng-if="tab.id == 0 || (($index == 0) && (tab.id == 1))">
+                                    <!--<a href="{{images[tab.id][$index].url}}" ng-click="clickThumbnail({{$index}})">-->
+									<a ng-click="clickThumbnail('{{images[tab.id][$index].url}}')">
+                                        <img ng-class="{thumbnailbig : (($index == 0 || 2) && (tab.id == 0)) || (($index == 0) && (tab.id == 1))}" ng-src="{{images[tab.id][$index].src}}" width="100%">
+                                    </a>
+                            </div>
+                            <div class="col col-200" ng-class="{thumbnail : (($index+1 == 1 || 3) && (tab.id == 0))}">
+
+                                    <img ng-class="{smallone : ($index+1 == 1 || 3) && (tab.id == 0)}" src="../img/breakingnews.gif" width="50px" id="smallone" ng-if="tab.id == 0">
+                                    <!--<a href="{{images[tab.id][$index+1].url}}">-->
+									<a ng-click="clickThumbnail('{{images[tab.id][$index].url}}')">
+                                        <img ng-class="{thumbnailbig : ($index+1 == 1 || 3) && (tab.id == 0)}" ng-src="{{images[tab.id][$index+1].src}}" width="100%">
+                                    </a>
+                            </div>
+                        </div>
+
+                    </ion-scroll>
+                </ion-slide>
+				
+                <ion-slide ng-init="loadThumbnails(tab,'B')" ng-repeat="tab in tabs | filter: { category: 'B'}">
+                    <ion-scroll direction="y">
+                        <div class="row" ng-repeat="image in images[tab.id] | limitTo: 3" ng-if="$even">
+                            <div class="col col-200">
+                                <div>
+                                    <a href="{{images[tab.id][$index].url}}">
+                                        <img ng-src="{{images[tab.id][$index].src}}" width="100%">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col col-200">
+                                <div>
+                                    <a href="{{images[tab.id][$index+1].url}}">
+                                        <img ng-src="{{images[tab.id][$index+1].src}}" width="100%">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </ion-scroll>
+                </ion-slide>
+				
+				<ion-slide ng-init="loadThumbnails(tab,'C')" ng-repeat="tab in tabs | filter: { category: 'C'}">
+                    <ion-scroll direction="y">
+                        <div class="row" ng-repeat="image in images[tab.id] | limitTo: 3" ng-if="$even">
+                            <div class="col col-200">
+                                <div>
+                                    <a href="{{images[tab.id][$index].url}}">
+                                        <img ng-src="{{images[tab.id][$index].src}}" width="100%">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col col-200">
+                                <div>
+                                    <a href="{{images[tab.id][$index+1].url}}">
+                                        <img ng-src="{{images[tab.id][$index+1].src}}" width="100%">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </ion-scroll>
+                </ion-slide>				
+				
+            </ion-slide-box>
+            <div class="tsb-icons">
+                <div class="tsb-ic-wrp">
+                    <ion-scroll direction="x" class="tsb-hscroll">
+                        <a href="javascript:;" class="{{tab.icon}}" ng-repeat="tab in tabs" on-finish-render="test()">{{tab.text}}</a>
+                    </ion-scroll>
+                </div>
+            </div>
+        </tab-slide-box>
+    </ion-content>
+</ion-view>

@@ -4,7 +4,7 @@
 // 'starter.controllers' is found in controllers.js
 
 (function(){
-    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngProgress'])
+    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngProgress', 'ngCordova'])
 
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading) {
         $ionicPlatform.ready(function() {
@@ -29,8 +29,10 @@
 			}
 			*/
 			
+			// Check for network connection
 			//Approach 2
-			/*function checkConnection() {
+			/*
+			function checkConnection() {
 			var networkState = navigator.connection.type;
 
 			var states = {};
@@ -54,9 +56,37 @@
 
 				function onOffline() {
 				   // Handle the offline event
-				   alert('you are offline');
+				   alert('You are offline. Please connect to network to browse.');
 				}
-			})*/
+			})
+			*/
+			
+			document.addEventListener("deviceready", function () {
+
+				$scope.network = $cordovaNetwork.getNetwork();
+				$scope.isOnline = $cordovaNetwork.isOnline();
+				$scope.$apply();
+				
+				// listen for Online event
+				$rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+					$scope.isOnline = true;
+					$scope.network = $cordovaNetwork.getNetwork();
+					
+					$scope.$apply();
+				})
+
+				// listen for Offline event
+				$rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+					console.log("got offline");
+					$scope.isOnline = false;
+					$scope.network = $cordovaNetwork.getNetwork();
+					
+					$scope.$apply();
+				})
+
+		  }, false);
+			
+			//==end Check for network connection
 
             $rootScope.$on('loading:show', function () {
 			  $ionicLoading.show({
@@ -169,6 +199,7 @@
                     }
                 }
             });
+			
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/tabs');
     });
