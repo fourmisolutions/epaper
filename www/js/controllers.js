@@ -14,10 +14,14 @@ function getTabs(categories) {
     }
     return tabs;
 }
-app.controller("MenuCtrl", ["$scope","ePaperService", function($scope, ePaperService){
+app.controller("MenuCtrl", ["$scope","ePaperService",'$ionicSlideBoxDelegate', function($scope, ePaperService, $ionicSlideBoxDelegate){
     ePaperService.getCategories().then(function(categories){
         $scope.tabs = getTabs(categories);
-    })
+    })    
+    $scope.goTo = function(index){
+        var handle = $ionicSlideBoxDelegate.$getByHandle('myTab');
+        $ionicSlideBoxDelegate.slide(index)
+    }
 }]);
 
 app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate',
