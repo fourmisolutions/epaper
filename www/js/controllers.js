@@ -11,12 +11,16 @@ function getTabs(categories) {
             var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
             tabs.push(tab);
         }
+		
     }
+	console.log(tabs);
     return tabs;
 }
 app.controller("MenuCtrl", ["$scope","ePaperService", function($scope, ePaperService){
     ePaperService.getCategories().then(function(categories){
+		console.log(categories);
         $scope.tabs = getTabs(categories);
+		console.log($scope.tabs);
     })
 }]);
 
@@ -27,7 +31,8 @@ app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegat
 			$state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
 		};
         $scope.goTo = function(index){
-            var handle = $ionicSlideBoxDelegate.$getByHandle('myTab');
+            console.log(index);
+			var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
             $ionicSlideBoxDelegate.slide(index)
         }
 		$scope.loadBreakingNews = function() {
@@ -88,11 +93,6 @@ app.controller("MainCtrl", ['$rootScope', "$scope", "$stateParams", "$q", "$loca
             handle.anchorScroll(true);  // 'true' for animation
         };
     }]);
-
-
-
-
-
 
 
 app.controller("DetailController", function($scope, $stateParams) {

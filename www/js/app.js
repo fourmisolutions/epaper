@@ -4,7 +4,7 @@
 // 'starter.controllers' is found in controllers.js
 
 (function(){
-    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngProgress', 'ngCordova'])
+    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
 
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading) {
         $ionicPlatform.ready(function() {
@@ -60,7 +60,7 @@
 			})
 			*/
 			
-			document.addEventListener("deviceready", function () {
+			/*document.addEventListener("deviceready", function () {
                 
 				$scope.network = $cordovaNetwork.getNetwork();
 				$scope.isOnline = $cordovaNetwork.isOnline();
@@ -84,6 +84,7 @@
 				})
 
 		  }, false);
+		  */
 			
 			//==end Check for network connection
 
