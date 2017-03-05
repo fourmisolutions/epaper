@@ -141,17 +141,17 @@
                 url: '/app',
                 abstract: true,
                 templateUrl: 'templates/menu.html',
-                controller: 'AppCtrl'
+                controller: 'MenuCtrl'
             })
 
-            .state('app.thumbnail', {
+            /*.state('app.thumbnail', {
                 url: '/thumbnail',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/thumbnail.html'
                     }
                 }
-            })
+            })*/
 
             .state('app.tabs', {
                 url: '/tabs',

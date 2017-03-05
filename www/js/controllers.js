@@ -16,12 +16,22 @@ function getTabs(categories) {
 	console.log(tabs);
     return tabs;
 }
-app.controller("MenuCtrl", ["$scope","ePaperService", function($scope, ePaperService){
-    ePaperService.getCategories().then(function(categories){
-		console.log(categories);
-        $scope.tabs = getTabs(categories);
-		console.log($scope.tabs);
-    })
+app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
+	function($scope, ePaperService, $ionicSlideBoxDelegate){
+		ePaperService.getCategories().then(function(categories){
+			console.log(categories);
+			$scope.tabs = getTabs(categories);
+			console.log($scope.tabs);		
+			
+		});
+		
+		$scope.goTo = function(index){
+			console.log(index);
+			var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
+			$ionicSlideBoxDelegate.slide(index);
+		}
+		
+		
 }]);
 
 app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate',
@@ -79,10 +89,11 @@ app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperServ
 
 
 }]);
+app.controller("AppCtrl", ["$scope", 
+	function($scope){
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-
-});
+		
+}]);
 
 
 app.controller("MainCtrl", ['$rootScope', "$scope", "$stateParams", "$q", "$location", "$window", '$timeout', '$ionicScrollDelegate',
