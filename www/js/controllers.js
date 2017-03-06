@@ -13,7 +13,6 @@ function getTabs(categories) {
         }
 		
     }
-	console.log(tabs);
     return tabs;
 }
 app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
@@ -35,7 +34,8 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate",
 }]);
 
 app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate',
-    function( $scope, $state, categories, $ionicScrollDelegate){
+    function( $scope, $state, categories, $ionicScrollDelegate){		
+		
 		$scope.tabs = getTabs(categories);
 		$scope.clickThumbnail = function(categoryId, pageNo) {
 			$state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    

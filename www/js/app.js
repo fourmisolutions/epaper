@@ -20,17 +20,17 @@
 			// $ionicPlatform.ready(function() {
 			//  });
 			
-			 if ($cordovaNetwork.isOffline()) {
+			if ($cordovaNetwork.isOffline()) {
 
 				$ionicPopup.confirm({
 
 				title: "Internet is not working",
 
-				content: "Internet is not working on your device."
+				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
 
-			});
+				});
 
-		}
+			}
 
 
 
