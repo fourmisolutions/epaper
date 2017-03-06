@@ -4,90 +4,44 @@
 // 'starter.controllers' is found in controllers.js
 
 (function(){
-    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngProgress', 'ngCordova'])
+    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
 
-    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading) {
+    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork) {
         $ionicPlatform.ready(function() {
 	
-			// Check for network connection
-			//Approach 1
-			//cordova plugin add cordova-plugin-network-information
-			/*
-			if(window.Connection) {
-			  if(navigator.connection.type == Connection.NONE) {
+			// Check for network connection		
+			// Before call plugin you must check that device is ready or not, we have two ways to check that device ready.
+
+			//document.addEventListener("deviceready", function () {
+			//  }, false);
+
+			// OR with IONIC
+			
+			// $ionicPlatform.ready(function() {
+			//  });
+			
+			if ($cordovaNetwork.isOffline()) {
+
 				$ionicPopup.confirm({
-				  title: 'No Internet Connection',
-				  content: 'Sorry, no Internet connectivity detected. Please reconnect and try again.'
-				})
-				.then(function(result) {
-				  if(!result) {
-					ionic.Platform.exitApp();
-				  }
+
+				title: "Internet is not working",
+
+				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
+
 				});
-			  }
+
 			}
-			*/
+
+
+
 			
-			// Check for network connection
-			//Approach 2
-			/*
-			function checkConnection() {
-			var networkState = navigator.connection.type;
-
-			var states = {};
-			states[Connection.UNKNOWN]  = 'Unknown connection';
-			states[Connection.ETHERNET] = 'Ethernet connection';
-			states[Connection.WIFI]     = 'WiFi connection';
-			states[Connection.CELL_2G]  = 'Cell 2G connection';
-			states[Connection.CELL_3G]  = 'Cell 3G connection';
-			states[Connection.CELL_4G]  = 'Cell 4G connection';
-			states[Connection.CELL]     = 'Cell generic connection';
-			states[Connection.NONE]     = 'No network connection';
-
-				console.log('Connection type: ' + states[networkState]);
-				}
-				$interval(function(){
-					checkConnection();
-				}, 5000)
-
-
-				document.addEventListener("offline", onOffline, false);
-
-				function onOffline() {
-				   // Handle the offline event
-				   alert('You are offline. Please connect to network to browse.');
-				}
-			})
-			*/
 			
-			document.addEventListener("deviceready", function () {
-                
-				$scope.network = $cordovaNetwork.getNetwork();
-				$scope.isOnline = $cordovaNetwork.isOnline();
-				$scope.$apply();
-				
-				// listen for Online event
-				$rootScope.$on('$cordovaNetwork:online', function(event, networkState){
-					$scope.isOnline = true;
-					$scope.network = $cordovaNetwork.getNetwork();
-					
-					$scope.$apply();
-				})
-
-				// listen for Offline event
-				$rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
-					console.log("got offline");
-					$scope.isOnline = false;
-					$scope.network = $cordovaNetwork.getNetwork();
-					
-					$scope.$apply();
-				})
-
-		  }, false);
+			
 			
 			//==end Check for network connection
 
-            $rootScope.$on('loading:show', function () {
+            /*
+			$rootScope.$on('loading:show', function () {
 			  $ionicLoading.show({
 				template: '<ion-spinner></ion-spinner> Loading ...'
 			  })
@@ -106,6 +60,7 @@
 				  console.log('done');
 				  $rootScope.$broadcast('loading:hide');
 			});
+			*/
 			
 			$rootScope.$on("$locationChangeStart", function(event, next, current){
                 $rootScope.error = null;
@@ -140,17 +95,17 @@
                 url: '/app',
                 abstract: true,
                 templateUrl: 'templates/menu.html',
-                controller: 'AppCtrl'
+                controller: 'MenuCtrl'
             })
 
-            .state('app.thumbnail', {
+            /*.state('app.thumbnail', {
                 url: '/thumbnail',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/thumbnail.html'
                     }
                 }
-            })
+            })*/
 
             .state('app.tabs', {
                 url: '/tabs',

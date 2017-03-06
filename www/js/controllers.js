@@ -11,27 +11,38 @@ function getTabs(categories) {
             var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
             tabs.push(tab);
         }
+		
     }
     return tabs;
 }
-app.controller("MenuCtrl", ["$scope","ePaperService",'$ionicSlideBoxDelegate', function($scope, ePaperService, $ionicSlideBoxDelegate){
-    ePaperService.getCategories().then(function(categories){
-        $scope.tabs = getTabs(categories);
-    })    
-    $scope.goTo = function(index){
-        var handle = $ionicSlideBoxDelegate.$getByHandle('myTab');
-        $ionicSlideBoxDelegate.slide(index)
-    }
+app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
+	function($scope, ePaperService, $ionicSlideBoxDelegate){
+		ePaperService.getCategories().then(function(categories){
+			console.log(categories);
+			$scope.tabs = getTabs(categories);
+			console.log($scope.tabs);		
+			
+		});
+		
+		$scope.goTo = function(index){
+			console.log(index);
+			var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
+			$ionicSlideBoxDelegate.slide(index);
+		}
+		
+		
 }]);
 
 app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate',
-    function( $scope, $state, categories, $ionicScrollDelegate){
+    function( $scope, $state, categories, $ionicScrollDelegate){		
+		
 		$scope.tabs = getTabs(categories);
 		$scope.clickThumbnail = function(categoryId, pageNo) {
 			$state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
 		};
         $scope.goTo = function(index){
-            var handle = $ionicSlideBoxDelegate.$getByHandle('myTab');
+            console.log(index);
+			var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
             $ionicSlideBoxDelegate.slide(index)
         }
 		$scope.loadBreakingNews = function() {
@@ -78,10 +89,11 @@ app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperServ
 
 
 }]);
+app.controller("AppCtrl", ["$scope", 
+	function($scope){
 
-app.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-
-});
+		
+}]);
 
 
 app.controller("MainCtrl", ['$rootScope', "$scope", "$stateParams", "$q", "$location", "$window", '$timeout', '$ionicScrollDelegate',
@@ -92,11 +104,6 @@ app.controller("MainCtrl", ['$rootScope', "$scope", "$stateParams", "$q", "$loca
             handle.anchorScroll(true);  // 'true' for animation
         };
     }]);
-
-
-
-
-
 
 
 app.controller("DetailController", function($scope, $stateParams) {

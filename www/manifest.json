@@ -1,7 +1,7 @@
 
 {
-  "name": "My Ionic App",
-  "short_name": "My Ionic App",
+  "name": "See Hua EPaper",
+  "short_name": "See Hua EPaper",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{

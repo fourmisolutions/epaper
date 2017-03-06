@@ -120,7 +120,7 @@ app.factory('Category', function(){
     return Category;
 });
 
-app.factory('ePaperService', function($http, $q, Category, Categories, $window) {
+app.factory('ePaperService', function($http, $q, Category, Categories, $window, $ionicPopup, $cordovaNetwork) {
     var ePaperService = {};
 
     //POST login
@@ -139,7 +139,19 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
     //GET /news/breaking - online version
 	var baseUrl = 'http://shetest.theborneopost.com';
     var breakingApiUrl = '/seehua_breaking_news.json';
-    ePaperService.getBreakingNews = function() {    
+    ePaperService.getBreakingNews = function() {  
+		//Check network state
+		if ($cordovaNetwork.isOffline()) {
+
+				$ionicPopup.confirm({
+
+				title: "Internet is not working",
+
+				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
+
+				});
+		}
+	
         return $http.get(baseUrl + breakingApiUrl, {cache:true}).then(function(response) {
             return response.data;
         });
@@ -148,11 +160,35 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
     //GET /news/categories    
 	var categoriesApiUrl = '/seehua_pdf.json';
     ePaperService.getCategories = function() {
-        return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
+        //Check network state
+		if ($cordovaNetwork.isOffline()) {
+
+				$ionicPopup.confirm({
+
+				title: "Internet is not working",
+
+				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
+
+				});
+		}
+		
+		return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
             return Categories.build(response.data);
         });
     }
     ePaperService.getNews = function(categoryId, pageNo) {
+		//Check network state
+		if ($cordovaNetwork.isOffline()) {
+
+				$ionicPopup.confirm({
+
+				title: "Internet is not working",
+
+				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
+
+				});
+		}
+		
         return ePaperService.getCategories().then(function(categories){
            return categories.getNews(categoryId, pageNo);
         });
@@ -160,7 +196,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window) 
 	return ePaperService;
 });
 
-app.factory('ConnectivityMonitor', function($rootScope, $cordovaNetwork){
+/*app.factory('ConnectivityMonitor', function($rootScope, $cordovaNetwork){
  
   return {
     isOnline: function(){
@@ -205,4 +241,4 @@ app.factory('ConnectivityMonitor', function($rootScope, $cordovaNetwork){
         }       
     }
   }
-});
+});*/
