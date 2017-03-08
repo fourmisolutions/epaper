@@ -120,12 +120,10 @@ app.factory('Category', function(){
     return Category;
 });
 
-app.factory('ePaperService', function($http, $q, Category, Categories, $window, $ionicPopup, $cordovaNetwork) {
+app.factory('ePaperService', function($http, $q, Category, Categories) {
     var ePaperService = {};
-
     //POST login
     var loginApiUrl = '/login';
-
     ePaperService.login = function() {
         return $http.post(baseUrl + loginApiUrl, data)
             .then(function(status, headers){
@@ -140,19 +138,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window, 
 	var baseUrl = 'http://shetest.theborneopost.com';
     var breakingApiUrl = '/seehua_breaking_news.json';
     ePaperService.getBreakingNews = function() {  
-		//Check network state
-		if ($cordovaNetwork.isOffline()) {
-
-				$ionicPopup.confirm({
-
-				title: "Internet is not working",
-
-				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
-
-				});
-		}
-	
-        return $http.get(baseUrl + breakingApiUrl, {cache:true}).then(function(response) {
+	     return $http.get(baseUrl + breakingApiUrl, {cache:true}).then(function(response) {
             return response.data;
         });
     }
@@ -160,85 +146,16 @@ app.factory('ePaperService', function($http, $q, Category, Categories, $window, 
     //GET /news/categories    
 	var categoriesApiUrl = '/seehua_pdf.json';
     ePaperService.getCategories = function() {
-        //Check network state
-		if ($cordovaNetwork.isOffline()) {
-
-				$ionicPopup.confirm({
-
-				title: "Internet is not working",
-
-				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
-
-				});
-		}
-		
-		return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
+        return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
             return Categories.build(response.data);
+        }, function(error){
+            return undefined;
         });
     }
     ePaperService.getNews = function(categoryId, pageNo) {
-		//Check network state
-		if ($cordovaNetwork.isOffline()) {
-
-				$ionicPopup.confirm({
-
-				title: "Internet is not working",
-
-				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
-
-				});
-		}
-		
         return ePaperService.getCategories().then(function(categories){
            return categories.getNews(categoryId, pageNo);
         });
     }
 	return ePaperService;
 });
-
-/*app.factory('ConnectivityMonitor', function($rootScope, $cordovaNetwork){
- 
-  return {
-    isOnline: function(){
-      if(ionic.Platform.isWebView()){
-        return $cordovaNetwork.isOnline();    
-      } else {
-        return navigator.onLine;
-      }
-    },
-    isOffline: function(){
-      if(ionic.Platform.isWebView()){
-        return !$cordovaNetwork.isOnline();    
-      } else {
-        return !navigator.onLine;
-      }
-    },
-    startWatching: function(){
-        if(ionic.Platform.isWebView()){
- 
-          $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
-            console.log("went online");
-			alert("went online");
-          });
- 
-          $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
-            console.log("went offline");
-			alert("went offline");
-          });
- 
-        }
-        else {
- 
-          window.addEventListener("online", function(e) {
-            console.log("went online");
-			alert("went online");
-          }, false);    
- 
-          window.addEventListener("offline", function(e) {
-            console.log("went offline");
-			alert("went offline");
-          }, false);  
-        }       
-    }
-  }
-});*/

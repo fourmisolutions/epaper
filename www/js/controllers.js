@@ -1,7 +1,10 @@
 var app = angular.module('epaper.controllers', []);
 const pageSize = 4; 
 function getTabs(categories) {
-    var tabs = []
+    var tabs = [];
+    if(categories == undefined) {
+        return;
+    };
     for(var j=0;j < categories.getTotal();j++){
         var category = categories.getCategory(j);
         for(var pageNo = 0 ; pageNo < category.getNoOfPages(pageSize); pageNo++)
@@ -18,36 +21,29 @@ function getTabs(categories) {
 app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
 	function($scope, ePaperService, $ionicSlideBoxDelegate){
 		ePaperService.getCategories().then(function(categories){
-			console.log(categories);
 			$scope.tabs = getTabs(categories);
-			console.log($scope.tabs);		
-			
 		});
-		
 		$scope.goTo = function(index){
-			console.log(index);
 			var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
 			$ionicSlideBoxDelegate.slide(index);
 		}
-		
-		
 }]);
 
 app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate',
-    function( $scope, $state, categories, $ionicScrollDelegate){		
-		
-		$scope.tabs = getTabs(categories);
-		$scope.clickThumbnail = function(categoryId, pageNo) {
-			$state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
-		};
+    function( $scope, $state, categories, $ionicScrollDelegate){
+        $scope.tabs = getTabs(categories);
+        $scope.clickThumbnail = function(categoryId, pageNo) {
+            $state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
+        };
         $scope.goTo = function(index){
             console.log(index);
-			var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
+            var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
             $ionicSlideBoxDelegate.slide(index)
         }
-		$scope.loadBreakingNews = function() {
+        $scope.loadBreakingNews = function() {
             $state.go("app.breakingnews");
         }
+        
 
     }
 ]);

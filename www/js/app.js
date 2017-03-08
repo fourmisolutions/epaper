@@ -8,67 +8,6 @@
 
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork) {
         $ionicPlatform.ready(function() {
-	
-			// Check for network connection		
-			// Before call plugin you must check that device is ready or not, we have two ways to check that device ready.
-
-			//document.addEventListener("deviceready", function () {
-			//  }, false);
-
-			// OR with IONIC
-			
-			// $ionicPlatform.ready(function() {
-			//  });
-			
-			if ($cordovaNetwork.isOffline()) {
-
-				$ionicPopup.confirm({
-
-				title: "Internet is not working",
-
-				content: "Internet is not working on your device. Reconnect and reload the app again to browse."
-
-				});
-
-			}
-
-
-
-			
-			
-			
-			
-			//==end Check for network connection
-
-            /*
-			$rootScope.$on('loading:show', function () {
-			  $ionicLoading.show({
-				template: '<ion-spinner></ion-spinner> Loading ...'
-			  })
-			});
-
-			$rootScope.$on('loading:hide', function () {
-			  $ionicLoading.hide();
-			});
-
-			$rootScope.$on('$stateChangeStart', function () {
-			  console.log('Loading ...');
-			  $rootScope.$broadcast('loading:show');
-			});
-
-			$rootScope.$on('$stateChangeSuccess', function () {
-				  console.log('done');
-				  $rootScope.$broadcast('loading:hide');
-			});
-			*/
-			
-			$rootScope.$on("$locationChangeStart", function(event, next, current){
-                $rootScope.error = null;
-                console.log("Route change!!!", $location.path());
-                var path = $location.path();
-                console.log("App Loaded!!!");
-            });
-
             $rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
                 $ionicHistory.goBack();
@@ -78,8 +17,7 @@
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-                cordova.plugins.Keyboard.disableScroll(true);
-
+                cordova.plugins.Keyboard.disableScroll(true);                
             }
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required
@@ -94,19 +32,8 @@
             .state('app', {
                 url: '/app',
                 abstract: true,
-                templateUrl: 'templates/menu.html',
-                controller: 'MenuCtrl'
+                templateUrl: 'templates/menu.html'
             })
-
-            /*.state('app.thumbnail', {
-                url: '/thumbnail',
-                views: {
-                    'menuContent': {
-                        templateUrl: 'templates/thumbnail.html'
-                    }
-                }
-            })*/
-
             .state('app.tabs', {
                 url: '/tabs',
                 views: {
@@ -116,12 +43,11 @@
                     }
                 },
                 resolve : {
-                    categories : function(ePaperService) {
+                    categories : function(ePaperService, $q) {
                         return ePaperService.getCategories();
                     }
                 }
             })
-
 
             .state('app.detail', {
                 url: '/detail/:categoryId/:pageNo',
@@ -170,4 +96,31 @@
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/tabs');
     });
+    var showOfflinePopup = true;
+    app.factory('requestInterceptor', ['$q','$cordovaNetwork','$injector', function($q, $cordovaNetwork, $injector) {  
+        var requestInterceptor = {
+            request: function(config) {
+                var deferred = $q.defer();
+                    //Check network state
+                if (window.cordova && $cordovaNetwork.isOffline() && config.url.indexOf("http://shetest.theborneopost.com/") != -1) {
+                    if(showOfflinePopup) {
+                        $injector.get("$ionicPopup").confirm({
+                            title: "Internet is not working",
+                            content: "Internet is not working on your device. Reconnect and reload the app again to browse."
+                        });
+                        showOfflinePopup = false;
+                    }
+                    deferred.reject(config);
+                } else {
+                    deferred.resolve(config);
+                }
+                return deferred.promise;
+            }
+        };
+
+        return requestInterceptor;
+    }]);
+    app.config(['$httpProvider', function($httpProvider) {  
+        $httpProvider.interceptors.push('requestInterceptor');
+    }]);
 }());
