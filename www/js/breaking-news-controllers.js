@@ -40,7 +40,25 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$ionicLoadi
 
     $scope.title = news.title;
     $scope.description = news.description;
-    $scope.imageUrl = news.imageURL;     
+	$scope.content = news.content;
+	$scope.imageURLs = [];
+	
+	
+	if (news.imageURL.indexOf(',') >= 0)
+	{
+		var imageURL_local = news.imageURL.split(',');
+		$scope.imageUrl = imageURL_local[0]; 
+		$scope.imageURLs = imageURL_local.slice(1,imageURL_local.length);
+			//for(var i=1;i<imageURLs.length;i++)
+			//$scope.imageURLs = imageURLs[i];		
+	}
+	else
+	{
+		$scope.imageUrl = news.imageUrl;
+	}
+	
+    console.log($scope.imageUrl);
+	
     $scope.pdfURL = news.pdfURL;
     $scope.options = {
         pdfUrl: news.pdfURL,
