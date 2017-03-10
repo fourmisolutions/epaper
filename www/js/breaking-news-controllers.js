@@ -22,8 +22,8 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$ionicLoadi
     var tCtrl = this;
 
     this.onLoad = function (pag) {
-        var element = document.getElementById("loading-spinner");
-        element.parentNode.removeChild(element);
+        //var element = document.getElementById("loading-spinner");
+        //element.parentNode.removeChild(element);
     };
 
     this.onError = function (err) {
