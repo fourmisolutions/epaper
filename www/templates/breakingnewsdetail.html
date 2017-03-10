@@ -2,33 +2,24 @@
     <ion-nav-bar class="nav-bar bar-assertive">
         <ion-nav-back-button class="nav-button"></ion-nav-back-button>
     </ion-nav-bar>
-<ion-content>
-    <ion-scroll> 
-	<div class="list card">	
-        <div class="item item-body">
-		<h1>{{title}}</h1>
-		</div>	
-		
-		<div class="item item-body">
-			<img class="full-image" ng-src="{{imageUrl}}"></div>			
-			<p style="font-size: 120%;">{{description}}</p>
-		</div>
-			
-	</div>
-	</ion-scroll>
-	 
-			<ion-scroll>			
-        <div>
-            <pdf-gesture ng-pdf-options="options"></pdf-gesture>			
-		</div>	
-	
-	</ion-scroll>
-	<ion-scroll>
-		<div class="item item-body">
-			<p style="font-size: 120%;">{{content}}</p>
-			<div ng-repeat="url in imageURLs"><img class="full-image" ng-src="{{url}}"></div>
-		</div>
-		
-    </ion-scroll>
+    <ion-content>
+        <div class="list card">	
+            <div class="item item-body">
+                <h1>{{title}}</h1>
+            </div>
+            <div class="item item-body">
+                <img class="full-image" ng-src="{{imageUrl}}"></div>			
+                <p style="font-size: 120%;">{{description}}</p>
+            </div>
+            <div class="item item-body">
+                <span id="loading-spinner"><ion-spinner></ion-spinner >Loading...</span>
+                <ion-scroll direction="xy" zoom="true">		
+                    <pdf-gesture ng-pdf-options="options"></pdf-gesture>
+                </ion-scroll>
+            </div> 
+            <div class="item item-body">
+                <p style="font-size: 120%;">{{content}}</p>
+                <div ng-repeat="url in imageURLs"><img class="full-image" ng-src="{{url}}"></div>
+            </div>
 	</ion-content>
 </ion-view>

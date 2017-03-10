@@ -15,27 +15,25 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
 
 app.controller('BreakingNewsController', ['$scope', '$stateParams', '$ionicLoading',
     function($scope, $stateParams, $ionicLoading) {
-
+    
+    $scope.pdfLoaded = false;
+    
     var news = $stateParams.news;
     var tCtrl = this;
 
     this.onLoad = function (pag) {
-        $ionicLoading.hide();
+        var element = document.getElementById("loading-spinner");
+        element.parentNode.removeChild(element);
     };
 
     this.onError = function (err) {
-		$ionicLoading.hide();
     };
 
     this.onProgress = function (progress) {
-		$ionicLoading.show({
-		  template: '<ion-spinner></ion-spinner> News Loading...',
-		  duration: 5000
-		});
     };
 
     this.onPageRender = function (page) {
-		
+        
     };
 
     $scope.title = news.title;
@@ -57,7 +55,6 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$ionicLoadi
 		$scope.imageUrl = news.imageUrl;
 	}
 	
-    console.log($scope.imageUrl);
 	
     $scope.pdfURL = news.pdfURL;
     $scope.options = {
