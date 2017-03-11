@@ -43,7 +43,8 @@
             var container = angular.element('<div class="pdf-container"></container>');
             var buttonContainer = angular.element('<div class="button-container"></div>')
             container.append(buttonContainer);
-            var button = angular.element('<div class="button"><i class="icon ion-arrow-shrink"></i></div>');
+            //var button = angular.element('<div class="button"><i class="icon ion-arrow-shrink"></i></div>');
+			var button = angular.element('<div id="floating-button1" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"><p class="shrink">100%</p></div>');
             var count = 0;
             button.bind('click', function (e) {
                 if (count == 0) {
@@ -55,8 +56,9 @@
                 }
             });
             buttonContainer.append(button);
-            button = angular.element('<div class="button" id="plus"><i class="icon ion-plus-round"></i></div>');
-            button.bind('click', function (e) {
+            //button = angular.element('<div class="button" id="plus"><i class="icon ion-plus-round"></i></div>');
+            button = angular.element('<div id="floating-button2" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="plus">+</p></div>');
+			button.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomIn();
                     count++;
@@ -66,8 +68,9 @@
                 }
             });
             buttonContainer.append(button);
-            button = angular.element('<div class="button" id="minus"><i class="icon ion-minus-round"></i></div>');
-            button.bind('click', function (e) {
+            //button = angular.element('<div class="button" id="minus"><i class="icon ion-minus-round"></i></div>');
+            button = angular.element('<div id="floating-button3" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="minus">-</p></div>');
+			button.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomOut();
                     count++;
@@ -248,6 +251,85 @@
 
                 }
             };
+
+            $ionicGesture.on('touch', function (e) {
+                if (buttonContainer.hasClass('active')) {
+                    clearTimeout(timer);
+                } else {
+                    buttonContainer.addClass('active');
+                }
+                timer = setTimeout(function () {
+                    buttonContainer.removeClass('active');
+                }, 5000);
+            }, element);
+            $ionicGesture.on('release', function (e) {
+                pinch = 0;
+            }, element);
+            if(options.pinchin) {
+                $ionicGesture.on('pinchin', function (e) {
+                    if (pinch) {
+                        if (scale > .4) {
+                            scale -= ((pinch - e.gesture.scale) / 2);
+                            zoom();
+                            pinch = e.gesture.scale;
+                        } else {
+                            scale = .4;
+                            return;
+                        }
+                    } else
+                        pinch = e.gesture.scale;
+                    $ionicGesture.trigger('dragleft',{target: element});
+                }, element);
+                $ionicGesture.on('pinchout', function (e) {
+                    if (pinch) {
+                        if (scale < 1.5) {
+                            scale += ((e.gesture.scale - pinch) / 2);
+                            zoom();
+                            pinch = e.gesture.scale;
+                        } else {
+                            scale = 1.5;
+                            return;
+                        }
+                    } else
+                        pinch = e.gesture.scale;
+                }, element);
+            }
+            $ionicGesture.on('dragend', function (e) {
+                if ((left + e.gesture.deltaX) < (windowWidth - canvasWidth)) {
+                    left = windowWidth - canvasWidth;
+                } else if ((left + e.gesture.deltaX) > 0) {
+                    left = 0;
+                } else
+                    left += e.gesture.deltaX;
+            }, element);
+
+            $ionicGesture.on('dragleft', function (e) {
+                if (!pdfDoc)
+                    return;
+                var margin = left + e.gesture.deltaX;
+                //exceed margin then margin left till max.
+                if((margin) < (windowWidth - canvasWidth)) {
+                    margin = windowWidth - canvasWidth;
+                }
+                pageFit = false;
+                scope.$apply(function () {
+                    container.css('margin-left', (margin) + 'px');
+                })
+            }, element);
+
+            $ionicGesture.on('dragright', function (e) {
+                if (!pdfDoc)
+                    return;
+                var margin = left + e.gesture.deltaX;
+                //exceed min margin then just stick to zero
+                if((margin) > 0) {
+                    margin = 0;
+                }
+                pageFit = false;
+                scope.$apply(function () {
+                    container.css('margin-left', margin + 'px');
+                })
+            }, element);
         }
     }
 });

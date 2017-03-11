@@ -49,8 +49,7 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$ionicLoadi
 		var imageURL_local = news.imageURL.split(',');
 		$scope.imageUrl = imageURL_local[0]; 
 		$scope.imageURLs = imageURL_local.slice(1,imageURL_local.length);
-			//for(var i=1;i<imageURLs.length;i++)
-			//$scope.imageURLs = imageURLs[i];		
+
 	}
 	else
 	{
