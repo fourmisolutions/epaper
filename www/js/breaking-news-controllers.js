@@ -12,8 +12,8 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
     };
 }]);
 
-app.controller('BreakingNewsController', ['$scope', '$stateParams',
-    function($scope, $stateParams) {
+app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',
+    function($scope, $stateParams, $timeout) {
 
     var news = $stateParams.news;
     var tCtrl = this;
@@ -49,14 +49,16 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams',
 		$scope.imageUrl = news.imageUrl;
 	}
 	
-    $scope.pdfURL = news.pdfURL;
-    $scope.options = {
-        pdfUrl: news.pdfURL,
-        onLoad: tCtrl.onLoad,
-        onProgress: tCtrl.onProgress,
-        onError: tCtrl.onError,
-        onPageRender: tCtrl.onPageRender,
-        httpHeaders: [],
-        pinchin: false
-    };
+    $timeout(function() {
+        $scope.options = {
+            pdfUrl: news.pdfURL,
+            onLoad: tCtrl.onLoad,
+            onProgress: tCtrl.onProgress,
+            onError: tCtrl.onError,
+            onPageRender: tCtrl.onPageRender,
+            httpHeaders: [],
+            pinchin: false
+        };
+    }, 1000);
+    
 }]);

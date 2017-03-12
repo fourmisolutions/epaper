@@ -157,5 +157,15 @@ app.factory('ePaperService', function($http, $q, Category, Categories) {
            return categories.getNews(categoryId, pageNo);
         });
     }
+    
+    ePaperService.registerPushNotification = function(token, platform, deviceId) {
+        var request = {
+            token: token,
+            platform: platform,
+            deviceId: deviceId
+        }
+        //TODO - call server to register toke with platform
+    }
+    
 	return ePaperService;
 });

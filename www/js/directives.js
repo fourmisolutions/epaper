@@ -225,18 +225,14 @@
                 }
             };
 
-            scope.$watch('ngPdfOptions.pdfUrl', function (newVal) {
-                if (newVal !== '') {
+            scope.$watch('ngPdfOptions', function (newVal) {
+                options = newVal;
+                if (newVal !== '' && newVal !== undefined) {
                     if (debug) {
                         console.log('pdfUrl value change detected: ', newVal);
                     }
-                    if (pdfLoaderTask) {
-                        //pdfLoaderTask.destroy().then(function () {
-                            renderPDF();
-                        //});
-                    } else {
-                        renderPDF();
-                    }
+                    renderPDF();
+                    
                 }
             });
 
@@ -251,49 +247,6 @@
 
                 }
             };
-
-            $ionicGesture.on('touch', function (e) {
-                if (buttonContainer.hasClass('active')) {
-                    clearTimeout(timer);
-                } else {
-                    buttonContainer.addClass('active');
-                }
-                timer = setTimeout(function () {
-                    buttonContainer.removeClass('active');
-                }, 5000);
-            }, element);
-            $ionicGesture.on('release', function (e) {
-                pinch = 0;
-            }, element);
-            if(options.pinchin) {
-                $ionicGesture.on('pinchin', function (e) {
-                    if (pinch) {
-                        if (scale > .4) {
-                            scale -= ((pinch - e.gesture.scale) / 2);
-                            zoom();
-                            pinch = e.gesture.scale;
-                        } else {
-                            scale = .4;
-                            return;
-                        }
-                    } else
-                        pinch = e.gesture.scale;
-                    $ionicGesture.trigger('dragleft',{target: element});
-                }, element);
-                $ionicGesture.on('pinchout', function (e) {
-                    if (pinch) {
-                        if (scale < 1.5) {
-                            scale += ((e.gesture.scale - pinch) / 2);
-                            zoom();
-                            pinch = e.gesture.scale;
-                        } else {
-                            scale = 1.5;
-                            return;
-                        }
-                    } else
-                        pinch = e.gesture.scale;
-                }, element);
-            }
         }
     }
 });

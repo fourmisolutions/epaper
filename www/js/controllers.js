@@ -48,8 +48,8 @@ app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegat
     }
 ]);
 
-app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup',
-    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup) {	
+app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout',
+    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout) {	
 	var scope = $scope;
     var tCtrl = this;
     this.onLoad = function (pag) {
@@ -72,15 +72,18 @@ app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperServ
     };
     this.onPageRender = function (page) {
     };
-    $scope.options = {
-        pdfUrl: news.pdfURL,
-        onLoad: tCtrl.onLoad,
-        onProgress: tCtrl.onProgress,
-        onError: tCtrl.onError,
-        onPageRender: tCtrl.onPageRender,
-        httpHeaders: [],
-        pinchin: false
-    };
+    
+    $timeout(function() {
+        $scope.options = {
+            pdfUrl: news.pdfURL,
+            onLoad: tCtrl.onLoad,
+            onProgress: tCtrl.onProgress,
+            onError: tCtrl.onError,
+            onPageRender: tCtrl.onPageRender,
+            httpHeaders: [],
+            pinchin: false
+        };
+    }, 500);
 
 
 }]);

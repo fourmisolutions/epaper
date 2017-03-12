@@ -6,7 +6,7 @@
 (function(){
     var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
 
-    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork) {
+    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5) {
         $ionicPlatform.ready(function() {
             $rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
@@ -23,6 +23,59 @@
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
+            var showOffline = true;
+            if(window.cordova) {
+                $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+                    showOffline = true;
+                });
+                $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+                    if(showOffline) {
+                        $ionicPopup.confirm({
+                            title: "Internet is not working",
+                            content: "Internet is not working on your device. Reconnect and reload the app again to browse."
+                        });
+                        showOffline = false;
+                    }
+                });
+            }
+            
+            if(window.cordova) {
+                var options = {
+                    android: {
+                      senderID: "AIzaSyDNgiK8i8cVovm41h9vVkgKngfJbC6SnT0"
+                    },
+                    ios: {
+                      alert: "true",
+                      badge: "true",
+                      sound: "true"
+                    },
+                    windows: {}
+                };
+
+                // initialize
+                $cordovaPushV5.initialize(options).then(function(result) {
+                    console.log("initialize push", result);
+                    // start listening for new notifications
+                    $cordovaPushV5.onNotification();
+                    // start listening for errors
+                    $cordovaPushV5.onError();
+
+                    // register to get registrationId
+                    $cordovaPushV5.register().then(function(registrationId) {
+                        console.log("registrationId", registrationId);
+                        var currentPlatform = ionic.Platform.platform();
+                        var deviceId = window.device.uuid
+                        console.log("registrationId", registrationId);
+                        console.log("registrationId", currentPlatform);
+                        console.log("registrationId", deviceId);
+                        //here need to register with server
+                      // save `registrationId` somewhere;
+                    }, function(err){
+                        console.log("push error", err);
+                    });
+                });
+            }
+            
         });
     })
 
@@ -96,31 +149,5 @@
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/tabs');
     });
-    var showOfflinePopup = true;
-    app.factory('requestInterceptor', ['$q','$cordovaNetwork','$injector', function($q, $cordovaNetwork, $injector) {  
-        var requestInterceptor = {
-            request: function(config) {
-                var deferred = $q.defer();
-                    //Check network state
-                if (window.cordova && $cordovaNetwork.isOffline() && config.url.indexOf("http://shetest.theborneopost.com/") != -1) {
-                    if(showOfflinePopup) {
-                        $injector.get("$ionicPopup").confirm({
-                            title: "Internet is not working",
-                            content: "Internet is not working on your device. Reconnect and reload the app again to browse."
-                        });
-                        showOfflinePopup = false;
-                    }
-                    deferred.reject(config);
-                } else {
-                    deferred.resolve(config);
-                }
-                return deferred.promise;
-            }
-        };
-
-        return requestInterceptor;
-    }]);
-    app.config(['$httpProvider', function($httpProvider) {  
-        $httpProvider.interceptors.push('requestInterceptor');
-    }]);
+    
 }());
