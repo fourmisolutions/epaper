@@ -40,7 +40,7 @@ app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegat
         });
         $interval(function() {
             $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-        }, 1000);
+        }, 10000);
         $scope.tabs = getTabs(categories);
         $scope.clickThumbnail = function(categoryId, pageNo) {
             $state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
