@@ -167,5 +167,16 @@ app.factory('ePaperService', function($http, $q, Category, Categories) {
         //TODO - call server to register toke with platform
     }
     
+    ePaperService.getBreakingNewsCount = function() {
+        if(localStorage.getItem("breakingNewsCount") == undefined) {
+            localStorage.setItem("breakingNewsCount", 0);
+        }
+        return parseInt(localStorage.getItem("breakingNewsCount"));
+    }
+    
+    ePaperService.setBreakingNewsCount = function(breakingNewsCount) {
+        return localStorage.setItem("breakingNewsCount", breakingNewsCount);
+    }
+    
 	return ePaperService;
 });

@@ -1,15 +1,19 @@
 var app = angular.module('epaper.breakingNewsControllers', ['ionic']);
 
-app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state',
-    function($scope, ePaperService, $state) {
-    ePaperService.getBreakingNews().then(function(news) {
-        $scope.news = news;
-    }, function (error) {
-    });
+app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state', '$rootScope',
+    function($scope, ePaperService, $state, $rootScope) {
+        
+        ePaperService.getBreakingNews().then(function(news) {
+            $scope.news = news;
+            $rootScope.$broadcast('onBreakingNewsUpdate');
+            ePaperService.setBreakingNewsCount(0);
+        }, function (error) {
+        });
+        
+        $scope.clickBreakingNews = function(index) {
+          $state.go('app.news', {news: $scope.news[index]});    
+        };
     
-    $scope.clickBreakingNews = function(index) {
-      $state.go('app.news', {news: $scope.news[index]});    
-    };
 }]);
 
 app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',

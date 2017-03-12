@@ -6,7 +6,7 @@
 (function(){
     var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
 
-    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5) {
+    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService) {
         $ionicPlatform.ready(function() {
             $rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
@@ -42,7 +42,7 @@
             if(window.cordova) {
                 var options = {
                     android: {
-                      senderID: "AIzaSyDNgiK8i8cVovm41h9vVkgKngfJbC6SnT0"
+                      senderID: "54566305933"
                     },
                     ios: {
                       alert: "true",
@@ -62,17 +62,22 @@
 
                     // register to get registrationId
                     $cordovaPushV5.register().then(function(registrationId) {
-                        console.log("registrationId", registrationId);
                         var currentPlatform = ionic.Platform.platform();
-                        var deviceId = window.device.uuid
-                        console.log("registrationId", registrationId);
-                        console.log("registrationId", currentPlatform);
-                        console.log("registrationId", deviceId);
+                        var deviceId = window.device.uuid;
+                        console.log(registrationId);
                         //here need to register with server
                       // save `registrationId` somewhere;
                     }, function(err){
-                        console.log("push error", err);
                     });
+                });
+                 // triggered every time notification received
+                $rootScope.$on('$cordovaPushV5:notificationReceived', function(event, data){
+                    ePaperService.setBreakingNewsCount(ePaperService.getBreakingNewsCount() + 1);
+                    $rootScope.$broadcast('onBreakingNewsUpdate');
+                });
+
+                // triggered every time error occurs
+                $rootScope.$on('$cordovaPushV5:errorOcurred', function(event, e){
                 });
             }
             

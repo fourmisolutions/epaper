@@ -18,8 +18,8 @@ function getTabs(categories) {
     }
     return tabs;
 }
-app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
-	function($scope, ePaperService, $ionicSlideBoxDelegate){
+app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope",
+	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope){
 		ePaperService.getCategories().then(function(categories){
 			$scope.tabs = getTabs(categories);
 		});
@@ -29,14 +29,23 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate",
 		}
 }]);
 
-app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate',
-    function( $scope, $state, categories, $ionicScrollDelegate){
+app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate','$timeout','ePaperService','$interval',
+    function( $scope, $state, categories, $ionicScrollDelegate, $timeout, ePaperService, $interval){
+        $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+        $scope.$on('onBreakingNewsUpdate',function(){
+            $timeout(function() {
+                $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+                $scope.$apply();
+            });
+        });
+        $interval(function() {
+            $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+        }, 1000);
         $scope.tabs = getTabs(categories);
         $scope.clickThumbnail = function(categoryId, pageNo) {
             $state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
         };
         $scope.goTo = function(index){
-            console.log(index);
             var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
             $ionicSlideBoxDelegate.slide(index)
         }

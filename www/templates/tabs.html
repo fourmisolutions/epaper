@@ -5,9 +5,11 @@
             <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <a href="#/app/breakingnewslist" class="button">
+            <a href="#/app/breakingnewslist" class="button" style="right:25px">
                 即时新闻
             </a>
+            <span class="badge badge-light" style="position: absolute; right: 0px">{{breakingNewsCount}}</span>
+            
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content>
