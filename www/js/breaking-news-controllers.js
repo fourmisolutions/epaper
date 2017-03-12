@@ -13,7 +13,6 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
         $scope.clickBreakingNews = function(index) {
           $state.go('app.news', {news: $scope.news[index]});    
         };
-    
 }]);
 
 app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',

@@ -80,6 +80,8 @@
                 $rootScope.$on('$cordovaPushV5:errorOcurred', function(event, e){
                 });
             }
+            //trying to clear cache 
+            ePaperService.clearCache();
             
         });
     })

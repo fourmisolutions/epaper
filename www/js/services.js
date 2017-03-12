@@ -178,5 +178,22 @@ app.factory('ePaperService', function($http, $q, Category, Categories) {
         return localStorage.setItem("breakingNewsCount", breakingNewsCount);
     }
     
+    ePaperService.clearCache = function() {
+        var now = new Date();
+        if(localStorage.getItem("lastUpdateDate") == undefined) {
+            localStorage.setItem("lastUpdateDate", new Date());
+        }
+        var lastUpdateDate = new Date(Date.parse(localStorage.getItem("lastUpdateDate")));
+        if(lastUpdateDate.getDate() != now.getDate() || lastUpdateDate.getMonth() != now.getMonth()) {
+            console.log("new date");
+            if(window.cache != undefined) {
+                console.log('clear cache');
+                window.cache.clear();
+                console.log('clear done');
+            }                
+            localStorage.setItem("lastUpdateDate", now);
+        }
+    }
+    
 	return ePaperService;
 });
