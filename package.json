@@ -20,7 +20,14 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
-    "ionic-plugin-keyboard"
+    "ionic-plugin-keyboard",
+    "cordova-plugin-network-information",
+    "cordova-plugin-compat",
+    "phonegap-plugin-push  --variable SENDER_ID=54566305933",
+    "https://github.com/tiltshiftfocus/cordova-plugin-cache.git"
+    
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "android@6.0.0"
+  ]
 }
