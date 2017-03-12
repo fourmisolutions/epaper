@@ -48,31 +48,30 @@ app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegat
     }
 ]);
 
-app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news',
-    function($scope, $stateParams, $ionicLoading, ePaperService, news) {	
+app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup',
+    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup) {	
 	var scope = $scope;
     var tCtrl = this;
-        
-
     this.onLoad = function (pag) {
 		$ionicLoading.hide();
     };
 
     this.onError = function (err) {
+		$ionicLoading.hide();
+        $ionicPopup.alert({
+            title: "Fail to load pdf",
+            content: "Please retry again or select other news."
+        });
     };
-
+    var total = 1.2 * 1024 * 1024; //always assume 1.2 mb for the pdf
     this.onProgress = function (progress) {
+        var percentage = Math.floor(progress.loaded/total * 100) + "%";
         $ionicLoading.show({
-		  template: '<ion-spinner></ion-spinner> News Loading...Be patient <br> It may take a while',
-		  duration: 15000
-		}).then(function(){
-		   console.log("The loading indicator is now displayed");
+		  template: '<ion-spinner></ion-spinner><span>Loading ' + percentage + '</span>'
 		});
     };
-
     this.onPageRender = function (page) {
     };
-    $scope.options = {};
     $scope.options = {
         pdfUrl: news.pdfURL,
         onLoad: tCtrl.onLoad,
@@ -100,32 +99,3 @@ app.controller("MainCtrl", ['$rootScope', "$scope", "$stateParams", "$q", "$loca
             handle.anchorScroll(true);  // 'true' for animation
         };
     }]);
-
-
-app.controller("DetailController", function($scope, $stateParams) {
-    
-	$scope.id = $stateParams.id;	
-    
-	var scope = $scope;
-    var tCtrl = this;
-
-    this.onLoad = function (pag) {
-    };
-
-    this.onError = function (err) {
-    };
-
-    this.onProgress = function (progress) {
-    };
-
-    this.onRenderPage = function (page) {
-    };
-
-    scope.options = {
-        pdfUrl: 'pdf/pdf' + $scope.id + '.pdf',
-        onLoad: tCtrl.onLoad,
-        onProgress: tCtrl.onProgress,
-        onError: tCtrl.onError,
-        onRenderPage: tCtrl.onRenderPage
-    };
-});
