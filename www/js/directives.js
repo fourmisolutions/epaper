@@ -114,7 +114,7 @@
             };
             scope.zoomIn = function () {
                 zoomTime += 1;
-                if (pdfDoc && zoomTime <= 4) {
+                if (pdfDoc && zoomTime <= 5) {
                     pageFit = false;
                     scale += .2;
                     scope.$apply(function () {
@@ -294,42 +294,6 @@
                         pinch = e.gesture.scale;
                 }, element);
             }
-            $ionicGesture.on('dragend', function (e) {
-                if ((left + e.gesture.deltaX) < (windowWidth - canvasWidth)) {
-                    left = windowWidth - canvasWidth;
-                } else if ((left + e.gesture.deltaX) > 0) {
-                    left = 0;
-                } else
-                    left += e.gesture.deltaX;
-            }, element);
-
-            $ionicGesture.on('dragleft', function (e) {
-                if (!pdfDoc)
-                    return;
-                var margin = left + e.gesture.deltaX;
-                //exceed margin then margin left till max.
-                if((margin) < (windowWidth - canvasWidth)) {
-                    margin = windowWidth - canvasWidth;
-                }
-                pageFit = false;
-                scope.$apply(function () {
-                    container.css('margin-left', (margin) + 'px');
-                })
-            }, element);
-
-            $ionicGesture.on('dragright', function (e) {
-                if (!pdfDoc)
-                    return;
-                var margin = left + e.gesture.deltaX;
-                //exceed min margin then just stick to zero
-                if((margin) > 0) {
-                    margin = 0;
-                }
-                pageFit = false;
-                scope.$apply(function () {
-                    container.css('margin-left', margin + 'px');
-                })
-            }, element);
         }
     }
 });
