@@ -58,16 +58,15 @@ app.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperServ
 
     this.onError = function (err) {
 		$ionicLoading.hide();
-        $ionicPopup.alert({
-            title: "Fail to load pdf",
-            content: "Please retry again or select other news."
-        });
     };
     var total = 1.2 * 1024 * 1024; //always assume 1.2 mb for the pdf
     this.onProgress = function (progress) {
-        var percentage = Math.floor(progress.loaded/total * 100) + "%";
+        var percentage = Math.floor(progress.loaded/total * 100);
+        if(percentage >= 100) {
+            percentage = 99;
+        }
         $ionicLoading.show({
-		  template: '<ion-spinner></ion-spinner><span>Loading ' + percentage + '</span>'
+		  template: '<ion-spinner></ion-spinner><span>Loading ' + percentage + '%</span>'
 		});
     };
     this.onPageRender = function (page) {
