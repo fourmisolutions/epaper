@@ -59,6 +59,7 @@
 }
 
 /* floating button */
+/*
 #presentation{
   width: 480px;
   height: 120px;
@@ -76,6 +77,7 @@
   transition: all 0.3s;
   transform: translateZ(10px);
 }
+*/
 
 #floating-button1{
   width: 45px;
@@ -83,8 +85,8 @@
   border-radius: 50%;
   background: #db4437;
   position: fixed;
-  bottom: 150px;
-  right: 30px;
+  top: 0px;
+  left: 10px;
   cursor: pointer;
   box-shadow: 0px 2px 5px #666;
 }
@@ -95,8 +97,8 @@
   border-radius: 50%;
   background: #db4437;
   position: fixed;
-  bottom: 90px;
-  right: 30px;
+  top: 0px;
+  left: 70px;
   cursor: pointer;
   box-shadow: 0px 2px 5px #666;
 }
@@ -107,8 +109,8 @@
   border-radius: 50%;
   background: #db4437;
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  top: 0px;
+  left: 130px;
   cursor: pointer;
   box-shadow: 0px 2px 5px #666;
 }
@@ -189,6 +191,15 @@
   animation: plus-in 0.15s linear;
   animation-fill-mode: forwards;
 }
+
+/*.button-container {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 30px;
+  left: 30px;
+  
+}
+*/
 /* end of floating button */
 
 /* breaking news */
@@ -214,3 +225,5 @@ div.spinner {
   width: 19% !important;
   height: 85px !important;
 }
+
+
