@@ -49,7 +49,7 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',
 	}
 	else
 	{
-		$scope.imageUrl = news.imageUrl;
+		$scope.imageUrl = news.imageURL;
 	}
 	
     $timeout(function() {

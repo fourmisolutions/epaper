@@ -40,12 +40,19 @@
             //ngPdfOptions.httpHeaders: http headers to download pdf
         },
         link: function (scope, element, attrs) {
-            var container = angular.element('<div class="pdf-container"></container>');
-            var buttonContainer = angular.element('<div class="button-container"></div>')
-            container.append(buttonContainer);
+			
+			/*var outerButtonContainer = document.createElement("div"); 
+			outerButtonContainer.id = 'outer-button-container';
+			outerButtonContainer.innerHTML = "<br><br><br>";
+            	
+			container.append(outerButtonContainer);		
+			*/	
+			var container = angular.element('<div class="pdf-container"></container>');			
+            //var buttonContainer = angular.element('<div class="button-container"></div>')
             //var button = angular.element('<div class="button"><i class="icon ion-arrow-shrink"></i></div>');
 			var button = angular.element('<div id="floating-button1" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"><p class="shrink">100%</p></div>');
-            var count = 0;
+			angular.element(document.querySelector('#outside-button-container')).append(button);
+			var count = 0;
             button.bind('click', function (e) {
                 if (count == 0) {
                     scope.pageFit();
@@ -55,9 +62,10 @@
                     }, 500);
                 }
             });
-            buttonContainer.append(button);
+            //buttonContainer.append(button);
             //button = angular.element('<div class="button" id="plus"><i class="icon ion-plus-round"></i></div>');
             button = angular.element('<div id="floating-button2" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="plus">+</p></div>');
+			angular.element(document.querySelector('#outside-button-container')).append(button);
 			button.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomIn();
@@ -67,9 +75,10 @@
                     }, 500);
                 }
             });
-            buttonContainer.append(button);
+            //buttonContainer.append(button);
             //button = angular.element('<div class="button" id="minus"><i class="icon ion-minus-round"></i></div>');
             button = angular.element('<div id="floating-button3" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="minus">-</p></div>');
+			angular.element(document.querySelector('#outside-button-container')).append(button);
 			button.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomOut();
@@ -81,7 +90,8 @@
                 
             });
 
-            buttonContainer.append(button);
+            //buttonContainer.append(button);
+
 
             element.append(container);
             var timer = null;
