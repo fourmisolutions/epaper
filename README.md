@@ -32,3 +32,12 @@ edit package.json for additional plugins
 
 ionic state restore (to reinstall platforms/plugins)
 ionic run android
+
+
+install android sdk
+install java
+install gradle
+
+
+
+http://stackoverflow.com/questions/20755044/how-to-install-cocoa-pods
