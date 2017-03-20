@@ -124,7 +124,7 @@
             };
             scope.zoomIn = function () {
                 zoomTime += 1;
-                if (pdfDoc && zoomTime <= 5) {
+                if (pdfDoc && zoomTime <= 6) {
                     pageFit = false;
                     scale += .2;
                     scope.$apply(function () {
