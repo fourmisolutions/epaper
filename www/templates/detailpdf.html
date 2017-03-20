@@ -4,11 +4,15 @@
         </ion-nav-back-button>
     </ion-nav-bar>
     <ion-content>
-	<div id="outside-button-container">
-		<br /><br /><br />
-	</div>
+	<div style="position: relative">
+		<div id="outside-button-container" class="outside-button-container">
+			<br /><br /><br />
+		</div>
+		<div style="position: absolute; top: 60px">
         <ion-scroll direction="xy">		
             <pdf-gesture ng-pdf-options="options"></pdf-gesture>
         <ion-scroll>
+		</div>
+	</div>
     </ion-content>
 </ion-view>

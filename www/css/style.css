@@ -84,8 +84,8 @@
   height: 45px;
   border-radius: 50%;
   background: #db4437;
-  position: fixed;
-  top: 0px;
+  position: absolute;
+  top: 1px;
   left: 10px;
   cursor: pointer;
   box-shadow: 0px 2px 5px #666;
@@ -96,8 +96,8 @@
   height: 45px;
   border-radius: 50%;
   background: #db4437;
-  position: fixed;
-  top: 0px;
+  position: absolute;
+  top: 1px;
   left: 70px;
   cursor: pointer;
   box-shadow: 0px 2px 5px #666;
@@ -108,8 +108,8 @@
   height: 45px;
   border-radius: 50%;
   background: #db4437;
-  position: fixed;
-  top: 0px;
+  position: absolute;
+  top: 1px;
   left: 130px;
   cursor: pointer;
   box-shadow: 0px 2px 5px #666;
@@ -190,6 +190,13 @@
 #container-floating:hover .plus{
   animation: plus-in 0.15s linear;
   animation-fill-mode: forwards;
+}
+
+.outside-button-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  
 }
 
 /*.button-container {

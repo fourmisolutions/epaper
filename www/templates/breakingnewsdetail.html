@@ -13,14 +13,16 @@
                 <p class="news-description">{{description}}</p>
                 <p class="to-be-continued-message">待续。。。更多新闻滚动到底部</p>
             </div>
-			<div id="outside-button-container">
-				<br /><br /><br />
-			</div>
-			<div>
-                <ion-scroll direction="xy">		
-                    <div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
-                    <pdf-gesture ng-pdf-options="options"></pdf-gesture>
-                </ion-scroll>
+			<div style="position: relative">
+				<div id="outside-button-container" class="outside-button-container">
+					<br /><br /><br />
+				</div>
+				<div style="position: relative; top: 60px;">
+					<ion-scroll direction="xy">		
+						<div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
+						<pdf-gesture ng-pdf-options="options"></pdf-gesture>
+					</ion-scroll>
+				</div>				
 			</div>
         
             <div class="item item-body">
