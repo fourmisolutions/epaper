@@ -42,7 +42,9 @@
             if(window.cordova) {
                 var options = {
                     android: {
-                      senderID: "167400319609"
+                      senderID: "167400319609",
+                      icon: "ic_stat_seehua",
+                      iconColor: "red"
                     },
                     ios: {
                       alert: "true",
