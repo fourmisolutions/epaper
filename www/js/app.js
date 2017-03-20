@@ -6,7 +6,7 @@
 (function(){
     var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
 
-    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService) {
+    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences) {
         $ionicPlatform.ready(function() {
             $rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
@@ -42,7 +42,7 @@
             if(window.cordova) {
                 var options = {
                     android: {
-                      senderID: "54566305933"
+                      senderID: "167400319609"
                     },
                     ios: {
                       alert: "true",
@@ -54,21 +54,29 @@
 
                 // initialize
                 $cordovaPushV5.initialize(options).then(function(result) {
-                    console.log("initialize push", result);
                     // start listening for new notifications
                     $cordovaPushV5.onNotification();
                     // start listening for errors
                     $cordovaPushV5.onError();
 
                     // register to get registrationId
-                    $cordovaPushV5.register().then(function(registrationId) {
-                        var currentPlatform = ionic.Platform.platform();
-                        var deviceId = window.device.uuid;
-                        console.log(registrationId);
-                        //here need to register with server
-                      // save `registrationId` somewhere;
-                    }, function(err){
-                    });
+                    //we will only register if there is no existing token keep in preference.
+                    $cordovaPreferences.fetch('token')
+                      .success(function(token) {
+                        console.log("token", token);
+                        if(token == undefined || token === "") {
+                            $cordovaPushV5.register().then(function(registrationId) {
+                                var currentPlatform = ionic.Platform.platform();
+                                var deviceId = window.device.uuid;
+                                ePaperService.registerPushNotification(registrationId, currentPlatform);
+                            }, function(err){
+                            });
+                        }
+                      })
+                      .error(function(error) {
+                          console.log("fail to fetch token", error);
+                      })
+                    
                 });
                  // triggered every time notification received
                 $rootScope.$on('$cordovaPushV5:notificationReceived', function(event, data){

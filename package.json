@@ -23,8 +23,9 @@
     "ionic-plugin-keyboard",
     "cordova-plugin-network-information",
     "cordova-plugin-compat",
-    "phonegap-plugin-push  --variable SENDER_ID=54566305933",
-    "https://github.com/tiltshiftfocus/cordova-plugin-cache.git"
+    "phonegap-plugin-push  --variable SENDER_ID=167400319609",
+    "https://github.com/tiltshiftfocus/cordova-plugin-cache.git",
+    "cordova-plugin-app-preferences"
     
   ],
   "cordovaPlatforms": [
