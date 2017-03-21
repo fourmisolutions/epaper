@@ -5,13 +5,15 @@
     </ion-nav-bar>
     <ion-content>
 	<div style="position: relative">
-		<div id="outside-button-container" class="outside-button-container">
-			<br /><br /><br />
+		<div id="header-button-container" class="header-button-container">
+			
 		</div>
-		<div style="position: absolute; top: 60px">
+		<div style="position: absolute; top: 60px; z-index: -1;">
         <ion-scroll direction="xy">		
             <pdf-gesture ng-pdf-options="options"></pdf-gesture>
         <ion-scroll>
+		</div>
+		<div id="footer-button-container" class="footer-button-container">
 		</div>
 	</div>
     </ion-content>
