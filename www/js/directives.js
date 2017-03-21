@@ -51,9 +51,22 @@
             //var buttonContainer = angular.element('<div class="button-container"></div>')
             //var button = angular.element('<div class="button"><i class="icon ion-arrow-shrink"></i></div>');
 			var button = angular.element('<div id="floating-button1" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"><p class="shrink">100%</p></div>');
-			angular.element(document.querySelector('#outside-button-container')).append(button);
+			var button1 = angular.element('<div id="floating-button4" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"><p class="shrink">100%</p></div>');
+
+			angular.element(document.querySelector('#header-button-container')).append(button);
+			angular.element(document.querySelector('#footer-button-container')).append(button1);
 			var count = 0;
             button.bind('click', function (e) {
+                if (count == 0) {
+                    scope.pageFit();
+                    count++;
+                    setTimeout(function () {
+                        count = 0;
+                    }, 500);
+                }
+            });
+			
+            button1.bind('click', function (e) {
                 if (count == 0) {
                     scope.pageFit();
                     count++;
@@ -65,8 +78,20 @@
             //buttonContainer.append(button);
             //button = angular.element('<div class="button" id="plus"><i class="icon ion-plus-round"></i></div>');
             button = angular.element('<div id="floating-button2" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="plus">+</p></div>');
-			angular.element(document.querySelector('#outside-button-container')).append(button);
+			button1 = angular.element('<div id="floating-button5" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="plus">+</p></div>');
+			angular.element(document.querySelector('#header-button-container')).append(button);
+			angular.element(document.querySelector('#footer-button-container')).append(button1);
 			button.bind('click', function (e) {
+                if (count == 0) {
+                    scope.zoomIn();
+                    count++;
+                    setTimeout(function () {
+                        count = 0;
+                    }, 500);
+                }
+            });
+			
+			button1.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomIn();
                     count++;
@@ -77,9 +102,22 @@
             });
             //buttonContainer.append(button);
             //button = angular.element('<div class="button" id="minus"><i class="icon ion-minus-round"></i></div>');
-            button = angular.element('<div id="floating-button3" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="minus">-</p></div>');
-			angular.element(document.querySelector('#outside-button-container')).append(button);
+            button = angular.element('<div id="floating-button3" data-toggle="tooltip" data-placement="left" data-original-title="Minus"><p class="minus">-</p></div>');
+			button1 = angular.element('<div id="floating-button6" data-toggle="tooltip" data-placement="left" data-original-title="Minus"><p class="minus">-</p></div>');
+			angular.element(document.querySelector('#header-button-container')).append(button);
+			angular.element(document.querySelector('#footer-button-container')).append(button1);
 			button.bind('click', function (e) {
+                if (count == 0) {
+                    scope.zoomOut();
+                    count++;
+                    setTimeout(function () {
+                        count = 0;
+                    }, 500);
+                }
+                
+            });
+			
+			button1.bind('click', function (e) {
                 if (count == 0) {
                     scope.zoomOut();
                     count++;
@@ -91,7 +129,6 @@
             });
 
             //buttonContainer.append(button);
-
 
             element.append(container);
             var timer = null;
