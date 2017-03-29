@@ -158,18 +158,23 @@ app.factory('ePaperService', function($http, $q, Category, Categories,  $cordova
         });
     }
     
+    var registerPushNotificationUrl = '/sh_rest/push_notifications';
     ePaperService.registerPushNotification = function(token, platform) {
         var request = {
             token: token,
-            platform: platform
+            type: platform
         }
         console.log("request", request);
-        $cordovaPreferences.store('token', token).success(function(value) {
-            console.log("store successfully", value);
-        }).error(function(error) {
-            console.log("failed", error);
+        $http.post(baseUrl + registerPushNotificationUrl, request).then(function(response){
+            console.log("register push notification", response);
+            $cordovaPreferences.store('token', token).success(function(value) {
+                console.log("store successfully", value);
+            }).error(function(error) {
+                console.log("failed", error);
+            });
+        }, function(error){
+            console.log("fail to register push notification", error);
         });
-        //TODO - call server to register toke with platform
     }
     
     ePaperService.getBreakingNewsCount = function() {
