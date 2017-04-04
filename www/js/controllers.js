@@ -51,8 +51,8 @@ function getTabs(categories) {
 }
 
 
-app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state",
-	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state){
+app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state", '$timeout',
+	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state, $timeout){
 		ePaperService.getCategories().then(function(categories){
 			//version 1.1		
 			var sorted = getTabs(categories).sort(function(a, b)
@@ -103,7 +103,11 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
 		//version 1.1
 		$scope.goTo = function(categoryId){
 			//load tabs of the category
-			$state.go("app.tabs", {"categoryId": categoryId});
+			$timeout(function() {
+				$state.go("app.tabs", {"categoryId": categoryId});
+				//$state.$apply();
+            });
+			
 		}
 		
 }]);
