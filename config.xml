@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.seehua.epaper462668" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>诗华电子报</name>
-  <description>&#xD;&#xD;&#xD;&#xD;
-        诗华电子报&#xD;&#xD;&#xD;&#xD;
+  <description>&#xD;&#xD;&#xD;&#xD;&#xD;
+        诗华电子报&#xD;&#xD;&#xD;&#xD;&#xD;
     </description>
-  <author email="admin@seehua.com" href="http://www.seahua.com/">&#xD;&#xD;&#xD;&#xD;
-      诗华报业集团&#xD;&#xD;&#xD;&#xD;
+  <author email="admin@seehua.com" href="http://www.seahua.com/">&#xD;&#xD;&#xD;&#xD;&#xD;
+      诗华报业集团&#xD;&#xD;&#xD;&#xD;&#xD;
     </author>
   <content src="index.html"/>
   <access origin="*"/>

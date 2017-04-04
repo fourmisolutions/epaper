@@ -104,8 +104,17 @@
                 abstract: true,
                 templateUrl: 'templates/menu.html'
             })
+			.state('app.home', {
+                url: '/home',
+				views: {
+                    'menuContent': {
+                        templateUrl: 'templates/home.html',
+                        controller: 'MenuCtrl'
+                    }
+                }                
+            })
             .state('app.tabs', {
-                url: '/tabs',
+                url: '/tabs/:categoryId', //version 1.1
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/tabs.html',
@@ -164,7 +173,7 @@
             });
 			
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/app/tabs');
+        $urlRouterProvider.otherwise('/app/home');
     });
     
 }());

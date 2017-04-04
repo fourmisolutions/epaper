@@ -1,36 +1,115 @@
 var app = angular.module('epaper.controllers', []);
 const pageSize = 4; 
-function getTabs(categories) {
+function getTabsByCategory(categories, cat) { //version 1.1
     var tabs = [];
     if(categories == undefined) {
         return;
-    };
+    };	
+
     for(var j=0;j < categories.getTotal();j++){
         var category = categories.getCategory(j);
-        for(var pageNo = 0 ; pageNo < category.getNoOfPages(pageSize); pageNo++)
-        {
-            var categoryPageNo = categories.getPageNo(j, pageNo, pageSize);
-            var news = category.getNewsStartFrom(pageNo, pageSize);
-            var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
-            tabs.push(tab);
-        }
 		
+		if(category.categoryId == cat) {
+		
+			for(var pageNo = 0 ; pageNo < category.getNoOfPages(pageSize); pageNo++)
+			{
+				var categoryPageNo = categories.getPageNo(j, pageNo, pageSize);
+				var news = category.getNewsStartFrom(pageNo, pageSize);
+				//var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
+				//version 1.1
+				var tab = {"categoryId": category.categoryId, "text": category.categoryId, news: news, "pageNoText": category.getStart(pageNo, pageSize) + "-" + category.getEnd(pageNo, pageSize)};			
+				tabs.push(tab);
+			}	
+		}		
     }
+	
     return tabs;
 }
-app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope",
-	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope){
+
+function getTabs(categories) { 
+    var tabs = [];
+    if(categories == undefined) {
+        return;
+    };	
+
+    for(var j=0;j < categories.getTotal();j++){
+        var category = categories.getCategory(j);	
+		
+			for(var pageNo = 0 ; pageNo < category.getNoOfPages(pageSize); pageNo++)
+			{
+				var categoryPageNo = categories.getPageNo(j, pageNo, pageSize);
+				var news = category.getNewsStartFrom(pageNo, pageSize);
+				//var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
+				//version 1.1
+				var tab = {"categoryId": category.categoryId, "text": category.categoryId, news: news};			
+				tabs.push(tab);
+			}	
+			
+    }
+	
+    return tabs;
+}
+
+
+app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state",
+	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state){
 		ePaperService.getCategories().then(function(categories){
-			$scope.tabs = getTabs(categories);
+			//version 1.1		
+			var sorted = getTabs(categories).sort(function(a, b)
+			{
+			  var nA = a.text.toLowerCase();
+			  var nB = b.text.toLowerCase();
+
+			  if(nA < nB)
+				return -1;
+			  else if(nA > nB)
+				return 1;
+			 return 0;
+			});
+			
+			var unique_category = [];
+			
+			for (var j = 0; j < sorted.length; j++){
+			  unique_category.push(sorted[j].text);
+			}
+			
+			Array.prototype.contains = function(v) {
+				for(var i = 0; i < this.length; i++) {
+					if(this[i] === v) return true;
+				}
+				return false;
+			};
+
+			Array.prototype.unique = function() {
+				var arr = [];
+				for(var i = 0; i < this.length; i++) {
+					if(!arr.contains(this[i])) {
+						arr.push(this[i]);
+					}
+				}
+				return arr; 
+			}
+			unique_category = unique_category.unique();
+
+			$scope.tabs = unique_category;
+			//end of version 1.1
 		});
-		$scope.goTo = function(index){
+		
+		/*$scope.goTo = function(index){
 			var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
 			$ionicSlideBoxDelegate.slide(index);
+		}*/
+		
+		//version 1.1
+		$scope.goTo = function(categoryId){
+			//load tabs of the category
+			$state.go("app.tabs", {"categoryId": categoryId});
 		}
+		
 }]);
 
-app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegate','$timeout','ePaperService','$interval',
-    function( $scope, $state, categories, $ionicScrollDelegate, $timeout, ePaperService, $interval){
+app.controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout','ePaperService','$interval', '$stateParams', 'categories',
+    function( $scope, $state, $ionicScrollDelegate, $timeout, ePaperService, $interval, $stateParams, categories){
         $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
         $scope.$on('onBreakingNewsUpdate',function(){
             $timeout(function() {
@@ -41,8 +120,13 @@ app.controller("TabsCtrl", ['$scope','$state','categories', '$ionicScrollDelegat
         $interval(function() {
             $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
         }, 10000);
-        $scope.tabs = getTabs(categories);
-        $scope.clickThumbnail = function(categoryId, pageNo) {
+        
+		$scope.tabs = getTabsByCategory(categories, $stateParams.categoryId);
+		
+		//console.log($stateParams.categoryId);
+		//$scope.tabs = getTabs(categories);        
+		
+		$scope.clickThumbnail = function(categoryId, pageNo) {
             $state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
         };
         $scope.goTo = function(index){
