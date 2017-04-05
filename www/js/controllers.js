@@ -1,5 +1,8 @@
 var app = angular.module('epaper.controllers', []);
 const pageSize = 4; 
+
+var chinese_menu_dictionary = {'A': '南砂', 'B': '中区', 'C': '北砂', 'D': '新華日報', 'E': '西沙', 'F': '东沙', 'G': '西马', 'H': '体育', 'I': '国际', 'J': '娱乐', 'K': '副刊', 'L': '财经', 'M': '豆苗' }
+
 function getTabsByCategory(categories, cat) { //version 1.1
     var tabs = [];
     if(categories == undefined) {
@@ -17,7 +20,7 @@ function getTabsByCategory(categories, cat) { //version 1.1
 				var news = category.getNewsStartFrom(pageNo, pageSize);
 				//var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
 				//version 1.1
-				var tab = {"categoryId": category.categoryId, "text": category.categoryId, news: news, "pageNoText": category.getStart(pageNo, pageSize) + "-" + category.getEnd(pageNo, pageSize)};			
+				var tab = {"categoryId": category.categoryId, "text": chinese_menu_dictionary[category.categoryId], news: news, "pageNoText": category.getStart(pageNo, pageSize) + "-" + category.getEnd(pageNo, pageSize)};			
 				tabs.push(tab);
 			}	
 		}		
@@ -41,7 +44,7 @@ function getTabs(categories) {
 				var news = category.getNewsStartFrom(pageNo, pageSize);
 				//var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
 				//version 1.1
-				var tab = {"categoryId": category.categoryId, "text": category.categoryId, news: news};			
+				var tab = {"categoryId": category.categoryId, "text": chinese_menu_dictionary[category.categoryId], news: news};			
 				tabs.push(tab);
 			}	
 			
@@ -57,8 +60,8 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
 			//version 1.1		
 			var sorted = getTabs(categories).sort(function(a, b)
 			{
-			  var nA = a.text.toLowerCase();
-			  var nB = b.text.toLowerCase();
+			  var nA = a.categoryId.toLowerCase();
+			  var nB = b.categoryId.toLowerCase();
 
 			  if(nA < nB)
 				return -1;
@@ -70,7 +73,7 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
 			var unique_category = [];
 			
 			for (var j = 0; j < sorted.length; j++){
-			  unique_category.push(sorted[j].text);
+			  unique_category.push(sorted[j].categoryId);
 			}
 			
 			Array.prototype.contains = function(v) {
@@ -90,8 +93,16 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
 				return arr; 
 			}
 			unique_category = unique_category.unique();
+			
+		
+			var tabs = [];
+			
+			for(var i=0; i< unique_category.length; i++){
+				var tab = {'categoryId': unique_category[i], 'text': chinese_menu_dictionary[unique_category[i]]};
+				tabs.push(tab);
+			}
 
-			$scope.tabs = unique_category;
+			$scope.tabs = tabs;
 			//end of version 1.1
 		});
 		
@@ -125,11 +136,8 @@ app.controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout'
             $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
         }, 10000);
         
-		$scope.tabs = getTabsByCategory(categories, $stateParams.categoryId);
-		
-		//console.log($stateParams.categoryId);
-		//$scope.tabs = getTabs(categories);        
-		
+		$scope.tabs = getTabsByCategory(categories, $stateParams.categoryId);		
+	
 		$scope.clickThumbnail = function(categoryId, pageNo) {
             $state.go('app.detail', {categoryId: categoryId, pageNo:pageNo});    
         };
@@ -197,4 +205,4 @@ app.controller("MainCtrl", ['$rootScope', "$scope", "$stateParams", "$q", "$loca
             var handle = $ionicScrollDelegate.$getByHandle('myPageDelegate');
             handle.anchorScroll(true);  // 'true' for animation
         };
-    }]);
+}]);

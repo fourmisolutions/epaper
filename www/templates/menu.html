@@ -18,8 +18,8 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ng-repeat="tab in tabs" ng-click="goTo(tab)">
-          {{tab}}		  
+        <ion-item menu-close ng-repeat="tab in tabs" ng-click="goTo(tab.categoryId)">
+          {{tab.text}}		  
         </ion-item>
       </ion-list>
     </ion-content>
