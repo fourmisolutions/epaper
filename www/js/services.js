@@ -1,4 +1,5 @@
 app.factory('Categories', function(Category){
+    var chinese_menu_dictionary = {'A': '南砂', 'B': '中区', 'C': '北砂', 'D': '新華日報', 'E': '西沙', 'F': '东沙', 'G': '西马', 'H': '体育', 'I': '国际', 'J': '娱乐', 'K': '副刊', 'L': '财经', 'M': '豆苗' }
     function Categories(categories) {
         this.categories = categories;
     }
