@@ -36,15 +36,17 @@
                     </ion-content>
                 </ion-slide>
             </ion-slide-box>
-            <div class="tsb-icons">
-                <div class="tsb-ic-wrp">
-                    
-                    <ion-scroll direction="x" class="tsb-hscroll">
+              
+           <ion-scroll direction="x" overflow-scroll="true" class="tsb-hscroll">
+		   <div class="tsb-icons">
+                <div class="tsb-ic-wrp"> 					
                         <a href="javascript:;" class="{{tab.icon}}" ng-repeat="tab in tabs" on-finish-render="test()">{{tab.pageNoText}}</a>
-                    </ion-scroll>
-                    
                 </div>
-            </div>
+            </div>  
+		    </ion-scroll>
+			
+
+			
         </tab-slide-box>
     </ion-content>
 </ion-view>

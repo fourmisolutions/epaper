@@ -20,7 +20,7 @@ function getTabsByCategory(categories, cat) { //version 1.1
 				var news = category.getNewsStartFrom(pageNo, pageSize);
 				//var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
 				//version 1.1
-				var tab = {"categoryId": category.categoryId, "text": chinese_menu_dictionary[category.categoryId], news: news, "pageNoText": category.getStart(pageNo, pageSize) + "-" + category.getEnd(pageNo, pageSize)};			
+				var tab = {"categoryId": category.categoryId, "text": chinese_menu_dictionary[category.categoryId], news: news, "pageIndex": category.getStart(pageNo, pageSize), "pageNoText": category.getStart(pageNo, pageSize) + "-" + category.getEnd(pageNo, pageSize)};			
 				tabs.push(tab);
 			}	
 		}		
@@ -123,8 +123,8 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
 		
 }]);
 
-app.controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout','ePaperService','$interval', '$stateParams', 'categories',
-    function( $scope, $state, $ionicScrollDelegate, $timeout, ePaperService, $interval, $stateParams, categories){
+app.controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout','ePaperService','$interval', '$stateParams', 'categories', '$ionicSlideBoxDelegate',
+    function( $scope, $state, $ionicScrollDelegate, $timeout, ePaperService, $interval, $stateParams, categories, $ionicSlideBoxDelegate){
         $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
         $scope.$on('onBreakingNewsUpdate',function(){
             $timeout(function() {
@@ -143,7 +143,7 @@ app.controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout'
         };
         $scope.goTo = function(index){
             var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
-            $ionicSlideBoxDelegate.slide(index)
+            $ionicSlideBoxDelegate.slide(index);
         }
         $scope.loadBreakingNews = function() {
             $state.go("app.breakingnews");

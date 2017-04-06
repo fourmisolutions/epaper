@@ -6,8 +6,8 @@
     height:100%;
 }
 
-.tabbed-slidebox .tsb-icons:after{
-    display:none;
+.tabbed-slidebox .tsb-icons: after{
+    display: none;
 }
 
 .sliderImgWrapper {
