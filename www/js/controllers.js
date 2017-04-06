@@ -20,7 +20,7 @@ function getTabsByCategory(categories, cat) { //version 1.1
 				var news = category.getNewsStartFrom(pageNo, pageSize);
 				//var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
 				//version 1.1
-				var tab = {"categoryId": category.categoryId, "text": chinese_menu_dictionary[category.categoryId], news: news, "pageIndex": category.getStart(pageNo, pageSize), "pageNoText": category.getStart(pageNo, pageSize) + "-" + category.getEnd(pageNo, pageSize)};			
+				var tab = {"categoryId": category.categoryId, "text": category.getCategoryDesc(), news: news, "pageIndex": category.getStart(pageNo, pageSize), "pageNoText": category.getStart(pageNo, pageSize) + "-" + category.getEnd(pageNo, pageSize)};			
 				tabs.push(tab);
 			}	
 		}		
@@ -28,6 +28,8 @@ function getTabsByCategory(categories, cat) { //version 1.1
 	
     return tabs;
 }
+
+
 
 function getTabs(categories) { 
     var tabs = [];
@@ -44,7 +46,7 @@ function getTabs(categories) {
 				var news = category.getNewsStartFrom(pageNo, pageSize);
 				//var tab = {"categoryId": category.categoryId, "text": category.categoryId + category.getStart(pageNo, pageSize) + "-" + category.categoryId + category.getEnd(pageNo, pageSize), news: news};
 				//version 1.1
-				var tab = {"categoryId": category.categoryId, "text": chinese_menu_dictionary[category.categoryId], news: news};			
+				var tab = {"categoryId": category.categoryId, "text": category.getCategoryDesc(), news: news};			
 				tabs.push(tab);
 			}	
 			
@@ -58,50 +60,12 @@ app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", 
 	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state, $timeout){
 		ePaperService.getCategories().then(function(categories){
 			//version 1.1		
-			var sorted = getTabs(categories).sort(function(a, b)
-			{
-			  var nA = a.categoryId.toLowerCase();
-			  var nB = b.categoryId.toLowerCase();
-
-			  if(nA < nB)
-				return -1;
-			  else if(nA > nB)
-				return 1;
-			 return 0;
-			});
-			
-			var unique_category = [];
-			
-			for (var j = 0; j < sorted.length; j++){
-			  unique_category.push(sorted[j].categoryId);
-			}
-			
-			Array.prototype.contains = function(v) {
-				for(var i = 0; i < this.length; i++) {
-					if(this[i] === v) return true;
-				}
-				return false;
-			};
-
-			Array.prototype.unique = function() {
-				var arr = [];
-				for(var i = 0; i < this.length; i++) {
-					if(!arr.contains(this[i])) {
-						arr.push(this[i]);
-					}
-				}
-				return arr; 
-			}
-			unique_category = unique_category.unique();
-			
-		
-			var tabs = [];
-			
-			for(var i=0; i< unique_category.length; i++){
-				var tab = {'categoryId': unique_category[i], 'text': chinese_menu_dictionary[unique_category[i]]};
+            var tabs = [];
+            for(var j=0;j < categories.getTotal();j++){
+                var category = categories.getCategory(j);	
+                var tab = {"categoryId": category.categoryId, "text": category.getCategoryDesc()};			
 				tabs.push(tab);
-			}
-
+            }
 			$scope.tabs = tabs;
 			//end of version 1.1
 		});

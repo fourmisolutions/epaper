@@ -1,7 +1,17 @@
 app.factory('Categories', function(Category){
     var chinese_menu_dictionary = {'A': '南砂', 'B': '中区', 'C': '北砂', 'D': '新華日報', 'E': '西沙', 'F': '东沙', 'G': '西马', 'H': '体育', 'I': '国际', 'J': '娱乐', 'K': '副刊', 'L': '财经', 'M': '豆苗' }
     function Categories(categories) {
-        this.categories = categories;
+        this.categories = categories.sort(function(a, b)
+        {
+			  var nA = a.categoryId.toLowerCase();
+			  var nB = b.categoryId.toLowerCase();
+
+			  if(nA < nB)
+				return -1;
+			  else if(nA > nB)
+				return 1;
+			 return 0;
+        });
     }
     
     Categories.build = function(data) {
@@ -74,6 +84,7 @@ app.factory('Category', function(){
     function Category(categoryId, news) {
         this.categoryId = categoryId;
         this.news = news;
+        this.categoryDesc = chinese_menu_dictionary[categoryId];
     }
     Category.build = function(categoryId, data) {
         var arrayOfNews = [];
@@ -105,7 +116,6 @@ app.factory('Category', function(){
     Category.prototype.getNews = function(index) {
         return this.news[index];
     }
-    
     Category.prototype.getNewsByPageNo = function(pageNo) {
         var news = this.getNews(pageNo);
         if(news != undefined && news.pageNo == pageNo) {
@@ -118,6 +128,10 @@ app.factory('Category', function(){
         });
         return news;
     }
+    Category.prototype.getCategoryDesc = function() {
+        return this.categoryDesc;
+    }
+    
     return Category;
 });
 
