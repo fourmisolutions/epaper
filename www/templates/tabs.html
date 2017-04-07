@@ -16,7 +16,7 @@
         <tab-slide-box tabs-position="bottom" delegate-handle=="ThumbnailTab">
             <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
                 <ion-slide ng-repeat="tab in tabs">
-                    <ion-content has-bouncing="true">
+                    <ion-content has-bouncing="true" overflow-scroll="false">
                         <div class="row">
                             <div class="col col-50"  ng-repeat="news2 in tab.news">
                                 <a href="#/app/detail/{{tab.categoryId}}/{{news2.pageNo}}">
@@ -36,14 +36,13 @@
                     </ion-content>
                 </ion-slide>
             </ion-slide-box>
-              
-           <ion-scroll direction="x" overflow-scroll="true" class="tsb-hscroll">
-		   <div class="tsb-icons">
-                <div class="tsb-ic-wrp"> 					
+            <div class="tsb-icons">
+                <div class="tsb-ic-wrp">
+                    <ion-scroll direction="x" class="tsb-hscroll" overflow-scroll="false">
                         <a href="javascript:;" class="{{tab.icon}}" ng-repeat="tab in tabs" on-finish-render="test()">{{tab.pageNoText}}</a>
+                    </ion-scroll>
                 </div>
-            </div>  
-		    </ion-scroll>
+            </div>
 			
 
 			
