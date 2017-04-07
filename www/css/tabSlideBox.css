@@ -29,14 +29,18 @@
     position: relative;
     -webkit-transition: -webkit-transform 0.3s; /* For Safari 3.1 to 6.0 */
     -webkit-transform: translate3d(0,0,0);
+
 }
 
 .tabbed-slidebox .tsb-icons a {
-    display: block;
-    width: 100%; /*version 1.1*/
+    display: inline-block;
+    width: 120%; /*version 1.1*/
     font-size: 1.5em; /*version 1.1*/
-    color: rgba(0, 0, 0, 0.7); /*version 1.1*/
-    -webkit-transform:translate3d(0,10px,0); /*version 1.1*/
+    color: rgba(0, 0, 0, 0.5); /*version 1.1*/
+	text-decoration: none;
+    -webkit-transform:translate3d(0,0,0); /*version 1.1*/
+	height: 50px;
+	margin-left: 10px;
 }
 
 .tabbed-slidebox .tsb-icons a.active {
