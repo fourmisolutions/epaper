@@ -1,5 +1,11 @@
 # epaper
 
+# fresh build
+ionic resources
+ionic state restore
+ionic build android
+
+
 ionic plugin add phonegap-plugin-push --variable SENDER_ID="54566305933"
 
 ionic plugin add cordova-plugin-network-information
