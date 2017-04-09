@@ -13,19 +13,19 @@
                 <p class="news-description">{{description}}</p>
                 <p class="to-be-continued-message">待续。。。更多新闻滚动到底部</p>
             </div>
-		</div>
+            <div>
 			<div style="position: relative">
 				<div id="header-button-container" class="header-button-container">					
 				</div>
 				<div style="position: relative; top: 50px;">
-					<ion-scroll direction="xy"  overflow-scroll="true">		
+					<ion-scroll direction="xy"  overflow-scroll="false">		
 						<div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
 						<pdf-gesture ng-pdf-options="options"></pdf-gesture>
 					</ion-scroll>
 				</div>				
 			</div>  
-		<div class="list card" style="position: relative; top: 50px;">			
-            <div class="item item-body">
+		</div>
+		<div class="item item-body">
                 <p style="font-size:120%">{{content}}</p>
                 <div ng-repeat="url in imageURLs"><img class="full-image" ng-src="{{url}}"></div>
             </div>
