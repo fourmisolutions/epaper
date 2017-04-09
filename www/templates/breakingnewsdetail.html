@@ -13,20 +13,19 @@
                 <p class="news-description">{{description}}</p>
                 <p class="to-be-continued-message">待续。。。更多新闻滚动到底部</p>
             </div>
-            <div>
-			<div style="position: relative">
-				<div id="header-button-container" class="header-button-container">					
-				</div>
-				<div style="position: relative; top: 50px;">
-					<ion-scroll direction="xy"  overflow-scroll="false">		
-						<div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
-						<pdf-gesture ng-pdf-options="options"></pdf-gesture>
-					</ion-scroll>
-				</div>				
-			</div>  
-		</div>
-		<div class="item item-body">
-                <p style="font-size:120%">{{content}}</p>
+            
+            <div style="position: relative">
+                <div id="header-button-container" class="header-button-container">					
+                </div>
+            </div>
+            <div class="item item-body">
+                <ion-scroll direction="xy"  overflow-scroll="false">		
+                    <div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
+                    <pdf-gesture ng-pdf-options="options"></pdf-gesture>
+                </ion-scroll>
+            </div>
+            <div class="item item-body">
+                <p class="news-description">{{content}}</p>
                 <div ng-repeat="url in imageURLs"><img class="full-image" ng-src="{{url}}"></div>
             </div>
         </div>

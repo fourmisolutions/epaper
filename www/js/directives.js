@@ -144,7 +144,7 @@
             var windowWidth = $window.innerWidth;
             var canvasWidth = 0;
             container.css('width', windowWidth + 'px');
-            container.css('height', $window.innerHeight + 'px');
+            container.css('height', $window.innerHeight * 0.8 + 'px');
             var zoomTime = 0;
             PDFJS.disableWorker = true;
 
