@@ -54,8 +54,18 @@ function getTabs(categories) {
 }
 
 
-app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state", '$timeout',
-	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state, $timeout){
+app.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state", '$timeout','$interval',
+	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state, $timeout, $interval){
+        $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+        $scope.$on('onBreakingNewsUpdate',function(){
+            $timeout(function() {
+                $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+                $scope.$apply();
+            });
+        });
+        $interval(function() {
+            $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+        }, 10000);
 		ePaperService.getCategories().then(function(categories){
 			//version 1.1		
             var tabs = [];
