@@ -10,6 +10,8 @@ ionic plugin add phonegap-plugin-push --variable SENDER_ID="54566305933"
 
 ionic plugin add cordova-plugin-network-information
 
+ionic plugin add https://github.com/fourmisolutions/cordova-comscore-plugin
+
 If contain error like this, follow this step - http://stackoverflow.com/questions/33475178/cordova-fails-to-build-on-android-gcm-dependency
 * What went wrong:
 A problem occurred configuring root project 'android'.
