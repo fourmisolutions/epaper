@@ -62,9 +62,9 @@ $ sudo npm install -g ionic@2.2.3
 
 1. Open a Terminal.
 
-2. Change current active directory to parent folder of the new project (replace [Folder Name] with the intended folder name):
+2. Change current active directory to parent folder of the new project (replace [Parent Folder Name] with the intended folder name):
 ```
-$ cd [Folder Name]
+$ cd [Parent Folder Name]
 ```
 
 3. Clone the GitHub project to local directory (replace [Branch Name] with the intended branch name, replace [Folder Name] with the intended folder name):
