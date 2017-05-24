@@ -30,9 +30,32 @@ $ sudo npm install -g ionic@2.2.3
       - Refer to the guide [here](https://developer.android.com/studio/run/managing-avds.html):
         - Using the Android Studio, create a dummy project first in order to to be able to access the `Android Studio > Tools > Android > AVD Manager`.
 
-6. `TODO:` Install required tools - iOS
+6. Install required tools - iOS
   - Refer to Apache Cordova for iOS guide [here](http://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html).
-
+    - Install Xcode:
+      - Select the Xcode version that is supported by the the Mac OS X version fo the development machine:
+        - Refer to [here](https://en.wikipedia.org/wiki/Xcode#Version_comparison_table).
+      - Download latest version of Xcode from [here](https://itunes.apple.com/us/app/xcode/id497799835?mt=12).
+      - Search and download previous versions of Xcode from [here](https://developer.apple.com/downloads/index.action). 
+      - Choose Xcode 8.2.1 for Mac OS X El Capitan 10.11.6.
+      - ``Note``: To submit apps to the Apple App Store℠ requires the latest versions of the Apple tools.
+    - Enable command-line tools for Cordova to run:
+      ```  
+      $ xcode-select --install 
+      $ npm install -g ios-sim
+      $ npm install -g ios-deploy
+      ```
+    - Check available simulators:
+      ```
+      $ ios-sim showdevicetypes
+      ```
+    - Download and install new simulators for additional iOS SDK versions or platforms using the Xcode app (need to restart for newly installed simulators to be visible):
+      - Xcode > Preferences... > Components
+    - Install CocoaPods (refer to https://cocoapods.org/): 
+      ```
+      $ sudo gem install cocoapods
+      $ pod setup  
+      ```
 
 
 # Import Current Project into Local Repository
@@ -44,14 +67,14 @@ $ sudo npm install -g ionic@2.2.3
 $ cd [Folder Name]
 ```
 
-3. Clone the GitHub project to local directory (replace [Branch Name] with the intended branch name):
+3. Clone the GitHub project to local directory (replace [Branch Name] with the intended branch name, replace [Folder Name] with the intended folder name):
 ```
-$ git clone --branch [Branch Name] https://github.com/fourmisolutions/epaper.git
+$ git clone --branch [Branch Name] https://github.com/fourmisolutions/epaper.git [Folder Name]
 ```
 
-4. Change current activate directory to newly created project folder:
+4. Change current activate directory to newly created project folder (replace [Folder Name] with the folder name defined in previous step):
 ```
-$ cd epaper
+$ cd [Folder Name]
 ```
 
 5. Configure the project dependencies into new project folder (this will create the "node_modules" folder):
@@ -59,31 +82,52 @@ $ cd epaper
 $ npm install
 ```
 
-6. Configure the platform and plugins into new project folder (this will create the "platform" and "plugins" folders):
+6. Explicitly add the required platforms to the project folder:
 ```
-$ ionic state reset
+$ ionic platform add android@6.1.0
 ```
-*Trouble-shooting: Possible Error #2*
+*Trouble-shooting: Possible Error #4*
+
+```
+$ ionic platform add ios@4.3.1
+```
+*Trouble-shooting: Possible Error #5*
 
 7. Copy the required resources into "platforms" folder:
 ```
 $ ionic resources
 ```
 
-8. Build the project for android:
+8. Configure the platform and plugins into new project folder (this will create the "platform" and "plugins" folders):
+```
+$ ionic state reset
+```
+*Trouble-shooting: Possible Error #2*
+
+9. Build the project for android:
 ```
 $ ionic build android
 ```
 *Trouble-shooting: Possible Error #3*
 
-9. Launch and view the application on a browser:
-```
-$ ionic serve
-```
-
 10. Launch and view the application on an android emulator or connected android phone:
 ```
 $ ionic run android
+```
+
+11. Build the project for iOS:
+```
+$ ionic build ios
+```
+
+12. Launch and view the application on an iOS emulator:
+```
+$ ionic run ios
+```
+
+13. Launch and view the application on a browser:
+```
+$ ionic serve
 ```
 
 
@@ -145,7 +189,7 @@ Mind letting us know? https://github.com/driftyco/ionic-cli/issues
     Error: CocoaPods was not found. Please install version 1.0.1 or greater from https://cocoapods.org/
     ```
     - To develop and test for android only, the plug-in is added successfully.
-    - `TODO:` To develop and test for ios, please proceed to install CocoaPods as per the error message and retry.
+    - To develop and test for ios, please proceed to install CocoaPods as per the error message and retry.
 
 
 ## Possible Error #3:
@@ -166,3 +210,25 @@ Error: spawn EACCES
       ```
       $ chmod +x hooks/after_prepare/copy_resource_files.js
       ```
+
+
+## Possible Error #4:
+
+```
+...
+Error: Source path does not exist: resources\android\icon\drawable-hdpi-icon.png
+```
+
+  - Solution:
+    - Error message can be ignored as the next step will restore the resources files.
+
+
+## Possible Error #5:
+
+```
+...
+Error: Source path does not exist: resources/ios/icon/icon-40.png
+```
+
+  - Solution:
+    - Error message can be ignored as the next step will restore the resources files.
