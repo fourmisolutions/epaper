@@ -93,6 +93,21 @@
             //trying to clear cache 
             ePaperService.clearCache();
             
+            /* ComScore SDK v5.X start */
+            // TODO: only for android, ios not yet ready
+        	
+        	ComScorePlugin.initClient("24608202", "82a44e8c84c174abac3cfdbcb2050ced");
+        	
+        	$ionicPlatform.on('pause', function() {
+        	    ComScorePlugin.notifyExitForeground();
+        	});
+
+        	$ionicPlatform.on('resume', function() {
+                ComScorePlugin.notifyEnterForeground();
+        	});
+
+        	/* ComScore SDK v5.X end */
+            
         });
     })
 
