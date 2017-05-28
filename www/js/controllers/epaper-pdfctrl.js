@@ -1,6 +1,6 @@
 angular.module('epaper.controllers')
-.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout',
-    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout) {	
+.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout', '$ionicPlatform',
+    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout, $ionicPlatform) {		
 	var scope = $scope;
     var tCtrl = this;
     this.onLoad = function (pag) {
@@ -34,6 +34,12 @@ angular.module('epaper.controllers')
             pinchin: false
         };
     }, 500);
+    
+    $ionicPlatform.ready(function() {
+		$scope.$on("$ionicView.beforeEnter", function(){
+	        ComScorePlugin.notifyScreenView("Daily News");
+	    });
+    });
 
 
 }]);

@@ -1,7 +1,7 @@
 var app = angular.module('epaper.breakingNewsControllers', ['ionic']);
 
-app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state', '$rootScope',
-    function($scope, ePaperService, $state, $rootScope) {
+app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state', '$rootScope', '$ionicPlatform',
+    function($scope, ePaperService, $state, $rootScope, $ionicPlatform) {
         
         ePaperService.getBreakingNews().then(function(news) {
             $scope.news = news;
@@ -13,10 +13,16 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
         $scope.clickBreakingNews = function(index) {
           $state.go('app.news', {news: $scope.news[index]});    
         };
+
+        $ionicPlatform.ready(function() {
+	        $scope.$on("$ionicView.beforeEnter", function(){
+	            ComScorePlugin.notifyScreenView("Breaking News");
+	        });
+        });
 }]);
 
-app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',
-    function($scope, $stateParams, $timeout) {
+app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', '$ionicPlatform',
+    function($scope, $stateParams, $timeout, $ionicPlatform) {
 
     var news = $stateParams.news;
     var tCtrl = this;
@@ -63,5 +69,11 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',
             pinchin: false
         };
     }, 1000);
+
+    $ionicPlatform.ready(function() {
+        $scope.$on("$ionicView.beforeEnter", function(){
+            ComScorePlugin.notifyScreenView("Breaking News");
+        });
+    });
     
 }]);

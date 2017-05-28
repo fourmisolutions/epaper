@@ -51,8 +51,8 @@ function getTabs(categories) {
 }
 
 angular.module('epaper.controllers')
-.controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout','ePaperService','$interval', '$stateParams', 'categories', '$ionicSlideBoxDelegate',
-    function( $scope, $state, $ionicScrollDelegate, $timeout, ePaperService, $interval, $stateParams, categories, $ionicSlideBoxDelegate){
+.controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout','ePaperService','$interval', '$stateParams', 'categories', '$ionicSlideBoxDelegate', '$ionicPlatform',
+    function( $scope, $state, $ionicScrollDelegate, $timeout, ePaperService, $interval, $stateParams, categories, $ionicSlideBoxDelegate, $ionicPlatform){
         $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
         $scope.$on('onBreakingNewsUpdate',function(){
             $timeout(function() {
@@ -72,10 +72,16 @@ angular.module('epaper.controllers')
         $scope.goTo = function(index){
             var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
             $ionicSlideBoxDelegate.slide(index);
-        }
+        };
         $scope.loadBreakingNews = function() {
             $state.go("app.breakingnews");
-        }
+        };
+        
+        $ionicPlatform.ready(function() {
+			$scope.$on("$ionicView.beforeEnter", function(){
+	            ComScorePlugin.notifyScreenView("Daily News");
+	        });
+        });
         
 
     }

@@ -96,7 +96,7 @@
             /* ComScore SDK v5.X start */
             // TODO: only for android, ios not yet ready
         	
-        	ComScorePlugin.initClient("24608202", "82a44e8c84c174abac3cfdbcb2050ced");
+            ComScorePlugin.initClientWithName("24608202", "82a44e8c84c174abac3cfdbcb2050ced", "seehua-epaper");
         	
         	$ionicPlatform.on('pause', function() {
         	    ComScorePlugin.notifyExitForeground();
