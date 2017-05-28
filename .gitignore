@@ -7,3 +7,5 @@ plugins/
 resources/android
 resources/ios
 *.log
+/.DS_Store
+/.project
