@@ -51,4 +51,13 @@ angular.module('epaper.controllers')
 			
 		}
 		
+		$scope.goToTodaySh = function(categoryId){
+			
+			$timeout(function() {
+				$state.go("app.todayseehualist", {"categoryId": categoryId});
+				//$state.$apply();
+            });
+			
+		}
+		
 }]);

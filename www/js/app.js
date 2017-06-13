@@ -4,7 +4,7 @@
 // 'starter.controllers' is found in controllers.js
 
 (function(){
-    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
+    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'epaper.todayShControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
 
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences) {
         $ionicPlatform.ready(function() {
@@ -193,6 +193,27 @@
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/breakingnews.html'
+                    }
+                }
+            })
+
+            .state('app.todayseehualist', {
+                url: '/todayseehualist/:categoryId',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/todayseehua.html',
+                        controller: 'MenuCtrl'
+                    }
+                }
+            })
+
+            .state('app.todayseehua', {
+                url: '/todayseehua/',
+                params: {news: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/todayseehuadetail.html',
+                        controller: 'MenuCtrl'
                     }
                 }
             });

@@ -1,0 +1,46 @@
+<ion-view view-title="Today See Hua" ng-controller="TodayShController">
+    <ion-nav-bar class="bar-assertive">
+        <ion-nav-buttons side="left">
+            <!-- Toggle left side menu -->
+            <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a href="#/app/breakingnewslist" class="button" style="right:25px">
+                即时新闻
+            </a>
+            <span class="badge badge-light" style="position: absolute; right: 0px" ng-show="breakingNewsCount > 0">!</span>
+            
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    
+    <ion-content>
+        <div class="list card">	
+            <div class="item item-body">
+                <h1>{{title}}</h1>
+            </div>	
+            
+            <div class="item item-body">
+                <img class="full-image" ng-src="{{imageUrl}}"></div>			
+                <p class="news-description">{{description}}</p>
+                <p class="to-be-continued-message">待续。。。更多新闻滚动到底部</p>
+            </div>
+            
+            <div style="position: relative">
+                <div id="header-button-container" class="header-button-container">					
+                </div>
+            </div>
+            <div class="item item-body">
+                <ion-scroll direction="xy"  overflow-scroll="false">		
+                    <div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
+                    <pdf-gesture ng-pdf-options="options"></pdf-gesture>
+                </ion-scroll>
+            </div>
+		</div>
+		<div class="list card">	
+            <div class="item item-body">
+                <p class="news-description" style="font-size: 120%">{{content}}</p>
+                <div ng-repeat="url in imageURLs"><img class="full-image" ng-src="{{url}}"></div>
+            </div>
+        </div>
+	</ion-content>
+</ion-view>
