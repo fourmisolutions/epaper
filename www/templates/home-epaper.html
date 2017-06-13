@@ -13,9 +13,9 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content ng-controller="MenuCtrl" style="text-align: center; background-color: #FF0000;">
-	<h3 class="title" style="text-align: center; color: #FFFFFF">See Hua e-Paper</h3>
+	<h3 class="title" style="text-align: center; background-color: #FF0000; color: #FFFFFF;">See Hua e-Paper</h3>
       <ion-list>
-        <ion-item menu-close ng-repeat="tab in tabs" ng-click="goTo(tab.categoryId)" style="text-align: center; background-color: #FF0000; color: #FFFFFF">
+        <ion-item menu-close ng-repeat="tab in tabs" ng-click="goTo(tab.categoryId)" style="text-align: center; background-color: #FF0000; color: #FFFFFF;">
           {{tab.text}}		  
         </ion-item>
       </ion-list>

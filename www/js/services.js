@@ -76,7 +76,7 @@ app.factory('Categories', function(Category){
     Categories.prototype.getNews = function(categoryId, pageNo) {
         return this.getCategoryByCategoryId(categoryId).getNewsByPageNo(pageNo);
     }
-    return Categories
+    return Categories;
 });
 
 app.factory('Category', function(){
@@ -135,7 +135,107 @@ app.factory('Category', function(){
     return Category;
 });
 
-app.factory('ePaperService', function($http, $q, Category, Categories,  $cordovaPreferences) {
+app.factory('TodayShCategories', function(TodayShCategory){
+    function TodayShCategories(categories) {
+        this.categories = categories.sort(function(a, b)
+        {
+			  var nA = a.categoryId.toLowerCase();
+			  var nB = b.categoryId.toLowerCase();
+
+			  if(nA < nB)
+				return -1;
+			  else if(nA > nB)
+				return 1;
+			 return 0;
+        });
+    }
+    
+    TodayShCategories.build = function(data) {
+        function getCategoryIds(data) {
+            var categoriesIds = [];
+            angular.forEach(data, function(news, key) {
+                //not exists
+                if(categoriesIds.indexOf(news.category) == -1) {
+                    categoriesIds.push(news.category);
+                }
+            });
+            return categoriesIds;
+        }
+        var categoryIds = getCategoryIds(data);
+        var categories = [];
+        angular.forEach(categoryIds, function(categoryId, key) {
+            categories.push(TodayShCategory.build(categoryId, data));
+        });
+        return new TodayShCategories(categories);
+    }
+    
+    TodayShCategories.prototype.getTotal = function() {
+        return this.categories.length;
+    };
+    TodayShCategories.prototype.getCategory = function(index) {
+        return this.categories[index];
+    }
+    
+    TodayShCategories.prototype.getTotalNews = function() {
+        var total = 0;
+        angular.forEach(this.categories, function(category) {
+            total += category.getTotal();
+        });
+        return total;
+    }
+    
+    TodayShCategories.prototype.getCategoryByCategoryId = function(categoryId) {
+        var category;
+        angular.forEach(this.categories, function(data) {
+            if(data.categoryId == categoryId) {
+                category = data;
+            }
+        });
+        return category;
+    }
+    
+    TodayShCategories.prototype.getNews = function(categoryId) {
+        return this.getCategoryByCategoryId(categoryId).getNews();
+    }
+    
+    return TodayShCategories;
+});
+
+app.factory('TodayShCategory', function(){
+    var chinese_menu_dictionary = {'A': '南砂', 'B': '中区', 'C': '北砂', 'D': '新華日報', 'E': '西沙', 'F': '东沙', 'G': '西马', 'H': '体育', 'I': '国际', 'J': '娱乐', 'K': '副刊', 'L': '财经', 'M': '豆苗' }
+    
+    function TodayShCategory(categoryId, news) {
+        this.categoryId = categoryId;
+        this.news = news;
+        this.categoryDesc = chinese_menu_dictionary[categoryId];
+    }
+    
+    TodayShCategory.build = function(categoryId, data) {
+        var arrayOfNews = [];
+        angular.forEach(data, function(news, key) {
+            if(news.category == categoryId) {
+                arrayOfNews.push(news);
+            }
+        });
+        return new TodayShCategory(categoryId, arrayOfNews);
+    }
+    
+    TodayShCategory.prototype.getTotal = function() {
+        return this.news.length;
+    }
+    
+    TodayShCategory.prototype.getNews = function(index) {
+        return this.news[index];
+    }
+    
+    TodayShCategory.prototype.getCategoryDesc = function() {
+        return this.categoryDesc;
+    }
+    
+    return TodayShCategory;
+});
+
+app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences) {
    	var baseUrl = 'http://shetest.theborneopost.com';
     var ePaperService = {};
     //POST login
@@ -157,7 +257,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories,  $cordova
         });
     }
 
-    //GET /news/categories    
+    //GET /news/categories - epaper
     var today = new Date();//this is to get once a day
 	var categoriesApiUrl = '/seehua_pdf.json?date=' + today.toISOString().substring(0, 10);;
     ePaperService.getCategories = function() {
@@ -170,6 +270,17 @@ app.factory('ePaperService', function($http, $q, Category, Categories,  $cordova
     ePaperService.getNews = function(categoryId, pageNo) {
         return ePaperService.getCategories().then(function(categories){
            return categories.getNews(categoryId, pageNo);
+        });
+    }
+
+    //GET /news/categories - today seehua (todaySh)
+    var today = new Date();//this is to get once a day
+	var todayShCategoriesApiUrl = '/seehua_pdf.json?date=' + today.toISOString().substring(0, 10);; // TODO: update actual api url
+    ePaperService.getTodayShCategories = function() {
+        return $http.get(baseUrl + todayShCategoriesApiUrl, {cache:true}).then(function(response) {
+            return TodayShCategories.build(response.data);
+        }, function(error){
+            return undefined;
         });
     }
     
