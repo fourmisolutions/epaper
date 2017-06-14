@@ -275,7 +275,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
 
     //GET /news/categories - today seehua (todaySh)
     var today = new Date();//this is to get once a day
-	var todayShCategoriesApiUrl = '/seehua_pdf.json?date=' + today.toISOString().substring(0, 10);; // TODO: update actual api url
+	var todayShCategoriesApiUrl = '/seehua_pdf.json?date=' + today.toISOString().substring(0, 10); // TODO: update actual api url
     ePaperService.getTodayShCategories = function() {
         return $http.get(baseUrl + todayShCategoriesApiUrl, {cache:true}).then(function(response) {
             return TodayShCategories.build(response.data);
@@ -283,6 +283,13 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
             return undefined;
         });
     }
+    
+    // TODO: demo only
+    ePaperService.getTodayShNews = function() {  
+	    return $http.get(baseUrl + breakingApiUrl + '?date=' + today.toISOString().substring(0, 10), {cache:true}).then(function(response) {
+           return response.data;
+       });
+   }
     
     var registerPushNotificationUrl = '/sh_rest/push_notifications';
     ePaperService.registerPushNotification = function(token, platform) {
