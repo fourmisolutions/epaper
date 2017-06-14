@@ -187,15 +187,15 @@ app.factory('TodayShCategories', function(TodayShCategory){
     TodayShCategories.prototype.getCategoryByCategoryId = function(categoryId) {
         var category;
         angular.forEach(this.categories, function(data) {
-            if(data.categoryId == categoryId) {
-                category = data;
+        	if(data.categoryId == categoryId) {
+        		category = data;
             }
         });
         return category;
     }
     
-    TodayShCategories.prototype.getNews = function(categoryId) {
-        return this.getCategoryByCategoryId(categoryId).getNews();
+    TodayShCategories.prototype.getNewsByCategoryId = function(categoryId) {
+        return this.getCategoryByCategoryId(categoryId).getNewsList();
     }
     
     return TodayShCategories;
@@ -222,6 +222,10 @@ app.factory('TodayShCategory', function(){
     
     TodayShCategory.prototype.getTotal = function() {
         return this.news.length;
+    }
+    
+    TodayShCategory.prototype.getNewsList = function() {
+        return this.news;
     }
     
     TodayShCategory.prototype.getNews = function(index) {
@@ -275,7 +279,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
 
     //GET /news/categories - today seehua (todaySh)
     var today = new Date();//this is to get once a day
-	var todayShCategoriesApiUrl = '/seehua_pdf.json?date=' + today.toISOString().substring(0, 10); // TODO: update actual api url
+	var todayShCategoriesApiUrl = '/seehua_today_news.json?date=' + today.toISOString().substring(0, 10);
     ePaperService.getTodayShCategories = function() {
         return $http.get(baseUrl + todayShCategoriesApiUrl, {cache:true}).then(function(response) {
             return TodayShCategories.build(response.data);
@@ -284,12 +288,11 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
         });
     }
     
-    // TODO: demo only
-    ePaperService.getTodayShNews = function() {  
-	    return $http.get(baseUrl + breakingApiUrl + '?date=' + today.toISOString().substring(0, 10), {cache:true}).then(function(response) {
-           return response.data;
-       });
-   }
+    ePaperService.getTodayShNews = function(categoryId) {
+    	return ePaperService.getTodayShCategories().then(function(categories){
+    		return categories.getNewsByCategoryId(categoryId);
+        });
+    }
     
     var registerPushNotificationUrl = '/sh_rest/push_notifications';
     ePaperService.registerPushNotification = function(token, platform) {

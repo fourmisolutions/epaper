@@ -1,7 +1,7 @@
 var app = angular.module('epaper.todayShControllers', ['ionic']);
 
-app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$rootScope', '$timeout','$interval',
-    function($scope, ePaperService, $state, $rootScope, $timeout, $interval) {
+app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$rootScope', '$timeout','$interval', '$stateParams',
+    function($scope, ePaperService, $state, $rootScope, $timeout, $interval, $stateParams) {
         
 		$scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
 	    $scope.$on('onBreakingNewsUpdate',function(){
@@ -13,14 +13,14 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
 	    $interval(function() {
 	        $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
 	    }, 10000);
-	
-        ePaperService.getTodayShNews().then(function(news) {
+	    
+	    ePaperService.getTodayShNews($stateParams.categoryId).then(function(news) {
             $scope.news = news;
         }, function (error) {
         });
         
         $scope.clickTodayShNews = function(index) {
-          $state.go('app.todayseehua', {news: $scope.news[index]});    
+            $state.go('app.todayseehua', {news: $scope.news[index]});    
         };
 }]);
 
