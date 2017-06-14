@@ -107,6 +107,7 @@
                 abstract: true,
                 templateUrl: 'templates/menu.html'
             })
+            
 			.state('app.home', {
                 url: '/home',
 				views: {
@@ -116,6 +117,27 @@
                     }
                 }                
             })
+            
+			.state('app.home-epaper', {
+                url: '/home-epaper',
+				views: {
+                    'menuContent': {
+                        templateUrl: 'templates/home-epaper.html',
+                        controller: 'MenuCtrl'
+                    }
+                }                
+            })
+            
+			.state('app.home-todaysh', {
+                url: '/home-todaysh',
+				views: {
+                    'menuContent': {
+                        templateUrl: 'templates/home-todaysh.html',
+                        controller: 'MenuCtrl'
+                    }
+                }                
+            })
+            
             .state('app.tabs', {
                 url: '/tabs/:categoryId', //version 1.1
                 views: {

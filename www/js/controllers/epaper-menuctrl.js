@@ -2,16 +2,19 @@ angular.module('epaper.controllers')
 .controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state", '$timeout','$interval',
 	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state, $timeout, $interval){
         $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+        
         $scope.$on('onBreakingNewsUpdate',function(){
             $timeout(function() {
                 $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
                 $scope.$apply();
             });
         });
+        
         $interval(function() {
             $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
         }, 10000);
-		ePaperService.getCategories().then(function(categories){
+		
+        ePaperService.getCategories().then(function(categories){
 			//version 1.1		
             var tabs = [];
             for(var j=0;j < categories.getTotal();j++){
@@ -21,6 +24,16 @@ angular.module('epaper.controllers')
             }
 			$scope.tabs = tabs;
 			//end of version 1.1
+		});
+        
+        ePaperService.getTodayShCategories().then(function(categories){
+			var todayShTabs = [];
+            for(var j=0;j < categories.getTotal();j++){
+                var category = categories.getCategory(j);	
+                var tab = {"categoryId": category.categoryId, "text": category.getCategoryDesc()};			
+                todayShTabs.push(tab);
+            }
+			$scope.todayShTabs = todayShTabs;
 		});
 		
 		/*$scope.goTo = function(index){

@@ -12,17 +12,12 @@
             
         </ion-nav-buttons>
     </ion-nav-bar>
-    
-    <ion-content style="text-align: center; background-color: #FF0000;">
-        <ion-list>
-            <ion-item style="height : 20vh; background : #FF0000;">&nbsp;</ion-item>
-            <ion-item menu-close href="#/app/home-epaper" style="text-align:center">
-                See Hua e-Paper
-            </ion-item>
-            <ion-item style="background : #FF0000;">&nbsp;</ion-item>
-            <ion-item menu-close href="#/app/home-todaysh" style="text-align:center">
-                Today See Hua
-            </ion-item>
-        </ion-list>
+    <ion-content ng-controller="MenuCtrl" style="text-align: center; background-color: #FF0000;">
+	<h3 class="title" style="text-align: center; background-color: #FF0000; color: #FFFFFF;">See Hua e-Paper</h3>
+      <ion-list>
+        <ion-item menu-close ng-repeat="tab in tabs" ng-click="goTo(tab.categoryId)" style="text-align: center; background-color: #FF0000; color: #FFFFFF;">
+          {{tab.text}}		  
+        </ion-item>
+      </ion-list>
     </ion-content>
 </ion-view>
