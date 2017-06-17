@@ -1,5 +1,6 @@
 <ion-view title="诗华电子报">
     <ion-nav-bar class="bar-assertive">
+        <ion-nav-back-button class="nav-button"></ion-nav-back-button>
         <ion-nav-buttons side="left">
             <!-- Toggle left side menu -->
             <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
@@ -15,7 +16,7 @@
     <ion-content ng-controller="MenuCtrl" style="text-align: center; background-color: #FF0000;">
 	<h3 class="title" style="text-align: center; background-color: #FF0000; color: #FFFFFF;">今日诗华</h3>
       <ion-list>
-        <ion-item menu-close ng-repeat="tab in todayShTabs" ng-click="goToTodaySh(tab.categoryId)" style="text-align: center; background-color: #FF0000; color: #FFFFFF;">
+        <ion-item menu-toggle="right" ng-repeat="tab in todayShTabs" ng-click="goToTodaySh(tab.categoryId)" style="text-align: center; background-color: #FF0000; color: #FFFFFF;">
           {{tab.text}}		  
         </ion-item>
       </ion-list>

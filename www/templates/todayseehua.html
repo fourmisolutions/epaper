@@ -1,5 +1,6 @@
 <ion-view view-title="今日诗华" ng-controller="TodayShListController">
     <ion-nav-bar class="bar-assertive">
+        <ion-nav-back-button class="nav-button"></ion-nav-back-button>
         <ion-nav-buttons side="left">
             <!-- Toggle left side menu -->
             <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
@@ -15,7 +16,7 @@
 
     <ion-content>
         <ion-list>
-            <ion-item menu-close ng-repeat="article in news" ng-click="clickTodayShNews({{$index}})">
+            <ion-item menu-toggle="right" ng-repeat="article in news" ng-click="clickTodayShNews({{$index}})">
                 <h2>{{article.title}}</h2>
                 <p>{{article.description}}</p>
             </ion-item>
