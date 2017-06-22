@@ -2,8 +2,10 @@ angular.module('epaper')
 .constant('ShApiConstants', {
 	
 	/* 
+	 * Handling CORS issues for 'ionic serve'
+	 * 
+	 * Ref: http://blog.ionic.io/handling-cors-issues-in-ionic/
 	 * Proxied path is defined in ionic.config.json
-	 * ref: http://blog.ionic.io/handling-cors-issues-in-ionic/
 	 * 
 	 * Options:
 	 * - true: when need to test run using 'ionic serve' or 'ionic run -l'

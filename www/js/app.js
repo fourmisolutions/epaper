@@ -4,15 +4,15 @@
 // 'starter.controllers' is found in controllers.js
 
 (function(){
-    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'epaper.todayShControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
-
+    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'epaper.todayShControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova', 'ngCookies'])
+    
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences) {
         $ionicPlatform.ready(function() {
             $rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
                 $ionicHistory.goBack();
             }
-
+            
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -98,7 +98,7 @@
         	
         });
     })
-
+    
     app.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
 

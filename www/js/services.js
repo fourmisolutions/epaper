@@ -265,15 +265,48 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
     }
     
     //POST login
-    var loginApiUrl = '/login';
-    
-    ePaperService.login = function() {
-        return $http.post(ePaperService.constructApiUrl(loginApiUrl), data)
-            .then(function(status, headers){
-            },function (error) {
-            });
-    }
-
+    ePaperService.login = function(username, password) {
+		// get session token
+		var getSessionToken = function() {
+			var sessionTokenUrl = ShApiConstants.sessionTokenUrl;
+			
+			return $http.get(ePaperService.constructApiUrl(sessionTokenUrl), {cache:false});
+		};
+		
+		var postLogin = function(username, password, sessionToken) {
+			var loginUrl = ShApiConstants.loginUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(loginUrl),
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'username' : username, 'password' : password}
+			});
+		};
+		
+		// submit login request
+		return getSessionToken().then(function(response){
+			return postLogin(username, password, response.data);
+		}, function(error){
+			throw error;
+		});
+	};
+	
+	//POST logout
+	ePaperService.logout = function(sessionToken) {
+		var postLogout = function(sessionToken) {
+			var logoutUrl = ShApiConstants.logoutUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(logoutUrl),
+				headers : { 'X-CSRF-Token' : sessionToken }
+			});
+		};
+		
+		// submit login request
+		return postLogout(sessionToken);
+	};
 
     //GET /news/breaking - online version
     var breakingApiUrl = ShApiConstants.breakingNewsListUrl;
