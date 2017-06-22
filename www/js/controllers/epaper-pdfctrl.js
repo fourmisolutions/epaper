@@ -25,7 +25,7 @@ angular.module('epaper.controllers')
     
     $timeout(function() {
         $scope.options = {
-            pdfUrl: news.pdfURL,
+            pdfUrl: ePaperService.constructApiUrl(news.pdfURL),
             onLoad: tCtrl.onLoad,
             onProgress: tCtrl.onProgress,
             onError: tCtrl.onError,

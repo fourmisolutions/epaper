@@ -1,4 +1,10 @@
 {
   "name": "epaper",
-  "app_id": "6924f533"
+  "app_id": "6924f533",
+  "proxies": [
+    {
+      "path": "/shapi-proxy", 
+      "proxyUrl": "http://shetest.theborneopost.com"
+    }
+  ]
 }

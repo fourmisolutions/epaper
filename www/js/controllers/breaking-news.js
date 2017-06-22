@@ -15,8 +15,8 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
         };
 }]);
 
-app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',
-    function($scope, $stateParams, $timeout) {
+app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 'ePaperService',
+    function($scope, $stateParams, $timeout, ePaperService) {
 
     var news = $stateParams.news;
     var tCtrl = this;
@@ -54,7 +54,7 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout',
 	
     $timeout(function() {
         $scope.options = {
-            pdfUrl: news.pdfURL,
+            pdfUrl: ePaperService.constructApiUrl(news.pdfURL),
             onLoad: tCtrl.onLoad,
             onProgress: tCtrl.onProgress,
             onError: tCtrl.onError,
