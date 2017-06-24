@@ -24,8 +24,12 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
         };
 }]);
 
-app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 
-    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService) {
+app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants',
+    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants) {
+	
+	$scope.$on("$ionicView.beforeEnter", function(event, data){
+		GaService.trackView(GaConstants.scrnNameTodaySeeHua);
+	});
 	
 	$scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
     $scope.$on('onBreakingNewsUpdate',function(){

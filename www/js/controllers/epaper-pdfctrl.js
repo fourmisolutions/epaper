@@ -1,6 +1,11 @@
 angular.module('epaper.controllers')
-.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout',
-    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout) {	
+.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout', 'GaService', 'GaConstants',
+    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout, GaService, GaConstants) {	
+	
+	$scope.$on("$ionicView.beforeEnter", function(event, data){
+		GaService.trackView(GaConstants.scrnNameSeeHuaEpaper);
+	});
+	
 	var scope = $scope;
     var tCtrl = this;
     this.onLoad = function (pag) {
