@@ -98,17 +98,17 @@ angular.module('epaper.controllers')
 							localStorage.getItem('shApiUsername'), 
 							window.atob(localStorage.getItem('shApiPassword'))).then(function(response){
 						
-						console.log('refreshShApiSession(): data=' + JSON.stringify(response.data));
+						//console.log('refreshShApiSession(): data=' + JSON.stringify(response.data));
 						
 						// store refreshed data in local storage for subsequent api calls
 						localStorage.setItem('shApiSessionToken', response.data.token);
-						console.log('sessionToken: ' + response.data.token);
+						//console.log('sessionToken: ' + response.data.token);
 						
 						localStorage.setItem('shApiSessionKey', response.data.session_name);
-						console.log('sessionKey: ' + response.data.session_name);
+						//console.log('sessionKey: ' + response.data.session_name);
 						
 						localStorage.setItem('shApiSessionValue', response.data.sessid);
-						console.log('sessionValue: ' + response.data.sessid);
+						//console.log('sessionValue: ' + response.data.sessid);
 						
 						// store session cookies to be sent over to server for subsequent api calls
 						if (ShApiConstants.useProxy) {
@@ -155,24 +155,24 @@ angular.module('epaper.controllers')
 			
 			ePaperService.login($scope.loginData.username, $scope.loginData.password).then(function(response){
 				
-				console.log('MenuCtrl.doLogin(): data=' + JSON.stringify(response.data));
+				//console.log('MenuCtrl.doLogin(): data=' + JSON.stringify(response.data));
 				
 				// store credentials and returned data in local storage for subsequent api calls
 				localStorage.setItem('shApiUsername', $scope.loginData.username);
-				console.log('username: ' + $scope.loginData.username);
+				//console.log('username: ' + $scope.loginData.username);
 				
 				var passwordEnc = window.btoa($scope.loginData.password);
 				localStorage.setItem('shApiPassword', passwordEnc);
-				console.log('passwordEnc: ' + passwordEnc);
+				//console.log('passwordEnc: ' + passwordEnc);
 				
 				localStorage.setItem('shApiSessionToken', response.data.token);
-				console.log('sessionToken: ' + response.data.token);
+				//console.log('sessionToken: ' + response.data.token);
 				
 				localStorage.setItem('shApiSessionKey', response.data.session_name);
-				console.log('sessionKey: ' + response.data.session_name);
+				//console.log('sessionKey: ' + response.data.session_name);
 				
 				localStorage.setItem('shApiSessionValue', response.data.sessid);
-				console.log('sessionValue: ' + response.data.sessid);
+				//console.log('sessionValue: ' + response.data.sessid);
 				
 				// store session cookies to be sent over to server for subsequent api calls
 				if (ShApiConstants.useProxy) {
@@ -210,10 +210,10 @@ angular.module('epaper.controllers')
 
 			confirmPopup.then(function(res) {
 				if(res) {
-					console.log('Proceed logout ...');
+					//console.log('Proceed logout ...');
 					
 					if (localStorage.getItem('shApiSessionToken') == undefined) {
-						console.log('MenuCtrl.confirmLogout: sessionToken unavailable');
+						//console.log('MenuCtrl.confirmLogout: sessionToken unavailable');
 					} else {
 						
 						var postLogoutProcess = function() {
@@ -237,7 +237,7 @@ angular.module('epaper.controllers')
 						
 						ePaperService.logout(localStorage.getItem('shApiSessionToken')).then(function(response){
 
-							console.log('MenuCtrl.confirmLogout(): response=' + JSON.stringify(response));
+							//console.log('MenuCtrl.confirmLogout(): response=' + JSON.stringify(response));
 							postLogoutProcess();
 							
 						}, function(error){
@@ -252,7 +252,7 @@ angular.module('epaper.controllers')
 						
 					}
 				} else {
-					console.log('Cancel logout');
+					//console.log('Cancel logout');
 				}
 			});
 		};
