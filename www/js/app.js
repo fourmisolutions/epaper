@@ -9,36 +9,6 @@
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences) {
         $ionicPlatform.ready(function() {
             
-        	$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-        		
-        		var msgStr = '';
-                
-        		msgStr += 'State change from: ' + fromState.name + ' to: ' + toState.name;
-                
-                var history = $ionicHistory.viewHistory();
-    	        
-    	        var viewStr = '';
-    	        angular.forEach(history.views, function(view, index){
-    	            viewStr += view.stateName + ',';
-    	        });
-    	        msgStr += '\n\nviews: [' + viewStr + ']';
-    	        
-    	        var historyStr = '';
-    	        angular.forEach(history.histories[$ionicHistory.currentHistoryId()].stack, function(view, index){
-    	             historyStr += view.stateName + ',';
-    	        });
-    	        msgStr += '\n\nhistory stack: [' + historyStr + ']';
-    	        
-    	        msgStr += '\n\nviewHistory=' + JSON.stringify(history);
-    	        
-    	        console.log('epaper: ' + msgStr);
-                
-                //$timeout(function() {
-                //    console.log('$timeout after 1 sec $ionicHistory.backView().stateName');
-                //    console.log($ionicHistory.backView() === null ? "<null>" : $ionicHistory.backView().stateName);
-                //}, 1000);
-            });
-        	
         	$rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
                 $ionicHistory.goBack();
