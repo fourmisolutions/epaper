@@ -14,11 +14,14 @@
 
   <ion-side-menu side="left" ng-controller="MenuCtrl" style="text-align: center;">
     <ion-header-bar class="bar-assertive">
-      <h1 class="title">欢迎！您是{{ currentUser }}</h1>
+      <h1 class="title" style="text-align: center">
+      <span ng-if="isAuthenticated">欢迎！您是{{ currentUser }}</span>
+      <span ng-if="!isAuthenticated">分类</span>
+      </h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ng-if="!isAuthenticated" ng-click="showLogin()" style="background-color : #00FF00; color : #000000;">
+        <ion-item menu-close ng-if="!isAuthenticated" ng-click="showLogin()" style="background-color : #FF0000; color : #FFFFFF;">
             会员登入
         </ion-item>
         <ion-item style="background-color : #FF0000; color : #FFFFFF;">
@@ -33,7 +36,7 @@
         <ion-item menu-close ng-repeat="tab in todayShTabs" ng-click="goToTodaySh(tab.categoryId)">
           {{tab.text}}        
         </ion-item>
-        <ion-item menu-close ng-if="isAuthenticated" ng-click="confirmLogout()" style="background-color : #FFFF00; color : #000000;">
+        <ion-item menu-close ng-if="isAuthenticated" ng-click="confirmLogout()" style="background-color : #FF0000; color : #FFFFFF;">
             会员退出
         </ion-item>
       </ion-list>

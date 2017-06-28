@@ -119,8 +119,12 @@ angular.module('epaper.controllers')
 						
 					}, function(error){
 						
-						// TODO: error handling
-						alert('refreshShApiSession(): error=' + JSON.stringify(error));
+						//console.log('refreshShApiSession(): error=' + JSON.stringify(error));
+						
+						$ionicPopup.confirm({
+                            title: "User Login Error",
+                            content: error.data
+                        });
 						
 					});
 					
@@ -190,9 +194,12 @@ angular.module('epaper.controllers')
 				
 			}, function(error){
 				
-				// TODO: error handling
-				alert('MenuCtrl.doLogin(): error=' + JSON.stringify(error));
+				//console.log('MenuCtrl.doLogin(): error=' + JSON.stringify(error));
 				
+				$ionicPopup.confirm({
+                    title: "User Login Error",
+                    content: error.data
+                });
 			});
 			
 		};
@@ -242,8 +249,7 @@ angular.module('epaper.controllers')
 							
 						}, function(error){
 							
-							// TODO: error handling
-							alert('MenuCtrl.confirmLogout(): error=' + JSON.stringify(error));
+							//console.log('MenuCtrl.confirmLogout(): error=' + JSON.stringify(error));
 							
 							// proceed to process logout even with api call error
 							postLogoutProcess();

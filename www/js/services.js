@@ -259,7 +259,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
     		result = ShApiConstants.baseUrl + strippedTargetUrl;
     	}
     	
-    	console.log('aPaperService.constructApiUrl(): result=' + result);
+    	//console.log('aPaperService.constructApiUrl(): result=' + result);
     	
     	return result;
     }
