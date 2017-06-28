@@ -147,6 +147,7 @@
             container.css('height', $window.innerHeight * 0.8 + 'px');
             var zoomTime = 0;
             PDFJS.disableWorker = true;
+            PDFJS.disableRange = true;
 
             scope.pageFit = function () {
                 zoomTime = 0;
