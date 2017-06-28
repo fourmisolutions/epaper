@@ -44,7 +44,7 @@ angular.module('epaper')
 .constant('GaConstants', {
 	
 	// refer to GA Admin > Property > Property Settings
-	trackingId : 'UA-101626860-1',
+	trackingId : 'UA-52578245-2',
 	
 	// default is 30 seconds, shortened for testing purpose only
 	dispatchInterval : 15,
