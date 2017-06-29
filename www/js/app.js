@@ -8,7 +8,8 @@
     
     app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences) {
         $ionicPlatform.ready(function() {
-            $rootScope.goBackState = function(){
+            
+        	$rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
                 $ionicHistory.goBack();
             }
