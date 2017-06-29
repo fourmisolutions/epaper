@@ -15,31 +15,35 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
         };
 }]);
 
-app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 'ePaperService',
-    function($scope, $stateParams, $timeout, ePaperService) {
+app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 'ePaperService', 'GaService', 'GaConstants',
+	function($scope, $stateParams, $timeout, ePaperService, GaService, GaConstants) {
+	
+	$scope.$on("$ionicView.beforeEnter", function(event, data){
+		GaService.trackView(GaConstants.scrnNameBreakingNews);
+	});
+	
+	var news = $stateParams.news;
+	var tCtrl = this;
 
-    var news = $stateParams.news;
-    var tCtrl = this;
+	this.onLoad = function (pag) {
+	};
 
-    this.onLoad = function (pag) {
-    };
+	this.onError = function (err) {
+	};
 
-    this.onError = function (err) {
-    };
+	this.onProgress = function (progress) {
+	};
 
-    this.onProgress = function (progress) {
-    };
+	this.onPageRender = function (page) {
 
-    this.onPageRender = function (page) {
-		
-    };
+	};
 
-    $scope.title = news.title;
-    $scope.description = news.description;
+	$scope.title = news.title;
+	$scope.description = news.description;
 	$scope.content = news.content;
 	$scope.imageURLs = [];
-	
-	
+
+
 	if (news.imageURL.indexOf(',') >= 0)
 	{
 		var imageURL_local = news.imageURL.split(',');
@@ -51,17 +55,18 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
 	{
 		$scope.imageUrl = news.imageURL;
 	}
-	
-    $timeout(function() {
-        $scope.options = {
-            pdfUrl: ePaperService.constructApiUrl(news.pdfURL),
-            onLoad: tCtrl.onLoad,
-            onProgress: tCtrl.onProgress,
-            onError: tCtrl.onError,
-            onPageRender: tCtrl.onPageRender,
-            httpHeaders: [],
-            pinchin: false
-        };
-    }, 1000);
-    
+
+	$timeout(function() {
+		$scope.options = {
+				pdfUrl: ePaperService.constructApiUrl(news.pdfURL),
+				onLoad: tCtrl.onLoad,
+				onProgress: tCtrl.onProgress,
+				onError: tCtrl.onError,
+				onPageRender: tCtrl.onPageRender,
+				httpHeaders: [],
+				pinchin: false
+		};
+	}, 1000);
+
+
 }]);
