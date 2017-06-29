@@ -1,9 +1,6 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus enable-menu-with-back-views="true">
   <ion-side-menu-content>
     <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-
       <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
@@ -24,13 +21,13 @@
         <ion-item style="background-color : #FF0000; color : #FFFFFF;">
             e诗华日报
         </ion-item>
-        <ion-item menu-close ng-repeat="tab in tabs" ng-click="goTo(tab.categoryId)">
+        <ion-item menu-toggle="left" ng-repeat="tab in tabs" ng-click="goTo(tab.categoryId)">
           {{tab.text}}		  
         </ion-item>
         <ion-item style="background-color : #FF0000; color : #FFFFFF;">
             今日诗华
         </ion-item>
-        <ion-item menu-close ng-repeat="tab in todayShTabs" ng-click="goToTodaySh(tab.categoryId)">
+        <ion-item menu-toggle="left" ng-repeat="tab in todayShTabs" ng-click="goToTodaySh(tab.categoryId)">
           {{tab.text}}        
         </ion-item>
         <ion-item menu-close ng-if="isAuthenticated" ng-click="confirmLogout()" style="background-color : #FFFF00; color : #000000;">

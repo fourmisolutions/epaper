@@ -132,7 +132,7 @@ angular.module('epaper.controllers')
 			}
 			
 		}
-		
+    
 		// Create the login modal that we will use later
 		$ionicModal.fromTemplateUrl('templates/login.html', {
 			scope: $scope
@@ -256,5 +256,9 @@ angular.module('epaper.controllers')
 				}
 			});
 		};
+
+		$scope.switchModule = function(moduleStateName) {
+			$state.go(moduleStateName);
+		}
 		
 }]);
