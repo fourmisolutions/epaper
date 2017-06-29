@@ -60,4 +60,8 @@ angular.module('epaper.controllers')
 			
 		}
 		
+		$scope.switchModule = function(moduleStateName) {
+			$state.go(moduleStateName);
+		}
+		
 }]);
