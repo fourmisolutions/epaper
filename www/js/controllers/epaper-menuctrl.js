@@ -97,7 +97,7 @@ angular.module('epaper.controllers')
 					ePaperService.login(
 							localStorage.getItem('shApiUsername'), 
 							window.atob(localStorage.getItem('shApiPassword'))).then(function(response){
-						
+
 						//console.log('refreshShApiSession(): data=' + JSON.stringify(response.data));
 						
 						// store refreshed data in local storage for subsequent api calls

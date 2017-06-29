@@ -1,4 +1,6 @@
 angular.module('epaper')
+
+// See Hua epaper API
 .constant('ShApiConstants', {
 	
 	/* 
@@ -34,5 +36,23 @@ angular.module('epaper')
 	loginUrl : '/sh_rest/user/login',
 	
 	logoutUrl : '/sh_rest/user/logout'
+
+})
+
+
+// Google Analytics
+.constant('GaConstants', {
 	
-});
+	// refer to GA Admin > Property > Property Settings
+	trackingId : 'UA-52578245-2',
+	
+	// default is 30 seconds, shortened for testing purpose only
+	dispatchInterval : 15,
+	
+	// screen names constants
+	scrnNameBreakingNews : 'Breaking News',
+	scrnNameTodaySeeHua : 'Today SeeHua',
+	scrnNameSeeHuaEpaper : 'SeeHua epaper'
+	
+})
+;

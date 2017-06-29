@@ -6,7 +6,7 @@
 (function(){
     var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'epaper.todayShControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova', 'ngCookies'])
     
-    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences) {
+    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences, GaConstants) {
         $ionicPlatform.ready(function() {
             
         	$rootScope.goBackState = function(){
@@ -97,6 +97,13 @@
             // ComScore SDK v5.X
             ComScorePlugin.initClient("24608202", "82a44e8c84c174abac3cfdbcb2050ced");
         	
+            // Google Analytics
+    		if (typeof window.ga !== 'undefined') {
+    			window.ga.startTrackerWithId(GaConstants.trackingId, GaConstants.dispatchInterval);
+    		} else {
+    			console.log("Google Analytics is not available");
+    		}
+            
         });
     })
     
