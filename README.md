@@ -25,7 +25,7 @@ s-gcm:9.8+.
          9.2.1
          9.2.0
          + 7 more
-         
+
 ionic platform update android
 
 http://ionicframework.com/docs/ionic-cli-faq/#cordova-directory
@@ -49,3 +49,5 @@ install gradle
 
 
 http://stackoverflow.com/questions/20755044/how-to-install-cocoa-pods
+
+For testing using the command `ionic serve`, please change the constant value `useProxy` in the file `www/js/constants.js` from `false` to `true`.

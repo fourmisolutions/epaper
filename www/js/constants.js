@@ -36,7 +36,7 @@ angular.module('epaper')
 	loginUrl : '/sh_rest/user/login',
 	
 	logoutUrl : '/sh_rest/user/logout'
-	
+
 })
 
 

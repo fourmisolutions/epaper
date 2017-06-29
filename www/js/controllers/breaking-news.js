@@ -68,4 +68,5 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
 		};
 	}, 1000);
 
+
 }]);

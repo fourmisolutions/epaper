@@ -30,8 +30,8 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		GaService.trackView(GaConstants.scrnNameTodaySeeHua);
 	});
-	
-	$scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
+
+    $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
     $scope.$on('onBreakingNewsUpdate',function(){
         $timeout(function() {
             $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
