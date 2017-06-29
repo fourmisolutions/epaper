@@ -1,6 +1,6 @@
 var app = angular.module('epaper.todayShControllers', ['ionic']);
 
-app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$rootScope', '$timeout','$interval', '$stateParams',
+app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$rootScope', '$timeout','$interval', '$stateParams', 
     function($scope, ePaperService, $state, $rootScope, $timeout, $interval, $stateParams) {
         
 		$scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
@@ -24,8 +24,8 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
         };
 }]);
 
-app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval',
-    function($scope, $stateParams, $timeout, ePaperService, $interval) {
+app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 
+    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService) {
 	
 	$scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
     $scope.$on('onBreakingNewsUpdate',function(){
@@ -74,7 +74,7 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
 	
     $timeout(function() {
         $scope.options = {
-            pdfUrl: news.pdfURL,
+            pdfUrl: ePaperService.constructApiUrl(news.pdfURL),
             onLoad: tCtrl.onLoad,
             onProgress: tCtrl.onProgress,
             onError: tCtrl.onError,

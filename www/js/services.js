@@ -239,33 +239,89 @@ app.factory('TodayShCategory', function(){
     return TodayShCategory;
 });
 
-app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences) {
-   	var baseUrl = 'http://shetest.theborneopost.com';
-    var ePaperService = {};
-    //POST login
-    var loginApiUrl = '/login';
-    ePaperService.login = function() {
-        return $http.post(baseUrl + loginApiUrl, data)
-            .then(function(status, headers){
-            },function (error) {
-            });
-    }
+app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants) {
+   	var ePaperService = {};
 
+    // param "targetUrl": "http://.../..." excluding any request params starting with "?" 
+    ePaperService.constructApiUrl = function(targetUrl) {
+    	
+    	// remove original baseUrl if present
+    	var baseUrlPattern = /^https?:\/\/[^\/:]+/i;
+    	var strippedTargetUrl = targetUrl.replace(baseUrlPattern, '');
+    	//console.log('aPaperService.constructApiUrl(): targetUrl=' + targetUrl + ', strippedTargetUrl=' + strippedTargetUrl);
+    	
+    	var result = '';
+    	if (ShApiConstants.useProxy) {
+    		// use proxied baseUrl
+    		result = ShApiConstants.baseUrlProxied + strippedTargetUrl;
+    	} else {
+    		// use actual baseUrl
+    		result = ShApiConstants.baseUrl + strippedTargetUrl;
+    	}
+    	
+    	//console.log('aPaperService.constructApiUrl(): result=' + result);
+    	
+    	return result;
+    }
+    
+    //POST login
+    ePaperService.login = function(username, password) {
+		// get session token
+		var getSessionToken = function() {
+			var sessionTokenUrl = ShApiConstants.sessionTokenUrl;
+			
+			return $http.get(ePaperService.constructApiUrl(sessionTokenUrl), {cache:false});
+		};
+		
+		var postLogin = function(username, password, sessionToken) {
+			var loginUrl = ShApiConstants.loginUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(loginUrl),
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'username' : username, 'password' : password}
+			});
+		};
+		
+		// submit login request
+		return getSessionToken().then(function(response){
+			return postLogin(username, password, response.data);
+		}, function(error){
+			throw error;
+		});
+	};
+	
+	//POST logout
+	ePaperService.logout = function(sessionToken) {
+		var postLogout = function(sessionToken) {
+			var logoutUrl = ShApiConstants.logoutUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(logoutUrl),
+				headers : { 'X-CSRF-Token' : sessionToken }
+			});
+		};
+		
+		// submit login request
+		return postLogout(sessionToken);
+	};
 
     //GET /news/breaking - online version
-    var breakingApiUrl = '/seehua_breaking_news.json';
+    var breakingApiUrl = ShApiConstants.breakingNewsListUrl;
     //no cache for breaking news
     ePaperService.getBreakingNews = function() {  
-	     return $http.get(baseUrl + breakingApiUrl, {cache:false}).then(function(response) {
+	     return $http.get(ePaperService.constructApiUrl(breakingApiUrl), {cache:false}).then(function(response) {
             return response.data;
         });
     }
 
     //GET /news/categories - epaper
     var today = new Date();//this is to get once a day
-	var categoriesApiUrl = '/seehua_pdf.json?date=' + today.toISOString().substring(0, 10);;
+	var categoriesApiUrl = ShApiConstants.seehuaEpaperListUrl + '?date=' + today.toISOString().substring(0, 10);;
     ePaperService.getCategories = function() {
-        return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
+        return $http.get(ePaperService.constructApiUrl(categoriesApiUrl), {cache:true}).then(function(response) {
             return Categories.build(response.data);
         }, function(error){
             return undefined;
@@ -279,9 +335,9 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
 
     //GET /news/categories - today seehua (todaySh)
     var today = new Date();//this is to get once a day
-	var todayShCategoriesApiUrl = '/seehua_today_news.json?date=' + today.toISOString().substring(0, 10);
+	var todayShCategoriesApiUrl = ShApiConstants.seehuaTodayListUrl + '?date=' + today.toISOString().substring(0, 10);
     ePaperService.getTodayShCategories = function() {
-        return $http.get(baseUrl + todayShCategoriesApiUrl, {cache:true}).then(function(response) {
+        return $http.get(ePaperService.constructApiUrl(todayShCategoriesApiUrl), {cache:true}).then(function(response) {
             return TodayShCategories.build(response.data);
         }, function(error){
             return undefined;
@@ -294,14 +350,14 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
         });
     }
     
-    var registerPushNotificationUrl = '/sh_rest/push_notifications';
+    var registerPushNotificationUrl = ShApiConstants.pushNotificationUrl;
     ePaperService.registerPushNotification = function(token, platform) {
         var request = {
             token: token,
             type: platform
         }
         console.log("request", request);
-        $http.post(baseUrl + registerPushNotificationUrl, request).then(function(response){
+        $http.post(ePaperService.constructApiUrl(registerPushNotificationUrl), request).then(function(response){
             console.log("register push notification", response);
             $cordovaPreferences.store('token', token).success(function(value) {
                 console.log("store successfully", value);
