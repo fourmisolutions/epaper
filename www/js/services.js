@@ -1,16 +1,6 @@
-app.factory('Categories', function(Category){
+app.factory('Categories', function(Category, $filter){
     function Categories(categories) {
-        this.categories = categories.sort(function(a, b)
-        {
-			  var nA = a.categoryId.toLowerCase();
-			  var nB = b.categoryId.toLowerCase();
-
-			  if(nA < nB)
-				return -1;
-			  else if(nA > nB)
-				return 1;
-			 return 0;
-        });
+        this.categories = $filter('orderBy')(categories, 'categoryId');
     }
     
     Categories.build = function(data) {
@@ -66,11 +56,15 @@ app.factory('Categories', function(Category){
     }
     Categories.prototype.getCategoryByCategoryId = function(categoryId) {
         var category;
-        angular.forEach(this.categories, function(data) {
-            if(data.categoryId == categoryId) {
-                category = data;
-            }
-        });
+        
+        var index = this.categories.findIndex(function(item) { return item.categoryId === categoryId });
+        if (index >= 0) {
+            category = this.categories[index];
+            //console.log('found index=' + index + ', category=' + JSON.stringify(category));
+        } else {
+            console.error('category not found for categoryId=' + categoryId);
+        }
+        
         return category;
     }
     Categories.prototype.getNews = function(categoryId, pageNo) {
@@ -135,19 +129,9 @@ app.factory('Category', function(){
     return Category;
 });
 
-app.factory('TodayShCategories', function(TodayShCategory){
+app.factory('TodayShCategories', function(TodayShCategory, $filter){
     function TodayShCategories(categories) {
-        this.categories = categories.sort(function(a, b)
-        {
-			  var nA = a.categoryId.toLowerCase();
-			  var nB = b.categoryId.toLowerCase();
-
-			  if(nA < nB)
-				return -1;
-			  else if(nA > nB)
-				return 1;
-			 return 0;
-        });
+        this.categories = $filter('orderBy')(categories, 'categoryId');
     }
     
     TodayShCategories.build = function(data) {
@@ -186,11 +170,14 @@ app.factory('TodayShCategories', function(TodayShCategory){
     
     TodayShCategories.prototype.getCategoryByCategoryId = function(categoryId) {
         var category;
-        angular.forEach(this.categories, function(data) {
-        	if(data.categoryId == categoryId) {
-        		category = data;
-            }
-        });
+
+        var index = this.categories.findIndex(function(item) { return item.categoryId === categoryId });
+        if (index >= 0) {
+            category = this.categories[index];
+        } else {
+            console.error('category not found for categoryId=' + categoryId);
+        }
+
         return category;
     }
     
