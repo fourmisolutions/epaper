@@ -3,17 +3,6 @@ var app = angular.module('epaper.todayShControllers', ['ionic']);
 app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$rootScope', '$timeout','$interval', '$stateParams', 
     function($scope, ePaperService, $state, $rootScope, $timeout, $interval, $stateParams) {
         
-		$scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-	    $scope.$on('onBreakingNewsUpdate',function(){
-	        $timeout(function() {
-	            $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-	            $scope.$apply();
-	        });
-	    });
-	    $interval(function() {
-	        $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-	    }, 10000);
-	    
 	    ePaperService.getTodayShNews($stateParams.categoryId).then(function(news) {
             $scope.news = news;
         }, function (error) {
@@ -31,17 +20,6 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
 		GaService.trackView(GaConstants.scrnNameTodaySeeHua);
 	});
 
-    $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-    $scope.$on('onBreakingNewsUpdate',function(){
-        $timeout(function() {
-            $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-            $scope.$apply();
-        });
-    });
-    $interval(function() {
-        $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-    }, 10000);
-	
     var news = $stateParams.news;
     var tCtrl = this;
 

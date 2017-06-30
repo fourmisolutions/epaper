@@ -113,15 +113,15 @@
             .state('app', {
                 url: '/app',
                 abstract: true,
-                templateUrl: 'templates/menu.html'
+                templateUrl: 'templates/menu.html',
+                controller: 'MenuCtrl'
             })
             
 			.state('app.home', {
                 url: '/home',
 				views: {
                     'menuContent': {
-                        templateUrl: 'templates/home.html',
-                        controller: 'MenuCtrl'
+                        templateUrl: 'templates/home.html'
                     }
                 }                
             })
@@ -130,8 +130,7 @@
                 url: '/home-epaper',
 				views: {
                     'menuContent': {
-                        templateUrl: 'templates/home-epaper.html',
-                        controller: 'MenuCtrl'
+                        templateUrl: 'templates/home-epaper.html'
                     }
                 }                
             })
@@ -140,8 +139,7 @@
                 url: '/home-todaysh',
 				views: {
                     'menuContent': {
-                        templateUrl: 'templates/home-todaysh.html',
-                        controller: 'MenuCtrl'
+                        templateUrl: 'templates/home-todaysh.html'
                     }
                 }                
             })
@@ -209,8 +207,7 @@
                 url: '/todayseehualist/:categoryId',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/todayseehua.html',
-                        controller: 'MenuCtrl'
+                        templateUrl: 'templates/todayseehua.html'
                     }
                 }
             })
@@ -220,8 +217,7 @@
                 params: {news: null},
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/todayseehuadetail.html',
-                        controller: 'MenuCtrl'
+                        templateUrl: 'templates/todayseehuadetail.html'
                     }
                 }
             });
