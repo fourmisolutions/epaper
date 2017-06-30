@@ -2,8 +2,12 @@ angular.module('epaper.controllers')
 .controller("LoginCtrl", ["$scope","$state","$ionicPopup", "$ionicHistory","$rootScope","User", 
 	function($scope, $state, $ionicPopup, $ionicHistory, $rootScope,User){
         var backToPreviousPage = function() {
-            //TODO - go to last page
-            $state.go("app.home");
+            if($ionicHistory.backView() == undefined) {
+                $state.go("app.home");
+            } else {
+                console.log($ionicHistory.backView());
+                $state.go($ionicHistory.backView().stateName, $ionicHistory.backView().stateParams, { reload: true, inherit: true, notify: true });
+            }
         }
         //TODO - should do it at state router
         if(User.isLoggedIn()) {

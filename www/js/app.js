@@ -163,7 +163,7 @@
 
             .state('app.detail', {
                 url: '/detail/:categoryId/:pageNo',
-                
+                cache: false,
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/detailpdf.html',
