@@ -121,11 +121,13 @@ angular.module('epaper.controllers')
 						
 						//console.log('refreshShApiSession(): error=' + JSON.stringify(error));
 						
-						$ionicPopup.confirm({
+						$ionicPopup.alert({
                             title: "User Login Error",
                             content: error.data
                         });
 						
+						// reset form data?
+						//$scope.loginData = {};
 					});
 					
 				};
@@ -196,10 +198,13 @@ angular.module('epaper.controllers')
 				
 				//console.log('MenuCtrl.doLogin(): error=' + JSON.stringify(error));
 				
-				$ionicPopup.confirm({
+				$ionicPopup.alert({
                     title: "User Login Error",
                     content: error.data
                 });
+				
+				// reset form data?
+                //$scope.loginData = {};
 			});
 			
 		};

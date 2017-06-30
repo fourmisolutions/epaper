@@ -20,22 +20,22 @@ angular.module('epaper')
 	baseUrlProxied : '/shapi-proxy',
     
 	// Used when running 'ionic run' or 'ionic emulate' or during UAT or Production
-	baseUrl : 'http://shetest.theborneopost.com', // development, UAT
+	baseUrl : 'http://shepaper.theborneopost.com', // development, UAT
 	//baseUrl : 'http://xxx.theborneopost.com', // production
 	
-	breakingNewsListUrl : '/seehua_breaking_news.json',
+	breakingNewsListUrl : '/breaking-news.json',
 	
-	seehuaEpaperListUrl : '/seehua_pdf.json',
+	seehuaEpaperListUrl : '/epaper.json',
 	
-	seehuaTodayListUrl : '/seehua_today_news.json',
+	seehuaTodayListUrl : '/today-news.json',
 	
-	pushNotificationUrl : '/sh_rest/push_notifications',
+	pushNotificationUrl : '/epaper_rest_server/push_notifications',
 	
 	sessionTokenUrl : '/services/session/token',
 	
-	loginUrl : '/sh_rest/user/login',
+	loginUrl : '/epaper_rest_server/user/login',
 	
-	logoutUrl : '/sh_rest/user/logout'
+	logoutUrl : '/epaper_rest_server/user/logout'
 
 })
 

@@ -118,11 +118,11 @@ app.factory('Category', function(){
     }
     Category.prototype.getNewsByPageNo = function(pageNo) {
         var news = this.getNews(pageNo);
-        if(news != undefined && news.pageNo == pageNo) {
+        if(news != undefined && news.pagenumber == pageNo) {
             return news;
         }
         angular.forEach(this.news, function(data) {
-            if(data.pageNo == pageNo) {
+            if(data.pagenumber == pageNo) {
                 news = data;
             }
         });
