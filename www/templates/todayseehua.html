@@ -15,9 +15,9 @@
 
     <ion-content>
         <ion-list>
-            <ion-item menu-close ng-repeat="article in news" ng-click="clickTodayShNews({{$index}})">
+            <ion-item menu-toggle="right" ng-repeat="article in news" ng-click="clickTodayShNews({{$index}})">
                 <h2>{{article.title}}</h2>
-                <p>{{article.description}}</p>
+                <p>{{article.summary}}</p>
             </ion-item>
         </ion-list>
     </ion-content>

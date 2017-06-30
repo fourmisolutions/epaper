@@ -112,11 +112,11 @@ app.factory('Category', function(){
     }
     Category.prototype.getNewsByPageNo = function(pageNo) {
         var news = this.getNews(pageNo);
-        if(news != undefined && news.pageNo == pageNo) {
+        if(news != undefined && news.pagenumber == pageNo) {
             return news;
         }
         angular.forEach(this.news, function(data) {
-            if(data.pageNo == pageNo) {
+            if(data.pagenumber == pageNo) {
                 news = data;
             }
         });
@@ -287,7 +287,8 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
 			return $http({
 				method : 'post',
 				url : ePaperService.constructApiUrl(logoutUrl),
-				headers : { 'X-CSRF-Token' : sessionToken }
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'1' : 1}
 			});
 		};
 		
@@ -383,3 +384,20 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
     
 	return ePaperService;
 });
+
+//Google Analytics service
+app.factory('GaService', function(ShApiConstants) {
+	
+	var service = {};
+	
+	service.trackView = function(viewTitle) {
+		if (!ShApiConstants.useProxy 
+				&& typeof window.ga !== 'undefined') { 
+			console.log('ga.trackView.viewTitle = ' + viewTitle);
+			window.ga.trackView(viewTitle); 
+		}
+	}
+	
+	return service;
+	
+})

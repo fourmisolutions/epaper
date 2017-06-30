@@ -13,9 +13,13 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
         };
 }]);
 
-app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 
-    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService) {
+app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants',
+    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants) {
 	
+	$scope.$on("$ionicView.beforeEnter", function(event, data){
+		GaService.trackView(GaConstants.scrnNameTodaySeeHua);
+	});
+
     var news = $stateParams.news;
     var tCtrl = this;
 
@@ -33,26 +37,26 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     };
 
     $scope.title = news.title;
-    $scope.description = news.description;
+    $scope.description = news.summary;
 	$scope.content = news.content;
 	$scope.imageURLs = [];
 	
 	
-	if (news.imageURL.indexOf(',') >= 0)
+	if (news.image.indexOf(',') >= 0)
 	{
-		var imageURL_local = news.imageURL.split(',');
+		var imageURL_local = news.image.split(',');
 		$scope.imageUrl = imageURL_local[0]; 
 		$scope.imageURLs = imageURL_local.slice(1,imageURL_local.length);
 
 	}
 	else
 	{
-		$scope.imageUrl = news.imageURL;
+		$scope.imageUrl = news.image;
 	}
 	
     $timeout(function() {
         $scope.options = {
-            pdfUrl: ePaperService.constructApiUrl(news.pdfURL),
+            pdfUrl: ePaperService.constructApiUrl(news.pdf),
             onLoad: tCtrl.onLoad,
             onProgress: tCtrl.onProgress,
             onError: tCtrl.onError,
