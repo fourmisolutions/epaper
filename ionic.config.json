@@ -4,7 +4,7 @@
   "proxies": [
     {
       "path": "/shapi-proxy", 
-      "proxyUrl": "http://shetest.theborneopost.com"
+      "proxyUrl": "http://shepaper.theborneopost.com"
     }
   ]
 }
