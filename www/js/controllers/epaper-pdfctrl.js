@@ -29,10 +29,10 @@ angular.module('epaper.controllers')
             console.error('Error: ' + JSON.stringify(err));
             
             // unhandled error status
-            alertPopup = $ionicPopup.alert({
-                title: 'Unexpected Error',
-                content: err.message
-            });
+//            alertPopup = $ionicPopup.alert({
+//                title: 'Unexpected Error',
+//                content: err.message
+//            });
         }
         
 		if (alertPopup != undefined) {

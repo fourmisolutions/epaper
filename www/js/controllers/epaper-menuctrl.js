@@ -60,6 +60,8 @@ angular.module('epaper.controllers')
 			
 		};
 		
+		var localStorage = window.localStorage;
+		
 		// Form data for the login modal
 		$scope.loginData = {};
 		
@@ -67,8 +69,8 @@ angular.module('epaper.controllers')
 		$scope.currentUser = localStorage.getItem('shApiUsername');
 		
 		if ($scope.currentUser == undefined) {
-			
-			$scope.currentUser = '访客';
+		    
+		    $scope.currentUser = '访客';
 			$scope.isAuthenticated = false;
 			
 			if (ShApiConstants.useProxy) {
@@ -76,13 +78,13 @@ angular.module('epaper.controllers')
 			}
 			
 		} else {
-			
-			// verify if session cookies is still available
+		    
+		    // verify if session cookies is still available
 			// - if gone need to refresh session data based on localStorage values
 			// - possible scenario: user closed the app intentionally or restart device
 			if (ShApiConstants.useProxy) {
-				
-				// for 'ionic serve', closing the browser tab/window will not remove the localStorage 
+			    
+			    // for 'ionic serve', closing the browser tab/window will not remove the localStorage 
 				// - new incognito window will start with new localStarage though
 				if ($cookies.get(localStorage.getItem('shApiSessionKey')) == undefined) {
 					$cookies.put(
@@ -119,12 +121,12 @@ angular.module('epaper.controllers')
 						
 					}, function(error){
 						
-						//console.log('refreshShApiSession(): error=' + JSON.stringify(error));
+						console.error('refreshShApiSession(): error=' + JSON.stringify(error));
 						
-						$ionicPopup.alert({
-                            title: "User Login Error",
-                            content: error.data
-                        });
+//						$ionicPopup.alert({
+//                            title: "User Login Error",
+//                            content: error.data
+//                        });
 						
 						// reset form data?
 						//$scope.loginData = {};
@@ -161,7 +163,7 @@ angular.module('epaper.controllers')
 			
 			ePaperService.login($scope.loginData.username, $scope.loginData.password).then(function(response){
 				
-				//console.log('MenuCtrl.doLogin(): data=' + JSON.stringify(response.data));
+				//console.log('MenuCtrl.doLogin(): data=' + JSON.stringify(response));
 				
 				// store credentials and returned data in local storage for subsequent api calls
 				localStorage.setItem('shApiUsername', $scope.loginData.username);
@@ -185,6 +187,8 @@ angular.module('epaper.controllers')
 					$cookies.put(
 							response.data.session_name, response.data.sessid, 
 							{path:'/'});
+				} else {
+				    sessionStorage.setItem('toRefreshShApiSession', 'N');
 				}
 				
 				$scope.currentUser = $scope.loginData.username;

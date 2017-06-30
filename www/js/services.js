@@ -300,7 +300,8 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
 			return $http({
 				method : 'post',
 				url : ePaperService.constructApiUrl(logoutUrl),
-				headers : { 'X-CSRF-Token' : sessionToken }
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'1' : 1}
 			});
 		};
 		
