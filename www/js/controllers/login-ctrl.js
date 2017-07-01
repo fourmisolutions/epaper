@@ -20,8 +20,6 @@ angular.module('epaper.controllers')
                 $rootScope.$broadcast('postLogin');
                 backToPreviousPage();
 			}, function(error){
-				
-                backToPreviousPage();
 				//console.log('MenuCtrl.doLogin(): error=' + JSON.stringify(error));
 				
 				$ionicPopup.alert({

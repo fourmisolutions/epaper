@@ -72,9 +72,6 @@ angular.module('epaper.controllers')
             User.refreshShApiSession();
 		} else {
             $scope.currentUser = '访客';
-            if (ShApiConstants.useProxy) {
-				$cookies.remove(localStorage.getItem('shApiSessionKey'), {path:'/'});
-			}
         }
 		// Open the login modal
 		$scope.showLogin = function() {

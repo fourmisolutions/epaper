@@ -1,4 +1,4 @@
-app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q) {
+app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q, $cookies) {
         var localStorage = window.localStorage;
 		var user = {}
         user.login = function(username, password) {
@@ -21,35 +21,25 @@ app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q)
                 
                 localStorage.setItem('shApiSessionValue', response.data.sessid);
                 //console.log('sessionValue: ' + response.data.sessid);
-                
-                // store session cookies to be sent over to server for subsequent api calls
-                if (ShApiConstants.useProxy) {
-                    $cookies.put(
-                            response.data.session_name, response.data.sessid, 
-                            {path:'/'});
-                } else {
-                    sessionStorage.setItem('toRefreshShApiSession', 'N');
-                }                                        
+                $cookies.put(response.data.session_name, response.data.sessid,{path:'/'});
+                sessionStorage.setItem('toRefreshShApiSession', 'N');
                 return response;
             }, function(error){
-                localStorage.setItem('shApiUsername', 'test');
                 throw error;
             });
         }
         user.logout = function() {
             //console.log('Proceed logout ...');                
             var postLogoutProcess = function() {
-                    // remove session cookies
-                    if (ShApiConstants.useProxy) {
-                        $cookies.remove(localStorage.getItem('shApiSessionKey'), {path:'/'});
-                    }
-                    
                     // remove previously saved data in local storage
                     localStorage.removeItem('shApiUsername');
                     localStorage.removeItem('shApiPassword');
                     localStorage.removeItem('shApiSessionToken');
                     localStorage.removeItem('shApiSessionKey');
                     localStorage.removeItem('shApiSessionValue');
+                    angular.forEach(cookies, function (v, k) {
+                        $cookies.remove(k);
+                    });
                     
             };
             if (localStorage.getItem('shApiSessionToken') != undefined) {
@@ -87,16 +77,6 @@ app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q)
             // verify if session cookies is still available
             // - if gone need to refresh session data based on localStorage values
             // - possible scenario: user closed the app intentionally or restart device
-            if (ShApiConstants.useProxy) {
-                
-                // for 'ionic serve', closing the browser tab/window will not remove the localStorage 
-                // - new incognito window will start with new localStarage though
-                if ($cookies.get(localStorage.getItem('shApiSessionKey')) == undefined) {
-                    $cookies.put(
-                            localStorage.getItem('shApiSessionKey'), localStorage.getItem('shApiSessionValue'), 
-                            {path:'/'});
-                } 
-            } else {
                 ePaperService.login(
                     localStorage.getItem('shApiUsername'), 
                     window.atob(localStorage.getItem('shApiPassword'))).then(function(response){
@@ -112,27 +92,14 @@ app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q)
                     localStorage.setItem('shApiSessionValue', response.data.sessid);
                     //console.log('sessionValue: ' + response.data.sessid);
                     
-                    // store session cookies to be sent over to server for subsequent api calls
-                    if (ShApiConstants.useProxy) {
-                        $cookies.put(
-                                response.data.session_name, response.data.sessid, 
-                                {path:'/'});
-                    }
                     sessionStorage.setItem('toRefreshShApiSession', 'N');
                     
                 }, function(error){
                     
                     console.error('refreshShApiSession(): error=' + JSON.stringify(error));
-                    
-//						$ionicPopup.alert({
-//                            title: "User Login Error",
-//                            content: error.data
-//                        });
-                    
-                    // reset form data?
-                    //$scope.loginData = {};
+
                 });
-            }
+            
 		};
         return user;
 	});
