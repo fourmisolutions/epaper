@@ -9,7 +9,8 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
         });
         
         $scope.clickTodayShNews = function(index) {
-            $state.go('app.todayseehua', {news: $scope.news[index]});    
+            $state.go('app.todayseehua', 
+                    {news: $scope.news[index], categoryId: $stateParams.categoryId, index: index});
         };
 }]);
 
