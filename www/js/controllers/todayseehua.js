@@ -55,16 +55,21 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
 		$scope.imageUrl = news.image;
 	}
 	
-    $timeout(function() {
-        $scope.options = {
-            pdfUrl: ePaperService.constructApiUrl(news.pdf),
-            onLoad: tCtrl.onLoad,
-            onProgress: tCtrl.onProgress,
-            onError: tCtrl.onError,
-            onPageRender: tCtrl.onPageRender,
-            httpHeaders: [],
-            pinchin: false
-        };
-    }, 1000);
+	$scope.pdfUrl = news.pdf;
+    if (news.pdf) {
+        $timeout(function() {
+            $scope.options = {
+                pdfUrl: ePaperService.constructApiUrl(news.pdf),
+                onLoad: tCtrl.onLoad,
+                onProgress: tCtrl.onProgress,
+                onError: tCtrl.onError,
+                onPageRender: tCtrl.onPageRender,
+                httpHeaders: [],
+                pinchin: false
+            };
+        }, 1000);
+    } else {
+        //console.log('news.pdf is undefined or empty');
+    }
     
 }]);
