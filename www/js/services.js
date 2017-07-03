@@ -167,24 +167,49 @@ app.factory('Categories', function(TodayShCategories, Category, $filter){
 app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants) {
     var ePaperService = {};
 
-    // param "targetUrl": "http://.../..." excluding any request params starting with "?" 
-    ePaperService.constructApiUrl = function(targetUrl) {
+    /** 
+     * param "targetUrl": "http://.../..." excluding any request params starting with "?"
+     * param "paramOptions": pre-defined options to construct the url params, e.g. { optionKey1 : optionValue1, optionKey2 : optionValue2 }
+     * - Options:
+     *   - appendCurrentDate: true|false
+     *     - auto-append today's date to the url.
+     */ 
+    ePaperService.constructApiUrl = function(targetUrl, paramOptions) {
         
         // remove original baseUrl if present
         var baseUrlPattern = /^https?:\/\/[^\/:]+/i;
         var strippedTargetUrl = targetUrl.replace(baseUrlPattern, '');
-        //console.log('aPaperService.constructApiUrl(): targetUrl=' + targetUrl + ', strippedTargetUrl=' + strippedTargetUrl);
+        
+        var paramArray = [];
+        
+        // append any pre-defined optional parameters
+        if (paramOptions) {
+            if (paramOptions.appendCurrentDate) {
+                var today = new Date();
+                paramArray.push('date=' + today.toISOString().substring(0, 10));
+            }
+        }
+        
+        var paramStr = '';
+        if (paramArray.length > 0)
+            paramStr = '?' + paramArray.join('&');
+        
+//        console.log(
+//                'aPaperService.constructApiUrl(): ' 
+//                + 'targetUrl=' + targetUrl + ', ' 
+//                + 'strippedTargetUrl=' + strippedTargetUrl + ', '
+//                + 'paramStr=' + paramStr);
         
         var result = '';
         if (ShApiConstants.useProxy) {
             // use proxied baseUrl
-            result = ShApiConstants.baseUrlProxied + strippedTargetUrl;
+            result = ShApiConstants.baseUrlProxied + strippedTargetUrl + paramStr;
         } else {
             // use actual baseUrl
-            result = ShApiConstants.baseUrl + strippedTargetUrl;
+            result = ShApiConstants.baseUrl + strippedTargetUrl + paramStr;
         }
         
-        //console.log('aPaperService.constructApiUrl(): result=' + result);
+//        console.log('aPaperService.constructApiUrl(): result=' + result);
         
         return result;
     }
@@ -244,10 +269,9 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
     }
 
     //GET /news/categories - epaper
-    var today = new Date();//this is to get once a day
-    var categoriesApiUrl = ShApiConstants.seehuaEpaperListUrl + '?date=' + today.toISOString().substring(0, 10);;
+    var categoriesApiUrl = ShApiConstants.seehuaEpaperListUrl;
     ePaperService.getCategories = function() {
-        return $http.get(ePaperService.constructApiUrl(categoriesApiUrl), {cache:true}).then(function(response) {
+        return $http.get(ePaperService.constructApiUrl(categoriesApiUrl, {appendCurrentDate: true}), {cache:true}).then(function(response) {
             return new Categories(response.data);
         }, function(error){
             return undefined;
@@ -260,10 +284,9 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
     }
 
     //GET /news/categories - today seehua (todaySh)
-    var today = new Date();//this is to get once a day
-    var todayShCategoriesApiUrl = ShApiConstants.seehuaTodayListUrl + '?date=' + today.toISOString().substring(0, 10);
+    var todayShCategoriesApiUrl = ShApiConstants.seehuaTodayListUrl;
     ePaperService.getTodayShCategories = function() {
-        return $http.get(ePaperService.constructApiUrl(todayShCategoriesApiUrl), {cache:true}).then(function(response) {
+        return $http.get(ePaperService.constructApiUrl(todayShCategoriesApiUrl, {appendCurrentDate: true}), {cache:true}).then(function(response) {
             return new TodayShCategories(response.data);
         }, function(error){
             return undefined;
