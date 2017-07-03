@@ -1,6 +1,6 @@
 angular.module('epaper.controllers')
-.controller("LoginCtrl", ["$scope","$state","$stateParams", "$location","$rootScope","User", 
-	function($scope, $state, $stateParams, $location, $rootScope, User){
+.controller("LoginCtrl", ["$scope","$state","$stateParams", "$location","$rootScope", "$ionicPopup", "User", 
+	function($scope, $state, $stateParams, $location, $rootScope, $ionicPopup, User){
         var backToPreviousPage = function(redirectUrl) {
             if(redirectUrl == undefined) {
                 $state.go("app.home");

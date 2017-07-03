@@ -1,4 +1,4 @@
-app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q, $cookies) {
+app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q) {
         var localStorage = window.localStorage;
 		var user = {}
         user.login = function(username, password) {
@@ -37,6 +37,7 @@ app.factory('User', function($http, $cookies, ePaperService, ShApiConstants, $q,
                     localStorage.removeItem('shApiSessionToken');
                     localStorage.removeItem('shApiSessionKey');
                     localStorage.removeItem('shApiSessionValue');
+                    var cookies = $cookies.getAll();
                     angular.forEach(cookies, function (v, k) {
                         $cookies.remove(k);
                     });
