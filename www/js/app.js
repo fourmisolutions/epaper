@@ -213,7 +213,7 @@
             })
 
             .state('app.todayseehua', {
-                url: '/todayseehua/',
+                url: '/todayseehua/:categoryId/:index',
                 params: {news: null},
                 views: {
                     'menuContent': {
