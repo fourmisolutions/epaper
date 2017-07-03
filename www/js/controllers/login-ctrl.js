@@ -15,7 +15,6 @@ angular.module('epaper.controllers')
             backToPreviousPage();
         }
         var redirectUrl = $stateParams.redirectUrl;
-        console.log("redirectUrl:" + redirectUrl);
         // Perform the login action when the user submits the login form
         $scope.loginData = {}
 		$scope.doLogin = function() {
