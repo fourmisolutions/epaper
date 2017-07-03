@@ -1,10 +1,11 @@
 angular.module('epaper.controllers')
-.controller("LoginCtrl", ["$scope","$state","$stateParams", "$location","$rootScope", "$ionicPopup", "User", 
-	function($scope, $state, $stateParams, $location, $rootScope, $ionicPopup, User){
+.controller("LoginCtrl", ["$scope","$state","$stateParams", "$location","$rootScope", "$ionicPopup", "$ionicHistory", "User", 
+	function($scope, $state, $stateParams, $location, $rootScope, $ionicPopup, $ionicHistory, User){
         var backToPreviousPage = function(redirectUrl) {
             if(redirectUrl == undefined) {
-                $state.go("app.home");
+                $ionicHistory.goBack();
             } else {
+                $location.replace();//Replace in order not to keep in history
                 $location.path(redirectUrl);
             }
         }
@@ -14,6 +15,7 @@ angular.module('epaper.controllers')
             backToPreviousPage();
         }
         var redirectUrl = $stateParams.redirectUrl;
+        console.log("redirectUrl:" + redirectUrl);
         // Perform the login action when the user submits the login form
         $scope.loginData = {}
 		$scope.doLogin = function() {
