@@ -1,13 +1,15 @@
 angular.module('epaper.controllers')
-.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout', 'GaService', 'GaConstants', '$ionicPopup', '$state','User',
-    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout, GaService, GaConstants, $ionicPopup, $state, User) {	
+.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout', 'GaService', 'GaConstants', '$ionicPopup', '$state','$ionicHistory','User', 
+    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout, GaService, GaConstants, $ionicPopup, $state, $ionicHistory, User) {	
 	//TODO - Should do at router
     if(!User.isLoggedIn()) {    
         $ionicPopup.alert({
             title: '会员区域',
             content: '<h3 style="text-align: center">会员请先登入</h3>'
         });
-        $state.go('app.login');
+        var redirectUrl = $ionicHistory.currentView().url;
+        $ionicHistory.currentView($ionicHistory.backView());
+        $state.go('app.login', {'redirectUrl': redirectUrl}, {location: 'replace'});
         return;
     }
     

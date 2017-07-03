@@ -227,13 +227,14 @@
             })
             
             .state('app.login', {
-                url: '/login',
+                url: '/login?redirectUrl',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/login.html',
                         controller: 'LoginCtrl'
                     }
-                }
+                },
+                cache: false
             })
 
             ;
