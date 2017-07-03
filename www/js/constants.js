@@ -35,7 +35,9 @@ angular.module('epaper')
 	
 	loginUrl : '/epaper_rest_server/user/login',
 	
-	logoutUrl : '/epaper_rest_server/user/logout'
+	logoutUrl : '/epaper_rest_server/user/logout',
+	
+	chineseMenuDictionary : {'A': '南砂', 'B': '中区', 'C': '北砂', 'D': '新華日報', 'E': '西沙', 'F': '东沙', 'G': '西马', 'H': '体育', 'I': '国际', 'J': '娱乐', 'K': '副刊', 'L': '财经', 'M': '豆苗' }
 
 })
 
