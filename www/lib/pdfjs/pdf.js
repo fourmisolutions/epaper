@@ -6383,12 +6383,18 @@ var FontFaceObject = (function FontFaceObjectClosure() {
     },
 
     getPathGenerator: function FontLoader_getPathGenerator(objs, character) {
-      if (!(character in this.compiledGlyphs)) {
-        var js = objs.get(this.loadedName + '_path_' + character);
-        /*jshint -W054 */
-        this.compiledGlyphs[character] = new Function('c', 'size', js);
-      }
-      return this.compiledGlyphs[character];
+        if (!(character in this.compiledGlyphs)) {
+            var js;
+
+            try {
+                js = objs.get(this.loadedName + '_path_' + character); 
+            } catch (err) {
+                console.error('FontLoader_getPathGenerator(): ' + err);
+            }
+            /*jshint -W054 */
+            this.compiledGlyphs[character] = new Function('c', 'size', js);
+        }
+        return this.compiledGlyphs[character];
     }
   };
   return FontFaceObject;
