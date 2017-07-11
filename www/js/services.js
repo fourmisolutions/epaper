@@ -226,7 +226,7 @@ app.factory('TodayShCategory', function(){
     return TodayShCategory;
 });
 
-app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants) {
+app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants, ApiEndpoint) {
    	var ePaperService = {};
 
     // param "targetUrl": "http://.../..." excluding any request params starting with "?" 
@@ -237,14 +237,7 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
     	var strippedTargetUrl = targetUrl.replace(baseUrlPattern, '');
     	//console.log('aPaperService.constructApiUrl(): targetUrl=' + targetUrl + ', strippedTargetUrl=' + strippedTargetUrl);
     	
-    	var result = '';
-    	if (ShApiConstants.useProxy) {
-    		// use proxied baseUrl
-    		result = ShApiConstants.baseUrlProxied + strippedTargetUrl;
-    	} else {
-    		// use actual baseUrl
-    		result = ShApiConstants.baseUrl + strippedTargetUrl;
-    	}
+    	var result = ApiEndpoint.url + strippedTargetUrl;
     	
     	//console.log('aPaperService.constructApiUrl(): result=' + result);
     	
@@ -267,7 +260,8 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
 				method : 'post',
 				url : ePaperService.constructApiUrl(loginUrl),
 				headers : { 'X-CSRF-Token' : sessionToken },
-				data : {'username' : username, 'password' : password}
+				data : {'username' : username, 'password' : password},
+                withCredentials: true
 			});
 		};
 		

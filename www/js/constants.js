@@ -1,5 +1,8 @@
 angular.module('epaper')
-
+.constant('ApiEndpoint', {
+  //proxy url to resolve cors
+  url: 'http://localhost:8100/shapi-proxy'
+})
 // See Hua epaper API
 .constant('ShApiConstants', {
 	
@@ -14,14 +17,6 @@ angular.module('epaper')
 	 * - false: when test run using 'ionic run' or 'ionic emulate' or during UAT or Production
 	 */ 
 	useProxy : false,
-	
-	// Used only when running 'ionic serve' or 'ionic run -l' for testing
-	// Note: this is a relative path
-	baseUrlProxied : '/shapi-proxy',
-    
-	// Used when running 'ionic run' or 'ionic emulate' or during UAT or Production
-	baseUrl : 'http://shepaper.theborneopost.com', // development, UAT
-	//baseUrl : 'http://xxx.theborneopost.com', // production
 	
 	breakingNewsListUrl : '/breaking-news.json',
 	

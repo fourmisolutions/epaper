@@ -161,7 +161,7 @@
 
             .state('app.detail', {
                 url: '/detail/:categoryId/:pageNo',
-                
+                cache: false,
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/detailpdf.html',
@@ -220,10 +220,22 @@
                         templateUrl: 'templates/todayseehuadetail.html'
                     }
                 }
-            });
+            })
+            
+            .state('app.login', {
+                url: '/login?redirectUrl',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/login.html',
+                        controller: 'LoginCtrl'
+                    }
+                },
+                cache: false
+            })
+
+            ;
 			
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/home');
     });
-    
 }());
