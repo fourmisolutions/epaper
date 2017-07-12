@@ -19,15 +19,15 @@
                     <ion-content has-bouncing="true" overflow-scroll="false">
                         <div class="row">
                             <div class="col col-50"  ng-repeat="news2 in tab.news">
-                                <a href="#/app/detail/{{tab.categoryId}}/{{news2.pageNo}}">
-                                        <img class="full-image" ng-src="{{news2.thumbnailURL}}">
+                                <a href="#/app/detail/{{tab.categoryId}}/{{news2.pagenumber}}">
+                                        <img class="full-image" ng-src="{{news2.thumbnail}}">
                                  </a>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col col-50"  ng-repeat="news2 in tab.news.slice(2)">
-                                <a href="#/app/detail/{{tab.categoryId}}/{{news2.pageNo}}">
-                                        <img class="full-image" ng-src="{{news2.thumbnailURL}}">
+                                <a href="#/app/detail/{{tab.categoryId}}/{{news2.pagenumber}}">
+                                        <img class="full-image" ng-src="{{news2.thumbnail}}">
                                  </a>
                             </div>
                         </div>

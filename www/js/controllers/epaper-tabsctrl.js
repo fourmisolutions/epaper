@@ -53,17 +53,7 @@ function getTabs(categories) {
 angular.module('epaper.controllers')
 .controller("TabsCtrl", ['$scope','$state', '$ionicScrollDelegate','$timeout','ePaperService','$interval', '$stateParams', 'categories', '$ionicSlideBoxDelegate',
     function( $scope, $state, $ionicScrollDelegate, $timeout, ePaperService, $interval, $stateParams, categories, $ionicSlideBoxDelegate){
-        $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-        $scope.$on('onBreakingNewsUpdate',function(){
-            $timeout(function() {
-                $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-                $scope.$apply();
-            });
-        });
-        $interval(function() {
-            $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
-        }, 10000);
-        
+
 		$scope.tabs = getTabsByCategory(categories, $stateParams.categoryId);		
 	
 		$scope.clickThumbnail = function(categoryId, pageNo) {
@@ -73,10 +63,6 @@ angular.module('epaper.controllers')
             var handle = $ionicSlideBoxDelegate.$getByHandle('ThumbnailTab');
             $ionicSlideBoxDelegate.slide(index);
         }
-        $scope.loadBreakingNews = function() {
-            $state.go("app.breakingnews");
-        }
         
-
     }
 ]);

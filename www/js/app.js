@@ -4,15 +4,16 @@
 // 'starter.controllers' is found in controllers.js
 
 (function(){
-    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova'])
-
-    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences) {
+    var app = angular.module('epaper', ['ionic', 'epaper.controllers','epaper.breakingNewsControllers', 'epaper.todayShControllers', 'tabSlideBox', 'gesture-pdf', 'ngCordova', 'ngCookies'])
+    
+    app.run(function($ionicPlatform, $rootScope, $window, $location, $ionicViewSwitcher, $ionicHistory, $ionicLoading, $ionicPopup, $cordovaNetwork, $cordovaPushV5, $cordovaPush, ePaperService,  $cordovaPreferences, GaConstants) {
         $ionicPlatform.ready(function() {
-            $rootScope.goBackState = function(){
+            
+        	$rootScope.goBackState = function(){
                 $ionicViewSwitcher.nextDirection('back');
                 $ionicHistory.goBack();
             }
-
+            
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -96,26 +97,53 @@
             // ComScore SDK v5.X
             ComScorePlugin.initClient("24608202", "82a44e8c84c174abac3cfdbcb2050ced");
         	
+            // Google Analytics
+    		if (typeof window.ga !== 'undefined') {
+    			window.ga.startTrackerWithId(GaConstants.trackingId, GaConstants.dispatchInterval);
+    		} else {
+    			console.log("Google Analytics is not available");
+    		}
+            
         });
     })
-
+    
     app.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
 
             .state('app', {
                 url: '/app',
                 abstract: true,
-                templateUrl: 'templates/menu.html'
+                templateUrl: 'templates/menu.html',
+                controller: 'MenuCtrl'
             })
+            
 			.state('app.home', {
                 url: '/home',
 				views: {
                     'menuContent': {
-                        templateUrl: 'templates/home.html',
-                        controller: 'MenuCtrl'
+                        templateUrl: 'templates/home.html'
                     }
                 }                
             })
+            
+			.state('app.home-epaper', {
+                url: '/home-epaper',
+				views: {
+                    'menuContent': {
+                        templateUrl: 'templates/home-epaper.html'
+                    }
+                }                
+            })
+            
+			.state('app.home-todaysh', {
+                url: '/home-todaysh',
+				views: {
+                    'menuContent': {
+                        templateUrl: 'templates/home-todaysh.html'
+                    }
+                }                
+            })
+            
             .state('app.tabs', {
                 url: '/tabs/:categoryId', //version 1.1
                 views: {
@@ -133,7 +161,7 @@
 
             .state('app.detail', {
                 url: '/detail/:categoryId/:pageNo',
-                
+                cache: false,
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/detailpdf.html',
@@ -173,10 +201,41 @@
                         templateUrl: 'templates/breakingnews.html'
                     }
                 }
-            });
+            })
+
+            .state('app.todayseehualist', {
+                url: '/todayseehualist/:categoryId',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/todayseehua.html'
+                    }
+                }
+            })
+
+            .state('app.todayseehua', {
+                url: '/todayseehua/:categoryId/:index',
+                params: {news: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/todayseehuadetail.html'
+                    }
+                }
+            })
+            
+            .state('app.login', {
+                url: '/login?redirectUrl',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/login.html',
+                        controller: 'LoginCtrl'
+                    }
+                },
+                cache: false
+            })
+
+            ;
 			
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/home');
     });
-    
 }());

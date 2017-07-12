@@ -1,4 +1,4 @@
-<ion-view title="诗华电子报">
+<ion-view view-title="今日诗华" ng-controller="TodayShListController">
     <ion-nav-bar class="bar-assertive">
         <ion-nav-buttons side="left">
             <!-- Toggle left side menu -->
@@ -12,16 +12,12 @@
             
         </ion-nav-buttons>
     </ion-nav-bar>
-    
-    <ion-content style="text-align: center; background-color: #FF0000;">
+
+    <ion-content>
         <ion-list>
-            <ion-item style="height : 20vh; background : #FF0000;">&nbsp;</ion-item>
-            <ion-item menu-toggle="right" ng-click="switchModule('app.home-epaper')" style="text-align:center">
-                e诗华日报
-            </ion-item>
-            <ion-item style="background : #FF0000;">&nbsp;</ion-item>
-            <ion-item menu-toggle="right" ng-click="switchModule('app.home-todaysh')" style="text-align:center">
-                今日诗华
+            <ion-item menu-toggle="right" ng-repeat="article in news" ng-click="clickTodayShNews({{$index}})">
+                <h2>{{article.title}}</h2>
+                <p>{{article.summary}}</p>
             </ion-item>
         </ion-list>
     </ion-content>

@@ -36,12 +36,12 @@ $ sudo npm install -g ionic@2.2.3
       - Select the Xcode version that is supported by the the Mac OS X version fo the development machine:
         - Refer to [here](https://en.wikipedia.org/wiki/Xcode#Version_comparison_table).
       - Download latest version of Xcode from [here](https://itunes.apple.com/us/app/xcode/id497799835?mt=12).
-      - Search and download previous versions of Xcode from [here](https://developer.apple.com/downloads/index.action). 
+      - Search and download previous versions of Xcode from [here](https://developer.apple.com/downloads/index.action).
       - Choose Xcode 8.2.1 for Mac OS X El Capitan 10.11.6.
       - ``Note``: To submit apps to the Apple App Store℠ requires the latest versions of the Apple tools.
     - Enable command-line tools for Cordova to run:
       ```  
-      $ xcode-select --install 
+      $ xcode-select --install
       $ npm install -g ios-sim
       $ npm install -g ios-deploy
       ```
@@ -51,7 +51,7 @@ $ sudo npm install -g ionic@2.2.3
       ```
     - Download and install new simulators for additional iOS SDK versions or platforms using the Xcode app (need to restart for newly installed simulators to be visible):
       - Xcode > Preferences... > Components
-    - Install CocoaPods (refer to https://cocoapods.org/): 
+    - Install CocoaPods (refer to https://cocoapods.org/):
       ```
       $ sudo gem install cocoapods
       $ pod setup  
@@ -129,7 +129,7 @@ $ ionic run ios
 ```
 $ ionic serve
 ```
-
+*Note: For testing using the command `ionic serve`, please change the constant value `useProxy` in the file `www/js/constants.js` from `false` to `true`.*
 
 # Trouble-shooting
 

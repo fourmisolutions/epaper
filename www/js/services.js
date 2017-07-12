@@ -1,16 +1,6 @@
-app.factory('Categories', function(Category){
+app.factory('Categories', function(Category, $filter){
     function Categories(categories) {
-        this.categories = categories.sort(function(a, b)
-        {
-			  var nA = a.categoryId.toLowerCase();
-			  var nB = b.categoryId.toLowerCase();
-
-			  if(nA < nB)
-				return -1;
-			  else if(nA > nB)
-				return 1;
-			 return 0;
-        });
+        this.categories = $filter('orderBy')(categories, 'categoryId');
     }
     
     Categories.build = function(data) {
@@ -66,17 +56,21 @@ app.factory('Categories', function(Category){
     }
     Categories.prototype.getCategoryByCategoryId = function(categoryId) {
         var category;
-        angular.forEach(this.categories, function(data) {
-            if(data.categoryId == categoryId) {
-                category = data;
-            }
-        });
+        
+        var index = this.categories.findIndex(function(item) { return item.categoryId === categoryId });
+        if (index >= 0) {
+            category = this.categories[index];
+            //console.log('found index=' + index + ', category=' + JSON.stringify(category));
+        } else {
+            console.error('category not found for categoryId=' + categoryId);
+        }
+        
         return category;
     }
     Categories.prototype.getNews = function(categoryId, pageNo) {
         return this.getCategoryByCategoryId(categoryId).getNewsByPageNo(pageNo);
     }
-    return Categories
+    return Categories;
 });
 
 app.factory('Category', function(){
@@ -118,11 +112,11 @@ app.factory('Category', function(){
     }
     Category.prototype.getNewsByPageNo = function(pageNo) {
         var news = this.getNews(pageNo);
-        if(news != undefined && news.pageNo == pageNo) {
+        if(news != undefined && news.pagenumber == pageNo) {
             return news;
         }
         angular.forEach(this.news, function(data) {
-            if(data.pageNo == pageNo) {
+            if(data.pagenumber == pageNo) {
                 news = data;
             }
         });
@@ -135,33 +129,181 @@ app.factory('Category', function(){
     return Category;
 });
 
-app.factory('ePaperService', function($http, $q, Category, Categories,  $cordovaPreferences) {
-   	var baseUrl = 'http://shetest.theborneopost.com';
-    var ePaperService = {};
-    //POST login
-    var loginApiUrl = '/login';
-    ePaperService.login = function() {
-        return $http.post(baseUrl + loginApiUrl, data)
-            .then(function(status, headers){
-            },function (error) {
-            });
+app.factory('TodayShCategories', function(TodayShCategory, $filter){
+    function TodayShCategories(categories) {
+        this.categories = $filter('orderBy')(categories, 'categoryId');
     }
+    
+    TodayShCategories.build = function(data) {
+        function getCategoryIds(data) {
+            var categoriesIds = [];
+            angular.forEach(data, function(news, key) {
+                //not exists
+                if(categoriesIds.indexOf(news.category) == -1) {
+                    categoriesIds.push(news.category);
+                }
+            });
+            return categoriesIds;
+        }
+        var categoryIds = getCategoryIds(data);
+        var categories = [];
+        angular.forEach(categoryIds, function(categoryId, key) {
+            categories.push(TodayShCategory.build(categoryId, data));
+        });
+        return new TodayShCategories(categories);
+    }
+    
+    TodayShCategories.prototype.getTotal = function() {
+        return this.categories.length;
+    };
+    TodayShCategories.prototype.getCategory = function(index) {
+        return this.categories[index];
+    }
+    
+    TodayShCategories.prototype.getTotalNews = function() {
+        var total = 0;
+        angular.forEach(this.categories, function(category) {
+            total += category.getTotal();
+        });
+        return total;
+    }
+    
+    TodayShCategories.prototype.getCategoryByCategoryId = function(categoryId) {
+        var category;
 
+        var index = this.categories.findIndex(function(item) { return item.categoryId === categoryId });
+        if (index >= 0) {
+            category = this.categories[index];
+        } else {
+            console.error('category not found for categoryId=' + categoryId);
+        }
+
+        return category;
+    }
+    
+    TodayShCategories.prototype.getNewsByCategoryId = function(categoryId) {
+        return this.getCategoryByCategoryId(categoryId).getNewsList();
+    }
+    
+    return TodayShCategories;
+});
+
+app.factory('TodayShCategory', function(){
+    var chinese_menu_dictionary = {'A': '南砂', 'B': '中区', 'C': '北砂', 'D': '新華日報', 'E': '西沙', 'F': '东沙', 'G': '西马', 'H': '体育', 'I': '国际', 'J': '娱乐', 'K': '副刊', 'L': '财经', 'M': '豆苗' }
+    
+    function TodayShCategory(categoryId, news) {
+        this.categoryId = categoryId;
+        this.news = news;
+        this.categoryDesc = chinese_menu_dictionary[categoryId];
+    }
+    
+    TodayShCategory.build = function(categoryId, data) {
+        var arrayOfNews = [];
+        angular.forEach(data, function(news, key) {
+            if(news.category == categoryId) {
+                arrayOfNews.push(news);
+            }
+        });
+        return new TodayShCategory(categoryId, arrayOfNews);
+    }
+    
+    TodayShCategory.prototype.getTotal = function() {
+        return this.news.length;
+    }
+    
+    TodayShCategory.prototype.getNewsList = function() {
+        return this.news;
+    }
+    
+    TodayShCategory.prototype.getNews = function(index) {
+        return this.news[index];
+    }
+    
+    TodayShCategory.prototype.getCategoryDesc = function() {
+        return this.categoryDesc;
+    }
+    
+    return TodayShCategory;
+});
+
+app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants, ApiEndpoint) {
+   	var ePaperService = {};
+
+    // param "targetUrl": "http://.../..." excluding any request params starting with "?" 
+    ePaperService.constructApiUrl = function(targetUrl) {
+    	
+    	// remove original baseUrl if present
+    	var baseUrlPattern = /^https?:\/\/[^\/:]+/i;
+    	var strippedTargetUrl = targetUrl.replace(baseUrlPattern, '');
+    	//console.log('aPaperService.constructApiUrl(): targetUrl=' + targetUrl + ', strippedTargetUrl=' + strippedTargetUrl);
+    	
+    	var result = ApiEndpoint.url + strippedTargetUrl;
+    	
+    	//console.log('aPaperService.constructApiUrl(): result=' + result);
+    	
+    	return result;
+    }
+    
+    //POST login
+    ePaperService.login = function(username, password) {
+		// get session token
+		var getSessionToken = function() {
+			var sessionTokenUrl = ShApiConstants.sessionTokenUrl;
+			
+			return $http.get(ePaperService.constructApiUrl(sessionTokenUrl), {cache:false});
+		};
+		
+		var postLogin = function(username, password, sessionToken) {
+			var loginUrl = ShApiConstants.loginUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(loginUrl),
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'username' : username, 'password' : password},
+                withCredentials: true
+			});
+		};
+		
+		// submit login request
+		return getSessionToken().then(function(response){
+			return postLogin(username, password, response.data);
+		}, function(error){
+			throw error;
+		});
+	};
+	
+	//POST logout
+	ePaperService.logout = function(sessionToken) {
+		var postLogout = function(sessionToken) {
+			var logoutUrl = ShApiConstants.logoutUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(logoutUrl),
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'1' : 1}
+			});
+		};
+		
+		// submit login request
+		return postLogout(sessionToken);
+	};
 
     //GET /news/breaking - online version
-    var breakingApiUrl = '/seehua_breaking_news.json';
+    var breakingApiUrl = ShApiConstants.breakingNewsListUrl;
     //no cache for breaking news
     ePaperService.getBreakingNews = function() {  
-	     return $http.get(baseUrl + breakingApiUrl, {cache:false}).then(function(response) {
+	     return $http.get(ePaperService.constructApiUrl(breakingApiUrl), {cache:false}).then(function(response) {
             return response.data;
         });
     }
 
-    //GET /news/categories    
+    //GET /news/categories - epaper
     var today = new Date();//this is to get once a day
-	var categoriesApiUrl = '/seehua_pdf.json?date=' + today.toISOString().substring(0, 10);;
+	var categoriesApiUrl = ShApiConstants.seehuaEpaperListUrl + '?date=' + today.toISOString().substring(0, 10);;
     ePaperService.getCategories = function() {
-        return $http.get(baseUrl + categoriesApiUrl, {cache:true}).then(function(response) {
+        return $http.get(ePaperService.constructApiUrl(categoriesApiUrl), {cache:true}).then(function(response) {
             return Categories.build(response.data);
         }, function(error){
             return undefined;
@@ -172,15 +314,32 @@ app.factory('ePaperService', function($http, $q, Category, Categories,  $cordova
            return categories.getNews(categoryId, pageNo);
         });
     }
+
+    //GET /news/categories - today seehua (todaySh)
+    var today = new Date();//this is to get once a day
+	var todayShCategoriesApiUrl = ShApiConstants.seehuaTodayListUrl + '?date=' + today.toISOString().substring(0, 10);
+    ePaperService.getTodayShCategories = function() {
+        return $http.get(ePaperService.constructApiUrl(todayShCategoriesApiUrl), {cache:true}).then(function(response) {
+            return TodayShCategories.build(response.data);
+        }, function(error){
+            return undefined;
+        });
+    }
     
-    var registerPushNotificationUrl = '/sh_rest/push_notifications';
+    ePaperService.getTodayShNews = function(categoryId) {
+    	return ePaperService.getTodayShCategories().then(function(categories){
+    		return categories.getNewsByCategoryId(categoryId);
+        });
+    }
+    
+    var registerPushNotificationUrl = ShApiConstants.pushNotificationUrl;
     ePaperService.registerPushNotification = function(token, platform) {
         var request = {
             token: token,
             type: platform
         }
         console.log("request", request);
-        $http.post(baseUrl + registerPushNotificationUrl, request).then(function(response){
+        $http.post(ePaperService.constructApiUrl(registerPushNotificationUrl), request).then(function(response){
             console.log("register push notification", response);
             $cordovaPreferences.store('token', token).success(function(value) {
                 console.log("store successfully", value);
@@ -219,3 +378,20 @@ app.factory('ePaperService', function($http, $q, Category, Categories,  $cordova
     
 	return ePaperService;
 });
+
+//Google Analytics service
+app.factory('GaService', function(ShApiConstants) {
+	
+	var service = {};
+	
+	service.trackView = function(viewTitle) {
+		if (!ShApiConstants.useProxy 
+				&& typeof window.ga !== 'undefined') { 
+			console.log('ga.trackView.viewTitle = ' + viewTitle);
+			window.ga.trackView(viewTitle); 
+		}
+	}
+	
+	return service;
+	
+})
