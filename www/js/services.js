@@ -164,100 +164,71 @@ app.factory('Categories', function(TodayShCategories, Category, $filter){
     return Categories;
 });
 
-app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants) {
-    var ePaperService = {};
+app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants, ApiEndpoint) {
+   	var ePaperService = {};
 
-    /** 
-     * param "targetUrl": "http://.../..." excluding any request params starting with "?"
-     * param "paramOptions": pre-defined options to construct the url params, e.g. { optionKey1 : optionValue1, optionKey2 : optionValue2 }
-     * - Options:
-     *   - appendCurrentDate: true|false
-     *     - auto-append today's date to the url.
-     */ 
-    ePaperService.constructApiUrl = function(targetUrl, paramOptions) {
-        
-        // remove original baseUrl if present
-        var baseUrlPattern = /^https?:\/\/[^\/:]+/i;
-        var strippedTargetUrl = targetUrl.replace(baseUrlPattern, '');
-        
-        var paramArray = [];
-        
-        // append any pre-defined optional parameters
-        if (paramOptions) {
-            if (paramOptions.appendCurrentDate) {
-                var today = new Date();
-                paramArray.push('date=' + today.toISOString().substring(0, 10));
-            }
-        }
-        
-        var paramStr = '';
-        if (paramArray.length > 0)
-            paramStr = '?' + paramArray.join('&');
-        
-//        console.log(
-//                'aPaperService.constructApiUrl(): ' 
-//                + 'targetUrl=' + targetUrl + ', ' 
-//                + 'strippedTargetUrl=' + strippedTargetUrl + ', '
-//                + 'paramStr=' + paramStr);
-        
-        var result = '';
-        if (ShApiConstants.useProxy) {
-            // use proxied baseUrl
-            result = ShApiConstants.baseUrlProxied + strippedTargetUrl + paramStr;
-        } else {
-            // use actual baseUrl
-            result = ShApiConstants.baseUrl + strippedTargetUrl + paramStr;
-        }
-        
-//        console.log('aPaperService.constructApiUrl(): result=' + result);
-        
-        return result;
+    // param "targetUrl": "http://.../..." excluding any request params starting with "?" 
+    ePaperService.constructApiUrl = function(targetUrl) {
+    	
+    	// remove original baseUrl if present
+    	var baseUrlPattern = /^https?:\/\/[^\/:]+/i;
+    	var strippedTargetUrl = targetUrl.replace(baseUrlPattern, '');
+    	//console.log('aPaperService.constructApiUrl(): targetUrl=' + targetUrl + ', strippedTargetUrl=' + strippedTargetUrl);
+    	
+    	var result = ApiEndpoint.url + strippedTargetUrl;
+    	
+    	//console.log('aPaperService.constructApiUrl(): result=' + result);
+    	
+    	return result;
+
     }
     
     //POST login
     ePaperService.login = function(username, password) {
-        // get session token
-        var getSessionToken = function() {
-            var sessionTokenUrl = ShApiConstants.sessionTokenUrl;
-            
-            return $http.get(ePaperService.constructApiUrl(sessionTokenUrl), {cache:false});
-        };
-        
-        var postLogin = function(username, password, sessionToken) {
-            var loginUrl = ShApiConstants.loginUrl;
-            
-            return $http({
-                method : 'post',
-                url : ePaperService.constructApiUrl(loginUrl),
-                headers : { 'X-CSRF-Token' : sessionToken },
-                data : {'username' : username, 'password' : password}
-            });
-        };
-        
-        // submit login request
-        return getSessionToken().then(function(response){
-            return postLogin(username, password, response.data);
-        }, function(error){
-            throw error;
-        });
-    };
-    
-    //POST logout
-    ePaperService.logout = function(sessionToken) {
-        var postLogout = function(sessionToken) {
-            var logoutUrl = ShApiConstants.logoutUrl;
-            
-            return $http({
-                method : 'post',
-                url : ePaperService.constructApiUrl(logoutUrl),
-                headers : { 'X-CSRF-Token' : sessionToken },
-                data : {'1' : 1}
-            });
-        };
-        
-        // submit login request
-        return postLogout(sessionToken);
-    };
+
+		// get session token
+		var getSessionToken = function() {
+			var sessionTokenUrl = ShApiConstants.sessionTokenUrl;
+			
+			return $http.get(ePaperService.constructApiUrl(sessionTokenUrl), {cache:false});
+		};
+		
+		var postLogin = function(username, password, sessionToken) {
+			var loginUrl = ShApiConstants.loginUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(loginUrl),
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'username' : username, 'password' : password},
+                withCredentials: true
+			});
+		};
+		
+		// submit login request
+		return getSessionToken().then(function(response){
+			return postLogin(username, password, response.data);
+		}, function(error){
+			throw error;
+		});
+	};
+	
+	//POST logout
+	ePaperService.logout = function(sessionToken) {
+		var postLogout = function(sessionToken) {
+			var logoutUrl = ShApiConstants.logoutUrl;
+			
+			return $http({
+				method : 'post',
+				url : ePaperService.constructApiUrl(logoutUrl),
+				headers : { 'X-CSRF-Token' : sessionToken },
+				data : {'1' : 1}
+			});
+		};
+		
+		// submit login request
+		return postLogout(sessionToken);
+	};
 
     //GET /news/breaking - online version
     var breakingApiUrl = ShApiConstants.breakingNewsListUrl;

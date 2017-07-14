@@ -29,7 +29,7 @@
                 <div id="header-button-container" class="header-button-container">					
                 </div>
             </div>
-            <div class="item item-body">
+            <div class="item item-body" ng-if="pdfUrl">
                 <ion-scroll direction="xy"  overflow-scroll="false">		
                     <div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
                     <pdf-gesture ng-pdf-options="options"></pdf-gesture>

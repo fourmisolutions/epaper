@@ -1,6 +1,6 @@
 angular.module('epaper.controllers')
-.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state", '$timeout','$interval', '$ionicModal', '$cookies', '$ionicPopup', 'ShApiConstants',
-	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state, $timeout, $interval, $ionicModal, $cookies, $ionicPopup, ShApiConstants){
+.controller("MenuCtrl", ["$scope","ePaperService", "$ionicSlideBoxDelegate", "$rootScope", "$state", '$timeout','$interval', '$ionicModal', '$cookies', '$ionicPopup', 'ShApiConstants','User',
+	function($scope, ePaperService, $ionicSlideBoxDelegate, $rootScope, $state, $timeout, $interval, $ionicModal, $cookies, $ionicPopup, ShApiConstants, User){
         $scope.breakingNewsCount = ePaperService.getBreakingNewsCount();
         
         $scope.$on('onBreakingNewsUpdate',function(){
@@ -65,154 +65,19 @@ angular.module('epaper.controllers')
 		// Form data for the login modal
 		$scope.loginData = {};
 		
-		$scope.isAuthenticated = true;
-		$scope.currentUser = localStorage.getItem('shApiUsername');
+		$scope.isAuthenticated = User.isLoggedIn();
+		$scope.currentUser = User.username();
 		
-		if ($scope.currentUser == undefined) {
-		    
-		    $scope.currentUser = '访客';
-			$scope.isAuthenticated = false;
-			
-			if (ShApiConstants.useProxy) {
-				$cookies.remove(localStorage.getItem('shApiSessionKey'), {path:'/'});
-			}
-			
+        if($scope.isAuthenticated) {
+            User.refreshShApiSession();
 		} else {
-		    
-		    // verify if session cookies is still available
-			// - if gone need to refresh session data based on localStorage values
-			// - possible scenario: user closed the app intentionally or restart device
-			if (ShApiConstants.useProxy) {
-			    
-			    // for 'ionic serve', closing the browser tab/window will not remove the localStorage 
-				// - new incognito window will start with new localStarage though
-				if ($cookies.get(localStorage.getItem('shApiSessionKey')) == undefined) {
-					$cookies.put(
-							localStorage.getItem('shApiSessionKey'), localStorage.getItem('shApiSessionValue'), 
-							{path:'/'});
-				} 
-				
-			} else if (sessionStorage.getItem('toRefreshShApiSession') == undefined) {
-				
-				var refreshShApiSession = function() {
-					
-					ePaperService.login(
-							localStorage.getItem('shApiUsername'), 
-							window.atob(localStorage.getItem('shApiPassword'))).then(function(response){
-
-						//console.log('refreshShApiSession(): data=' + JSON.stringify(response.data));
-						
-						// store refreshed data in local storage for subsequent api calls
-						localStorage.setItem('shApiSessionToken', response.data.token);
-						//console.log('sessionToken: ' + response.data.token);
-						
-						localStorage.setItem('shApiSessionKey', response.data.session_name);
-						//console.log('sessionKey: ' + response.data.session_name);
-						
-						localStorage.setItem('shApiSessionValue', response.data.sessid);
-						//console.log('sessionValue: ' + response.data.sessid);
-						
-						// store session cookies to be sent over to server for subsequent api calls
-						if (ShApiConstants.useProxy) {
-							$cookies.put(
-									response.data.session_name, response.data.sessid, 
-									{path:'/'});
-						}
-						
-					}, function(error){
-						
-						console.error('refreshShApiSession(): error=' + JSON.stringify(error));
-						
-//						$ionicPopup.alert({
-//                            title: "User Login Error",
-//                            content: error.data
-//                        });
-						
-						// reset form data?
-						//$scope.loginData = {};
-					});
-					
-				};
-				
-				refreshShApiSession();
-				
-				sessionStorage.setItem('toRefreshShApiSession', 'N');
-			}
-			
-		}
-    
-		// Create the login modal that we will use later
-		$ionicModal.fromTemplateUrl('templates/login.html', {
-			scope: $scope
-		}).then(function(modal) {
-			$scope.modal = modal;
-		});
-
-		// Triggered in the login modal to close it
-		$scope.closeLogin = function() {
-			$scope.modal.hide();
-		};
-
+            $scope.currentUser = '访客';
+        }
 		// Open the login modal
 		$scope.showLogin = function() {
-			$scope.modal.show();
+            $state.go('app.login');
 		};
 
-		// Perform the login action when the user submits the login form
-		$scope.doLogin = function() {
-			
-			ePaperService.login($scope.loginData.username, $scope.loginData.password).then(function(response){
-				
-				//console.log('MenuCtrl.doLogin(): data=' + JSON.stringify(response));
-				
-				// store credentials and returned data in local storage for subsequent api calls
-				localStorage.setItem('shApiUsername', $scope.loginData.username);
-				//console.log('username: ' + $scope.loginData.username);
-				
-				var passwordEnc = window.btoa($scope.loginData.password);
-				localStorage.setItem('shApiPassword', passwordEnc);
-				//console.log('passwordEnc: ' + passwordEnc);
-				
-				localStorage.setItem('shApiSessionToken', response.data.token);
-				//console.log('sessionToken: ' + response.data.token);
-				
-				localStorage.setItem('shApiSessionKey', response.data.session_name);
-				//console.log('sessionKey: ' + response.data.session_name);
-				
-				localStorage.setItem('shApiSessionValue', response.data.sessid);
-				//console.log('sessionValue: ' + response.data.sessid);
-				
-				// store session cookies to be sent over to server for subsequent api calls
-				if (ShApiConstants.useProxy) {
-					$cookies.put(
-							response.data.session_name, response.data.sessid, 
-							{path:'/'});
-				} else {
-				    sessionStorage.setItem('toRefreshShApiSession', 'N');
-				}
-				
-				$scope.currentUser = $scope.loginData.username;
-				$scope.isAuthenticated = true;
-				
-				$scope.loginData = {};
-				$scope.closeLogin();
-				$state.go('app.home');
-				
-			}, function(error){
-				
-				//console.log('MenuCtrl.doLogin(): error=' + JSON.stringify(error));
-				
-				$ionicPopup.alert({
-                    title: "User Login Error",
-                    content: error.data
-                });
-				
-				// reset form data?
-                //$scope.loginData = {};
-			});
-			
-		};
-		
 		// Confirm and perform logout action
 		$scope.confirmLogout = function() {
 			var confirmPopup = $ionicPopup.confirm({
@@ -224,53 +89,39 @@ angular.module('epaper.controllers')
 				okType: 'button-assertive'
 			});
 
-			confirmPopup.then(function(res) {
-				if(res) {
+			confirmPopup.then(function(confirm) {
+				if(confirm) {
 					//console.log('Proceed logout ...');
-					
-					if (localStorage.getItem('shApiSessionToken') == undefined) {
-						//console.log('MenuCtrl.confirmLogout: sessionToken unavailable');
-					} else {
-						
-						var postLogoutProcess = function() {
-							// remove session cookies
-							if (ShApiConstants.useProxy) {
-								$cookies.remove(localStorage.getItem('shApiSessionKey'), {path:'/'});
-							}
-							
-							// remove previously saved data in local storage
-							localStorage.removeItem('shApiUsername');
-							localStorage.removeItem('shApiPassword');
-							localStorage.removeItem('shApiSessionToken');
-							localStorage.removeItem('shApiSessionKey');
-							localStorage.removeItem('shApiSessionValue');
-							
-							$scope.currentUser = '访客';
-							$scope.isAuthenticated = false;
-							
-							$state.go('app.home');
-						};
-						
-						ePaperService.logout(localStorage.getItem('shApiSessionToken')).then(function(response){
-
-							//console.log('MenuCtrl.confirmLogout(): response=' + JSON.stringify(response));
-							postLogoutProcess();
-							
-						}, function(error){
-							
-							//console.log('MenuCtrl.confirmLogout(): error=' + JSON.stringify(error));
-							
-							// proceed to process logout even with api call error
-							postLogoutProcess();
-							
-						});
-						
-					}
-				} else {
-					//console.log('Cancel logout');
-				}
+                    var postLogoutProcess = function() {
+                        $scope.currentUser = '访客';
+                        $scope.isAuthenticated = false;
+                        $state.go('app.home');
+                    };
+                    
+                    User.logout().then(function(response){
+                        //console.log('MenuCtrl.confirmLogout(): response=' + JSON.stringify(response));
+                        postLogoutProcess();
+                        
+                    }, function(error){
+                        
+                        //console.log('MenuCtrl.confirmLogout(): error=' + JSON.stringify(error));
+                        
+                        // proceed to process logout even with api call error
+                        postLogoutProcess();
+                        
+                    });
+                    
+                }
 			});
 		};
+        
+        $scope.$on('postLogin',function(){
+            $timeout(function() {
+                $scope.isAuthenticated = User.isLoggedIn();
+                $scope.currentUser = User.username();
+                $scope.$apply();
+            });
+        });
 
 		$scope.switchModule = function(moduleStateName) {
 			$state.go(moduleStateName);

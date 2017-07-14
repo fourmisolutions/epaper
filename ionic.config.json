@@ -6,5 +6,11 @@
       "path": "/shapi-proxy", 
       "proxyUrl": "http://shepaper.theborneopost.com"
     }
-  ]
+  ],
+  "stage":{
+       "apiendpoint" : "http://shepaper.theborneopost.com"
+  },
+  "prod":{
+       "apiendpoint" : "http://shepaper.theborneopost.com"
+  }
 }
