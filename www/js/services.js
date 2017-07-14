@@ -167,15 +167,40 @@ app.factory('Categories', function(TodayShCategories, Category, $filter){
 app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants, ApiEndpoint) {
    	var ePaperService = {};
 
-    // param "targetUrl": "http://.../..." excluding any request params starting with "?" 
-    ePaperService.constructApiUrl = function(targetUrl) {
+    /** 
+     * param "targetUrl": "http://.../..." excluding any request params starting with "?"
+     * param "paramOptions": pre-defined options to construct the url params, e.g. { optionKey1 : optionValue1, optionKey2 : optionValue2 }
+     * - Options:
+     *   - appendCurrentDate: true|false
+     *     - auto-append today's date to the url.
+     */ 
+    ePaperService.constructApiUrl = function(targetUrl, paramOptions) {
     	
     	// remove original baseUrl if present
     	var baseUrlPattern = /^https?:\/\/[^\/:]+/i;
     	var strippedTargetUrl = targetUrl.replace(baseUrlPattern, '');
-    	//console.log('aPaperService.constructApiUrl(): targetUrl=' + targetUrl + ', strippedTargetUrl=' + strippedTargetUrl);
     	
-    	var result = ApiEndpoint.url + strippedTargetUrl;
+    	var paramArray = [];
+        
+        // append any pre-defined optional parameters
+        if (paramOptions) {
+            if (paramOptions.appendCurrentDate) {
+                var today = new Date();
+                paramArray.push('date=' + today.toISOString().substring(0, 10));
+            }
+        }
+        
+        var paramStr = '';
+        if (paramArray.length > 0)
+            paramStr = '?' + paramArray.join('&');
+        
+//        console.log(
+//                'aPaperService.constructApiUrl(): ' 
+//                + 'targetUrl=' + targetUrl + ', ' 
+//                + 'strippedTargetUrl=' + strippedTargetUrl + ', '
+//                + 'paramStr=' + paramStr);
+    	
+    	var result = ApiEndpoint.url + strippedTargetUrl + paramStr;
     	
     	//console.log('aPaperService.constructApiUrl(): result=' + result);
     	
