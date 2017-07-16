@@ -1,4 +1,4 @@
-app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants, ApiEndpoint) {
+app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCategories, $cordovaPreferences, ShApiConstants, ApiEndpoint, CachePdfWorker) {
     var ePaperService = {};
 
     /** 
@@ -168,11 +168,56 @@ app.factory('ePaperService', function($http, $q, Category, Categories, TodayShCa
         if(lastUpdateDate.getDate() != now.getDate() || lastUpdateDate.getMonth() != now.getMonth()) {
             if(window.cache != undefined) {
                 window.cache.clear();
-            }                
+            }
+            
+            // clear Today Seehua pdf file urls cache
+            ePaperService.todayShPdfHistory = [];
+            
             localStorage.setItem("lastUpdateDate", now);
         }
     }
-
+    
+    // cache to store Today SeeHua pdf file urls which has been loaded previously
+    ePaperService.todayShPdfHistory = [];
+    
+    // Attempt to push the provided pdf url into the history
+    ePaperService.pushIntoTodayShPdfHistory = function(pdfUrl) {
+        // Check if the provided pdf url is in the cache array
+        var index = ePaperService.todayShPdfHistory.findIndex(function(item) { return item === pdfUrl; });
+        if (index >= 0) {
+            // If found, return false
+            //console.log('found in cache pdfUrl=' + pdfUrl);
+            return false;
+        } else {
+            // If not found, push into the cache, return true
+            //console.log('not found in cache pdfUrl=' + pdfUrl);
+            ePaperService.todayShPdfHistory.push(pdfUrl);
+            return true;
+        }
+    };
+    
+    // Today Seehua: Pre-download PDF contents of news within the same category of current selected news
+    ePaperService.preDownloadTodayShPdf = function (categoryId) {
+        //console.log('preloading categoryId=' + categoryId);
+        
+        // get the list of news of the provided categoryId
+        ePaperService.getTodayShNews(categoryId).then(function(newsList){
+            // for each of the news in the list
+            angular.forEach(newsList, function(news, key) {
+                var pdfUrl = news.pdf;
+                // attempt to push the pdf url into history
+                if (ePaperService.pushIntoTodayShPdfHistory(pdfUrl)) {
+                    // if push success, proceed to preload the pdf content
+                    //console.log('proceed to preload content: ' + pdfUrl);
+                    CachePdfWorker.startWork(pdfUrl);
+                } else {
+                    //console.log('skip preload content: ' + pdfUrl);
+                }
+            });
+        });
+        
+    };
+    
     return ePaperService;
 });
 
