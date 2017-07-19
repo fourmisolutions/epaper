@@ -74,7 +74,7 @@ app.factory('TodayShCategories', function(TodayShCategory, $filter){
     TodayShCategories.prototype.getCategoryByCategoryId = function(categoryId) {
         var category;
 
-        var index = this.categories.findIndex(function(item) { return item.categoryId === categoryId });
+        var index = this.categories.findIndex(function(item) { return item.categoryId === categoryId; });
         if (index >= 0) {
             category = this.categories[index];
         } else {
