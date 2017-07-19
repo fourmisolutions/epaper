@@ -187,7 +187,7 @@
             };
 
             renderPage = function (num) {
-                if (renderTask[num - 1]) {
+                if (renderTask[num - 1] && renderTask[num - 1].internalRenderTask) {
                     renderTask[num - 1].internalRenderTask.cancel();
                 }
 
@@ -246,7 +246,9 @@
                 }
 
                 if (options.pdfUrl && options.pdfUrl.length) {
-                    pdfLoaderTask = PDFJS.getDocument(params, null, null, options.onProgress);
+                    pdfLoaderTask = PDFJS.getDocument(params);
+                    pdfLoaderTask.onProgress = options.onProgress;
+                    
                     pdfLoaderTask.then(
                         function (_pdfDoc) {
                             if (typeof options.onLoad === 'function') {
