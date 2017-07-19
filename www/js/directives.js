@@ -162,9 +162,9 @@
             };
             scope.zoomIn = function () {
                 zoomTime += 1;
-                if (pdfDoc && zoomTime <= 6) {
+                if (pdfDoc && zoomTime <= 3) {
                     pageFit = false;
-                    scale += .2;
+                    scale += .5;
                     scope.$apply(function () {
                         for (i = 1; i <= pdfDoc.numPages; i++) {
                             renderPage(i);
@@ -177,7 +177,7 @@
                 zoomTime -= 1;
                 if (pdfDoc) {
                     pageFit = false;
-                    scale -= .2;
+                    scale -= .5;
                     scope.$apply(function () {
                         for (i = 1; i <= pdfDoc.numPages; i++) {
                             renderPage(i);
