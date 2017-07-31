@@ -46,11 +46,23 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     $scope.imageURLs = [];
     $scope.images = news.image;
     
+    if (news.image.indexOf(',') >= 0)
+    {
+        var imageURL_local = news.image.split(',');
+        $scope.imageUrl = imageURL_local[0]; 
+        $scope.imageURLs = imageURL_local.slice(1,imageURL_local.length);
+
+    }
+    else
+    {
+        $scope.imageUrl = news.image;
+    }
+    
     $scope.shareAnywhere = function() {
-        var message = $scope.description;
-		var subject = $scope.description;
-		var image =  $scope.images;
-		var link = 'http://www.test.com';
+        var message = news.summary + "\n" + news.content;
+		var subject = news.title;
+		var image =  $scope.imageUrl;
+		var link = news.pdf;
 		//var link = "";	
 		
 		$cordovaSocialSharing
@@ -63,19 +75,6 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
 		  //console.log("Sharing fail.");
 		});
 	}
-
-
-    if (news.image.indexOf(',') >= 0)
-    {
-        var imageURL_local = news.image.split(',');
-        $scope.imageUrl = imageURL_local[0]; 
-        $scope.imageURLs = imageURL_local.slice(1,imageURL_local.length);
-
-    }
-    else
-    {
-        $scope.imageUrl = news.image;
-    }
 
     $scope.pdfUrl = news.pdf;
     if ($scope.pdfUrl) {
