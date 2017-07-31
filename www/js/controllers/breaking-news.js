@@ -56,7 +56,7 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
 		$scope.imageUrl = news.image;
 	}
     
-        $scope.shareAnywhere = function() {
+    $scope.shareAnywhere = function() {
         var message = news.summary + "\n" + news.content;
 		var subject = news.title;
 		var image =  $scope.imageUrl;
