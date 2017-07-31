@@ -15,8 +15,8 @@ app.controller('BreakingNewsListController', ['$scope', 'ePaperService', '$state
         };
 }]);
 
-app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 'ePaperService', 'GaService', 'GaConstants',
-	function($scope, $stateParams, $timeout, ePaperService, GaService, GaConstants) {
+app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 'ePaperService', 'GaService', 'GaConstants','$cordovaSocialSharing',
+	function($scope, $stateParams, $timeout, ePaperService, GaService, GaConstants, $cordovaSocialSharing) {
 	
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		GaService.trackView(GaConstants.scrnNameBreakingNews);
@@ -54,6 +54,24 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
 	else
 	{
 		$scope.imageUrl = news.image;
+	}
+    
+        $scope.shareAnywhere = function() {
+        var message = news.summary + "\n" + news.content;
+		var subject = news.title;
+		var image =  $scope.imageUrl;
+		var link = news.pdf;
+		//var link = "";	
+		
+		$cordovaSocialSharing
+		.share(message, subject, image, link) // Share via native share sheet
+		.then(function(result) {
+		  // Success!
+		  //console.log("Sharing success.");
+		}, function(err) {
+		  // An error occured. Show a message to the user
+		  //console.log("Sharing fail.");
+		});
 	}
 
 	$scope.pdfUrl = news.pdf;
