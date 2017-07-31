@@ -14,8 +14,8 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
         };
 }]);
 
-app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants', '$cordovaSocialSharing',
-    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants, $cordovaSocialSharing) {
+app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants',
+    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants) {
 	
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		GaService.trackView(GaConstants.scrnNameTodaySeeHua);
@@ -41,8 +41,6 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     $scope.description = news.summary;
 	$scope.content = news.content;
 	$scope.imageURLs = [];
-	
-	$scope.images = news.image;
 	
 	
 	if (news.image.indexOf(',') >= 0)
@@ -73,90 +71,5 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     } else {
         //console.log('news.pdf is undefined or empty');
     }
-	
-	
-	$scope.shareAnywhere = function() {
-        var message = $scope.description;
-		var subject = $scope.description;
-		var image =  $scope.images;
-		var link = 'http://www.test.com';
-		//var link = "";	
-		
-		$cordovaSocialSharing
-		.share(message, subject, image, link) // Share via native share sheet
-		.then(function(result) {
-		  // Success!
-		  console.log("Sharing success.");
-		}, function(err) {
-		  // An error occured. Show a message to the user
-		  console.log("Sharing fail.");
-		});
-	}
-	
-	
-	
-	/*$scope.shareViaFacebook = function() {	
-		var message = $scope.description;
-		var image =  $scope.images;
-		var link = 'http://www.test.com';
-		//var link = "";		
-	
-		$cordovaSocialSharing
-		.shareViaFacebook(message, image, link)
-		.then(function(result) {
-		  // Success!
-		  console.log("Facebook sharing success.");
-		}, function(err) {
-		  // An error occurred. Show a message to the user
-		  console.log("Facebook sharing failure.");
-		});
-		
-		$cordovaSocialSharing
-		.canShareVia("Facebook", message, image, link)
-		.then(function(result) {
-		  // Success!
-		  console.log("Facebook sharing success.");
-		}, function(err) {
-		  // An error occurred. Show a message to the user
-		  console.log("Facebook sharing failure.");
-		});
-		
-		
-	}*/
-	
-	/*$scope.shareViaWhatsapp = function() {	
-		var message = $scope.description;
-		var image =  $scope.images;
-		var link = 'http://www.test.com';
-		//var link = "";
-		
-		$cordovaSocialSharing
-		.shareViaWhatsApp(message, image, link)
-		.then(function(result) {
-		  // Success!
-		  console.log("Whatsapp sharing success.");
-		}, function(err) {
-		  // An error occurred. Show a message to the user
-		  console.log("Whatsapp sharing failure.");
-		});
-	}
-		
-	$scope.shareViaTwitter = function() {	
-		var message = $scope.description;
-		var image =  $scope.images;
-		var link = 'http://www.test.com';
-		//var link = "";
-		
-		$cordovaSocialSharing
-		.shareViaTwitter(message, image, link)
-		.then(function(result) {
-		  // Success!
-		  console.log("Twitter sharing success.");
-		}, function(err) {
-		  // An error occurred. Show a message to the user
-		  console.log("Twitter sharing failure.");
-		});		
-		
-	}*/
     
 }]);
