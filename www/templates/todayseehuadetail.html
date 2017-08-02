@@ -6,8 +6,9 @@
             </div>	
             
             <div class="item item-body">
-                <img class="full-image" ng-src="{{imageUrl}}"></div>			
+                <img class="full-image" ng-src="{{imageUrl}}" ng-if="imageUrl">			
                 <p class="news-description">{{description}}</p>
+                <p class="bar-assertive padding" ng-if="pdfUrl" align="center"><button class="button icon ion-android-download" ng-if="allowOpen" ng-click="openPdf()"></button></p>
                 <p class="to-be-continued-message">待续。。。更多新闻滚动到底部</p>
             </div>
             

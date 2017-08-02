@@ -14,8 +14,8 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
     };
 }]);
 
-app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants',
-    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants) {
+app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants', 'ShApiConstants', '$cordovaFileTransfer', '$cordovaFileOpener2',
+    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants, ShApiConstants, $cordovaFileTransfer, $cordovaFileOpener2) {
 
     $scope.$on("$ionicView.beforeEnter", function(event, data){
         GaService.trackView(GaConstants.scrnNameTodaySeeHua);
@@ -76,5 +76,58 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     } else {
         //console.log('news.pdf is undefined or empty');
     }
+    
+    // show download button only if not run on browser
+    $scope.allowOpen = false;
+    if (!ShApiConstants.useProxy) {
+        $scope.allowOpen = true; 
+    }
+    
+    // Download and Open using device installed app
+    // - works only in actual devices
+    $scope.openPdf = function() {
+        // download the target file
+        var url = $scope.pdfUrl;
+        
+        var tempFileName = url.split('/').pop();
+        //console.log('tempFileName=' + tempFileName);
+        if (tempFileName.indexOf('?') >= 0) {
+            tempFileName = tempFileName.substring(0, tempFileName.indexOf('?'));
+            //console.log('tempFileName=' + tempFileName);
+        }
+        
+        // tested on Android: unable to trigger native app if using cordova.file.cacheDirectory
+        var targetPath = cordova.file.dataDirectory + tempFileName;
+        var trustHosts = true;
+        var options = {};
+
+        $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
+        .then(function(result) {
+            // Success!
+            //console.log('Download success: ' + JSON.stringify(result));
+            
+            // open the downloaded file
+            $cordovaFileOpener2.open(
+                    targetPath, // You can also use a Cordova-style file uri: cdvfile://localhost/persistent/Download/starwars.pdf
+                    'application/pdf', 
+                    { 
+                        error : function(e) { 
+                            console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
+                        },
+                        success : function () {
+                            //console.log('file opened successfully');                
+                        }
+                    }
+            );
+            
+        }, function(err) {
+            // Error
+            console.error('Download error: ' + JSON.stringify(err));
+        }, function (progress) {
+            $timeout(function () {
+                $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+            });
+        });
+    };
 
 }]);
