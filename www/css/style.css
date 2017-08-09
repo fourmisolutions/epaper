@@ -260,6 +260,14 @@ div.spinner {
   height: 85px !important;
 }
 
+.home-background {
+    background: url("../images/home-background.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+}
 
-
+.menu-item {
+    background-color: transparent;
+}
 
