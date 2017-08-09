@@ -14,8 +14,8 @@ app.controller('TodayShListController', ['$scope', 'ePaperService', '$state', '$
     };
 }]);
 
-app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants',
-    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants) {
+app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePaperService', '$interval', 'ePaperService', 'GaService', 'GaConstants','$cordovaSocialSharing',
+    function($scope, $stateParams, $timeout, ePaperService, $interval, ePaperService, GaService, GaConstants, $cordovaSocialSharing) {
 
     $scope.$on("$ionicView.beforeEnter", function(event, data){
         GaService.trackView(GaConstants.scrnNameTodaySeeHua);
@@ -44,8 +44,8 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     $scope.description = news.summary;
     $scope.content = news.content;
     $scope.imageURLs = [];
-
-
+    $scope.images = news.image;
+    
     if (news.image.indexOf(',') >= 0)
     {
         var imageURL_local = news.image.split(',');
@@ -57,6 +57,24 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     {
         $scope.imageUrl = news.image;
     }
+    
+    $scope.shareAnywhere = function() {
+        var message = news.summary + "\n" + news.content;
+		var subject = news.title;
+		var image =  $scope.imageUrl;
+		var link = news.pdf;
+		//var link = "";	
+		
+		$cordovaSocialSharing
+		.share(message, subject, image, link) // Share via native share sheet
+		.then(function(result) {
+		  // Success!
+		  //console.log("Sharing success.");
+		}, function(err) {
+		  // An error occured. Show a message to the user
+		  //console.log("Sharing fail.");
+		});
+	}
 
     $scope.pdfUrl = news.pdf;
     if ($scope.pdfUrl) {

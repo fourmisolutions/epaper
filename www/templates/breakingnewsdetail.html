@@ -5,11 +5,14 @@
     <ion-content>
         <div class="list card">	
             <div class="item item-body">
-                <h1>{{title}}</h1>
+                <div class="row">
+                  <div class="col col-90"><h1>{{title}}</h1></div>
+                  <div class="col"><button class="button button-assertive icon ion-share" ng-click="shareAnywhere()"></button>	</div>
+                </div>
             </div>	
             
             <div class="item item-body">
-                <img class="full-image" ng-src="{{imageUrl}}"></div>			
+                <img class="full-image" ng-src="{{imageUrl}}">		
                 <p class="news-description">{{description}}</p>
                 <p class="to-be-continued-message">待续。。。更多新闻滚动到底部</p>
             </div>
