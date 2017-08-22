@@ -1,18 +1,21 @@
-<ion-view view-title="诗华电子报">
+<ion-view view-title="诗华电子报" ng-controller="PdfCtrl as pdfCtrl">
     <ion-nav-bar class="nav-bar bar-assertive">
         <ion-nav-back-button class="nav-button"></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content>
 	<div style="position: relative">
 		<div id="header-button-container" class="header-button-container">
-			
+			<div id="floating-button1" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"
+                ng-click="pdfCtrl.fitPage()"><p class="shrink">100%</p></div>
+            <div id="floating-button2" data-toggle="tooltip" data-placement="left" data-original-title="Plus"
+                ng-click="pdfCtrl.zoomIn()"><p class="plus">+</p></div>
+            <div id="floating-button3" data-toggle="tooltip" data-placement="left" data-original-title="Minus"
+                ng-click="pdfCtrl.zoomOut()"><p class="minus">-</p></div>
 		</div>
 		<div style="position: absolute; top: 60px;">
         	    <ion-scroll direction="xy" overflow-scroll="false">		
-            	<pdf-gesture ng-pdf-options="options"></pdf-gesture>
+            	<pdf-gesture></pdf-gesture>
         	    <ion-scroll>
-		</div>
-		<div id="footer-button-container" class="footer-button-container">
 		</div>
 	</div>
     </ion-content>

@@ -24,44 +24,50 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
     var news = $stateParams.news;
     var tCtrl = this;
     
-    this.onLoad = function (pag) {
+    tCtrl.onLoad = function (pag) {
+        //console.log('onLoad');
+        
         // call service function to pre-download PDF contents of the same category
         // current design: process preload of the rest of the news pdf only after current selected news pdf is finished downloaded
         try { ePaperService.preDownloadTodayShPdf(news.category); }
         catch (err) { console.error('Error: ' + err); }
     };
 
-    this.onError = function (err) {
+    tCtrl.onError = function (err) {
+        //console.log('onError');
     };
 
-    this.onProgress = function (progress) {
+    tCtrl.onProgress = function (progress) {
+        //console.log('onProgress');
     };
 
-    this.onPageRender = function (page) {
+    tCtrl.onPageRender = function (page) {
+        //console.log('onPageRender');
+        $scope.$apply(tCtrl.showSpinner = false);
     };
 
-    $scope.title = news.title;
-    $scope.description = news.summary;
-    $scope.content = news.content;
-    $scope.imageURLs = [];
-    $scope.images = news.image;
+    tCtrl.title = news.title;
+    tCtrl.description = news.summary;
+    tCtrl.content = news.content;
+    tCtrl.imageURLs = [];
+    tCtrl.images = news.image;
     
     if (news.image.indexOf(',') >= 0)
     {
         var imageURL_local = news.image.split(',');
-        $scope.imageUrl = imageURL_local[0]; 
-        $scope.imageURLs = imageURL_local.slice(1,imageURL_local.length);
+        tCtrl.imageUrl = imageURL_local[0]; 
+        tCtrl.imageURLs = imageURL_local.slice(1,imageURL_local.length);
 
     }
     else
     {
-        $scope.imageUrl = news.image;
+        tCtrl.imageUrl = news.image;
     }
     
-    $scope.shareAnywhere = function() {
+    tCtrl.shareAnywhere = function() {
         var message = news.summary + "\n" + news.content;
 		var subject = news.title;
-		var image =  $scope.imageUrl;
+		var image =  tCtrl.imageUrl;
 		var link = news.pdf;
 		//var link = "";	
 		
@@ -76,13 +82,13 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
 		});
 	}
 
-    $scope.pdfUrl = news.pdf;
-    if ($scope.pdfUrl) {
-        ePaperService.pushIntoTodayShPdfHistory($scope.pdfUrl);
+    tCtrl.pdfUrl = news.pdf;
+    if (tCtrl.pdfUrl) {
+        ePaperService.pushIntoTodayShPdfHistory(tCtrl.pdfUrl);
         
         $timeout(function() {
-            $scope.options = {
-                    pdfUrl: ePaperService.constructApiUrl($scope.pdfUrl),
+            tCtrl.options = {
+                    pdfUrl: ePaperService.constructApiUrl(tCtrl.pdfUrl),
                     onLoad: tCtrl.onLoad,
                     onProgress: tCtrl.onProgress,
                     onError: tCtrl.onError,
@@ -90,6 +96,9 @@ app.controller('TodayShController', ['$scope', '$stateParams', '$timeout', 'ePap
                     httpHeaders: [],
                     pinchin: false
             };
+            
+            $scope.$apply(tCtrl.showSpinner = true); 
+            
         }, 1000);
     } else {
         //console.log('news.pdf is undefined or empty');

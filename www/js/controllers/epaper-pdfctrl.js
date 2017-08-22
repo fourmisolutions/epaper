@@ -1,6 +1,6 @@
 angular.module('epaper.controllers')
-.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','news','$ionicPopup','$timeout', 'GaService', 'GaConstants', '$ionicPopup', '$state','$ionicHistory','User', 
-    function($scope, $stateParams, $ionicLoading, ePaperService, news, $ionicPopup, $timeout, GaService, GaConstants, $ionicPopup, $state, $ionicHistory, User) {	
+.controller('PdfCtrl', ['$scope', '$stateParams', '$ionicLoading','ePaperService','$ionicPopup','$timeout', 'GaService', 'GaConstants', '$ionicPopup', '$state','$ionicHistory','User', 
+    function($scope, $stateParams, $ionicLoading, ePaperService, $ionicPopup, $timeout, GaService, GaConstants, $ionicPopup, $state, $ionicHistory, User) {	
 	//TODO - Should do at router
     if(!User.isLoggedIn()) {    
         $ionicPopup.alert({
@@ -16,13 +16,20 @@ angular.module('epaper.controllers')
 	$scope.$on("$ionicView.beforeEnter", function(event, data){
 		GaService.trackView(GaConstants.scrnNameSeeHuaEpaper);
 	});
-	var scope = $scope;
+	
+	var news = {};
+	ePaperService.getNews($stateParams.categoryId, $stateParams.pageNo).then(function(result) { 
+	    news = result; 
+    }, function(reason) { 
+        console.error('Error: ' + reason); 
+    });
+	
     var tCtrl = this;
-    this.onLoad = function (pag) {
+    tCtrl.onLoad = function (pag) {
 		$ionicLoading.hide();
     };
 
-    this.onError = function (err) {
+    tCtrl.onError = function (err) {
         $ionicLoading.hide();
         
         var alertPopup;
@@ -51,7 +58,7 @@ angular.module('epaper.controllers')
 		}
     };
     var total = 1.2 * 1024 * 1024; //always assume 1.2 mb for the pdf
-    this.onProgress = function (progress) {
+    tCtrl.onProgress = function (progress) {
         var percentage = Math.floor(progress.loaded/total * 100);
         if(percentage >= 100) {
             percentage = 99;
@@ -60,11 +67,11 @@ angular.module('epaper.controllers')
 		  template: '<ion-spinner></ion-spinner><span>Loading ' + percentage + '%</span>'
 		});
     };
-    this.onPageRender = function (page) {
+    tCtrl.onPageRender = function (page) {
     };
     
     $timeout(function() {
-        $scope.options = {
+        tCtrl.options = {
             pdfUrl: ePaperService.constructApiUrl(news.pdf),
             onLoad: tCtrl.onLoad,
             onProgress: tCtrl.onProgress,

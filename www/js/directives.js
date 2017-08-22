@@ -1,4 +1,4 @@
-﻿angular.module('gesture-pdf', [])
+﻿﻿angular.module('gesture-pdf', [])
 
 // Directive to manipulate pdfs with gestures
 .directive('pdfGesture', function ($window, $ionicGesture) {
@@ -30,15 +30,16 @@
 
     return {
         restrict: 'E',
-        scope: {
-            ngPdfOptions: '='
-            //ngPdfOptions.pdfUrl: Url to the pdf
-            //ngPdfOptions.onLoad: method to call after loading a pdf. (numPages) is the argument passed stating the number of pages in the pdf
-            //ngPdfOptions.onProgress: method to call to evaluate the loading progress
-            //ngPdfOptions.onError: method to call if an error occurs
-            //ngPdfOptions.onPageRender: method to call if a pages finishes to render
-            //ngPdfOptions.httpHeaders: http headers to download pdf
-        },
+        transclude: true,
+//        scope: {
+//            ngPdfOptions: '='
+//            //ngPdfOptions.pdfUrl: Url to the pdf
+//            //ngPdfOptions.onLoad: method to call after loading a pdf. (numPages) is the argument passed stating the number of pages in the pdf
+//            //ngPdfOptions.onProgress: method to call to evaluate the loading progress
+//            //ngPdfOptions.onError: method to call if an error occurs
+//            //ngPdfOptions.onPageRender: method to call if a pages finishes to render
+//            //ngPdfOptions.httpHeaders: http headers to download pdf
+//        },
         link: function (scope, element, attrs) {
 			
 			/*var outerButtonContainer = document.createElement("div"); 
@@ -47,89 +48,8 @@
             	
 			container.append(outerButtonContainer);		
 			*/	
-			var container = angular.element('<div class="pdf-container"></container>');			
-            //var buttonContainer = angular.element('<div class="button-container"></div>')
-            //var button = angular.element('<div class="button"><i class="icon ion-arrow-shrink"></i></div>');
-			var button = angular.element('<div id="floating-button1" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"><p class="shrink">100%</p></div>');
-			var button1 = angular.element('<div id="floating-button4" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"><p class="shrink">100%</p></div>');
-
-			angular.element(document.querySelector('#header-button-container')).append(button);
-			angular.element(document.querySelector('#footer-button-container')).append(button1);
-			var count = 0;
-            button.bind('click', function (e) {
-                if (count == 0) {
-                    scope.pageFit();
-                    count++;
-                    setTimeout(function () {
-                        count = 0;
-                    }, 500);
-                }
-            });
+			var container = angular.element('<div class="pdf-container"></container>');		
 			
-            button1.bind('click', function (e) {
-                if (count == 0) {
-                    scope.pageFit();
-                    count++;
-                    setTimeout(function () {
-                        count = 0;
-                    }, 500);
-                }
-            });
-            //buttonContainer.append(button);
-            //button = angular.element('<div class="button" id="plus"><i class="icon ion-plus-round"></i></div>');
-            button = angular.element('<div id="floating-button2" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="plus">+</p></div>');
-			button1 = angular.element('<div id="floating-button5" data-toggle="tooltip" data-placement="left" data-original-title="Plus"><p class="plus">+</p></div>');
-			angular.element(document.querySelector('#header-button-container')).append(button);
-			angular.element(document.querySelector('#footer-button-container')).append(button1);
-			button.bind('click', function (e) {
-                if (count == 0) {
-                    scope.zoomIn();
-                    count++;
-                    setTimeout(function () {
-                        count = 0;
-                    }, 500);
-                }
-            });
-			
-			button1.bind('click', function (e) {
-                if (count == 0) {
-                    scope.zoomIn();
-                    count++;
-                    setTimeout(function () {
-                        count = 0;
-                    }, 500);
-                }
-            });
-            //buttonContainer.append(button);
-            //button = angular.element('<div class="button" id="minus"><i class="icon ion-minus-round"></i></div>');
-            button = angular.element('<div id="floating-button3" data-toggle="tooltip" data-placement="left" data-original-title="Minus"><p class="minus">-</p></div>');
-			button1 = angular.element('<div id="floating-button6" data-toggle="tooltip" data-placement="left" data-original-title="Minus"><p class="minus">-</p></div>');
-			angular.element(document.querySelector('#header-button-container')).append(button);
-			angular.element(document.querySelector('#footer-button-container')).append(button1);
-			button.bind('click', function (e) {
-                if (count == 0) {
-                    scope.zoomOut();
-                    count++;
-                    setTimeout(function () {
-                        count = 0;
-                    }, 500);
-                }
-                
-            });
-			
-			button1.bind('click', function (e) {
-                if (count == 0) {
-                    scope.zoomOut();
-                    count++;
-                    setTimeout(function () {
-                        count = 0;
-                    }, 500);
-                }
-                
-            });
-
-            //buttonContainer.append(button);
-
             element.append(container);
             var timer = null;
             var pageFit = true;
@@ -139,7 +59,7 @@
             var ctx = [];
             var windowEl = angular.element($window);
             var pdfDoc = null;
-            var options = scope.ngPdfOptions;
+            var options = scope.options;
             var left = 0;
             var windowWidth = $window.innerWidth;
             var canvasWidth = 0;
@@ -149,44 +69,39 @@
             PDFJS.disableWorker = true;
             PDFJS.disableRange = true;
 
-            scope.pageFit = function () {
+            scope.pdfCtrl.fitPage = function () {
                 zoomTime = 0;
                 if (pdfDoc) {
                     pageFit = true;
-                    scope.$apply(function () {
-                        for (i = 1; i <= pdfDoc.numPages; i++) {
-                            renderPage(i);
-                        }
-                    });
+                    for (i = 1; i <= pdfDoc.numPages; i++) {
+                        renderPage(i);
+                    }
                 }
             };
-            scope.zoomIn = function () {
+            
+            scope.pdfCtrl.zoomIn = function () {
                 zoomTime += 1;
                 if (pdfDoc && zoomTime <= 6) {
                     pageFit = false;
                     scale += .2;
-                    scope.$apply(function () {
-                        for (i = 1; i <= pdfDoc.numPages; i++) {
-                            renderPage(i);
-                        }
-                    });
+                    for (i = 1; i <= pdfDoc.numPages; i++) {
+                        renderPage(i);
+                    }
                 }
             };
 
-            scope.zoomOut = function () {
+            scope.pdfCtrl.zoomOut = function () {
                 zoomTime -= 1;
                 if (pdfDoc) {
                     pageFit = false;
                     scale -= .2;
-                    scope.$apply(function () {
-                        for (i = 1; i <= pdfDoc.numPages; i++) {
-                            renderPage(i);
-                        }
-                    });
+                    for (i = 1; i <= pdfDoc.numPages; i++) {
+                        renderPage(i);
+                    }
                 }
             };
 
-            renderPage = function (num) {
+            var renderPage = function (num) {
                 if (renderTask[num - 1] && renderTask[num - 1].internalRenderTask) {
                     renderTask[num - 1].internalRenderTask.cancel();
                 }
@@ -224,13 +139,13 @@
                 });
             };
 
-            clearCanvas = function (num) {
+            var clearCanvas = function (num) {
                 if (ctx && ctx[num]) {
                     ctx[num].clearRect(0, 0, canvas[num].width, canvas[num].height);
                 }
             };
 
-            renderPDF = function () {
+            var renderPDF = function () {
                 if (ctx) {
                     for (i = 0; i < ctx.length; i++) {
                         clearCanvas(i);
@@ -274,8 +189,8 @@
                     );
                 }
             };
-
-            scope.$watch('ngPdfOptions', function (newVal) {
+            
+            scope.$watch('pdfCtrl.options', function (newVal) {
                 options = newVal;
                 if (newVal !== '' && newVal !== undefined) {
                     if (debug) {
@@ -286,7 +201,7 @@
                 }
             });
 
-            zoom = function () {
+            var zoom = function () {
                 if (pdfDoc) {
                     pageFit = false;
                     scope.$apply(function () {

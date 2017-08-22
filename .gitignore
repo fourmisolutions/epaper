@@ -9,3 +9,4 @@ resources/ios
 *.log
 /.DS_Store
 /.project
+/.settings/
