@@ -30,7 +30,7 @@
 
     return {
         restrict: 'E',
-        transclude: true,
+//        transclude: true,
 //        scope: {
 //            ngPdfOptions: '='
 //            //ngPdfOptions.pdfUrl: Url to the pdf
