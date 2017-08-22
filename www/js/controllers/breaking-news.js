@@ -86,6 +86,8 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
     				httpHeaders: [],
     				pinchin: false
     		};
+    		
+    		$scope.$apply(tCtrl.showSpinner = true);
     	}, 1000);
 	} else {
 	    //console.log('news.pdf is undefined or empty');
