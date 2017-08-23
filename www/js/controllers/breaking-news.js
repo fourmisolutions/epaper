@@ -25,41 +25,41 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
 	var news = $stateParams.news;
 	var tCtrl = this;
 
-	this.onLoad = function (pag) {
+	tCtrl.onLoad = function (pag) {
 	};
 
-	this.onError = function (err) {
+	tCtrl.onError = function (err) {
 	};
 
-	this.onProgress = function (progress) {
+	tCtrl.onProgress = function (progress) {
 	};
 
-	this.onPageRender = function (page) {
-
+	tCtrl.onPageRender = function (page) {
+        $scope.$apply(tCtrl.showSpinner = false);
 	};
 
-	$scope.title = news.title;
-	$scope.description = news.summary;
-	$scope.content = news.content;
-	$scope.imageURLs = [];
+	tCtrl.title = news.title;
+	tCtrl.description = news.summary;
+	tCtrl.content = news.content;
+	tCtrl.imageURLs = [];
 
 
 	if (news.image.indexOf(',') >= 0)
 	{
 		var imageURL_local = news.image.split(',');
-		$scope.imageUrl = imageURL_local[0]; 
-		$scope.imageURLs = imageURL_local.slice(1,imageURL_local.length);
+		tCtrl.imageUrl = imageURL_local[0]; 
+		tCtrl.imageURLs = imageURL_local.slice(1,imageURL_local.length);
 
 	}
 	else
 	{
-		$scope.imageUrl = news.image;
+		tCtrl.imageUrl = news.image;
 	}
     
-    $scope.shareAnywhere = function() {
+    tCtrl.shareAnywhere = function() {
         var message = news.summary + "\n" + news.content;
 		var subject = news.title;
-		var image =  $scope.imageUrl;
+		var image =  tCtrl.imageUrl;
 		var link = news.pdf;
 		//var link = "";	
 		
@@ -74,10 +74,10 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
 		});
 	}
 
-	$scope.pdfUrl = news.pdf;
+	tCtrl.pdfUrl = news.pdf;
 	if (news.pdf) {
 	    $timeout(function() {
-    		$scope.options = {
+    		tCtrl.options = {
     				pdfUrl: ePaperService.constructApiUrl(news.pdf),
     				onLoad: tCtrl.onLoad,
     				onProgress: tCtrl.onProgress,
@@ -86,6 +86,8 @@ app.controller('BreakingNewsController', ['$scope', '$stateParams', '$timeout', 
     				httpHeaders: [],
     				pinchin: false
     		};
+    		
+    		$scope.$apply(tCtrl.showSpinner = true);
     	}, 1000);
 	} else {
 	    //console.log('news.pdf is undefined or empty');

@@ -164,13 +164,7 @@
                 cache: false,
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/detailpdf.html',
-                        controller: 'PdfCtrl',
-                    }
-                },
-                resolve: {
-                    news: function(ePaperService, $stateParams) {
-                        return  ePaperService.getNews($stateParams.categoryId, $stateParams.pageNo);
+                        templateUrl: 'templates/detailpdf.html'
                     }
                 }
             })
