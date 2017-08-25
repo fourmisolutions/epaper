@@ -1,34 +1,43 @@
-<ion-view view-title="诗华电子报" ng-controller="BreakingNewsController">
+<ion-view view-title="诗华电子报" ng-controller="BreakingNewsController as pdfCtrl">
     <ion-nav-bar class="nav-bar bar-assertive">
         <ion-nav-back-button class="nav-button"></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content>
         <div class="list card">	
             <div class="item item-body">
-                <h1>{{title}}</h1>
+                <div class="row">
+                  <div class="col col-90"><h1>{{pdfCtrl.title}}</h1></div>
+                  <div class="col"><button class="button button-assertive icon ion-share" ng-click="pdfCtrl.shareAnywhere()"></button>	</div>
+                </div>
             </div>	
             
             <div class="item item-body">
-                <img class="full-image" ng-src="{{imageUrl}}"></div>			
-                <p class="news-description">{{description}}</p>
+                <img class="full-image" ng-src="{{pdfCtrl.imageUrl}}">		
+                <p class="news-description">{{pdfCtrl.description}}</p>
                 <p class="to-be-continued-message">待续。。。更多新闻滚动到底部</p>
             </div>
             
             <div style="position: relative">
-                <div id="header-button-container" class="header-button-container">					
+                <div id="header-button-container" class="header-button-container">
+                    <div id="floating-button1" data-toggle="tooltip" data-placement="left" data-original-title="Shrink to 100%"
+                        ng-click="pdfCtrl.fitPage()"><p class="shrink">100%</p></div>
+                    <div id="floating-button2" data-toggle="tooltip" data-placement="left" data-original-title="Plus"
+                        ng-click="pdfCtrl.zoomIn()"><p class="plus">+</p></div>
+                    <div id="floating-button3" data-toggle="tooltip" data-placement="left" data-original-title="Minus"
+                        ng-click="pdfCtrl.zoomOut()"><p class="minus">-</p></div>
                 </div>
             </div>
-            <div class="item item-body" ng-if="pdfUrl">
+            <div class="item item-body" ng-if="pdfCtrl.pdfUrl">
                 <ion-scroll direction="xy"  overflow-scroll="false">		
-                    <div id="loading-spinner" class="spinner"><ion-spinner></ion-spinner ></div>
-                    <pdf-gesture ng-pdf-options="options"></pdf-gesture>
+                    <div ng-if="pdfCtrl.showSpinner" class="spinner"><ion-spinner></ion-spinner ></div>
+                    <pdf-gesture></pdf-gesture>
                 </ion-scroll>
             </div>
 		</div>
 		<div class="list card">	
             <div class="item item-body">
-                <p class="news-description" style="font-size: 120%">{{content}}</p>
-                <div ng-repeat="url in imageURLs"><img class="full-image" ng-src="{{url}}"></div>
+                <p class="news-description" style="font-size: 120%">{{pdfCtrl.content}}</p>
+                <div ng-repeat="url in pdfCtrl.imageURLs"><img class="full-image" ng-src="{{url}}"></div>
             </div>
         </div>
 	</ion-content>

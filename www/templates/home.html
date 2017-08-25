@@ -1,26 +1,12 @@
 <ion-view title="诗华电子报">
-    <ion-nav-bar class="bar-assertive">
-        <ion-nav-buttons side="left">
-            <!-- Toggle left side menu -->
-            <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-        </ion-nav-buttons>
-        <ion-nav-buttons side="right">
-            <a href="#/app/breakingnewslist" class="button" style="right:25px">
-                即时新闻
-            </a>
-            <span class="badge badge-light" style="position: absolute; right: 0px" ng-show="breakingNewsCount > 0">!</span>
-            
-        </ion-nav-buttons>
-    </ion-nav-bar>
-    
-    <ion-content style="text-align: center; background-color: #FF0000;">
+    <ion-content style="text-align: center;" class="home-background">
         <ion-list>
-            <ion-item style="height : 20vh; background : #FF0000;">&nbsp;</ion-item>
-            <ion-item menu-toggle="right" ng-click="switchModule('app.home-epaper')" style="text-align:center">
+            <ion-item style="height : 20vh" class="menu-item">&nbsp;</ion-item>
+            <ion-item menu-toggle="right" ng-click="switchModule('app.home-epaper')" style="text-align:center" class="menu-item">
                 e诗华日报
             </ion-item>
-            <ion-item style="background : #FF0000;">&nbsp;</ion-item>
-            <ion-item menu-toggle="right" ng-click="switchModule('app.home-todaysh')" style="text-align:center">
+            <ion-item class="menu-item">&nbsp;</ion-item>
+            <ion-item menu-toggle="right" ng-click="switchModule('app.home-todaysh')" style="text-align:center" class="menu-item">
                 今日诗华
             </ion-item>
         </ion-list>

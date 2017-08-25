@@ -253,13 +253,21 @@ div.spinner {
   top: 0; left: 0; bottom: 0; right: 0;
   height: 85px;
   text-align: center;
-  z-index: -5;
+  z-index: 5;
 }
 .spinner svg {
   width: 19% !important;
   height: 85px !important;
 }
 
+.home-background {
+    background: url("../images/home-background.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+}
 
-
+.menu-item {
+    background-color: transparent;
+}
 

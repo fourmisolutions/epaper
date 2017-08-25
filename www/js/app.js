@@ -66,7 +66,7 @@
                     //we will only register if there is no existing token keep in preference.
                     $cordovaPreferences.fetch('token')
                       .success(function(token) {
-                        console.log("token", token);
+                        //console.log("token", token);
                         if(token == undefined || token === "") {
                             $cordovaPushV5.register().then(function(registrationId) {
                                 var currentPlatform = ionic.Platform.platform();
@@ -77,7 +77,7 @@
                         }
                       })
                       .error(function(error) {
-                          console.log("fail to fetch token", error);
+                          //console.log("fail to fetch token", error);
                       })
                     
                 });
@@ -101,7 +101,7 @@
     		if (typeof window.ga !== 'undefined') {
     			window.ga.startTrackerWithId(GaConstants.trackingId, GaConstants.dispatchInterval);
     		} else {
-    			console.log("Google Analytics is not available");
+    			//console.log("Google Analytics is not available");
     		}
             
         });
@@ -164,13 +164,7 @@
                 cache: false,
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/detailpdf.html',
-                        controller: 'PdfCtrl',
-                    }
-                },
-                resolve: {
-                    news: function(ePaperService, $stateParams) {
-                        return  ePaperService.getNews($stateParams.categoryId, $stateParams.pageNo);
+                        templateUrl: 'templates/detailpdf.html'
                     }
                 }
             })

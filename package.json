@@ -1,6 +1,6 @@
 {
   "name": "epaper",
-  "version": "1.1.1",
+  "version": "1.0.2",
   "description": "epaper: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -26,7 +26,8 @@
     "https://github.com/tiltshiftfocus/cordova-plugin-cache.git",
     "cordova-plugin-app-preferences",
     "https://github.com/fourmisolutions/cordova-comscore-plugin.git",
-    "phonegap-plugin-push  --variable SENDER_ID=167400319609"
+    "phonegap-plugin-push  --variable SENDER_ID=167400319609",
+    "cordova-plugin-x-socialsharing"
     
   ],
   "cordovaPlatforms": [
