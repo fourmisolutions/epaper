@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.seehua.epaper462668" version="1.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.seehua.epaper462668" version="1.0.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>诗华电子报</name>
   <description>&#xD;&#xD;&#xD;&#xD;&#xD;&#xD;
         诗华电子报&#xD;&#xD;&#xD;&#xD;&#xD;&#xD;
@@ -25,7 +25,9 @@
   <plugin name="cordova-plugin-whitelist" spec="~1.3.1"/>
   <plugin name="cordova-plugin-splashscreen" spec="~4.0.1"/>
   <plugin name="cordova-plugin-statusbar" spec="~2.2.1"/>
-  <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
+  <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>  
+  <plugin name="cordova-plugin-google-analytics" spec="~1.7.11" />
+  <plugin name="com.comscoreplugin" spec="https://github.com/fourmisolutions/cordova-comscore-plugin.git" />
   <platform name="android">
     <icon src="resources\android\icon\drawable-ldpi-icon.png" density="ldpi"/>
     <icon src="resources\android\icon\drawable-mdpi-icon.png" density="mdpi"/>
